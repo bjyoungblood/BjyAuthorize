@@ -76,7 +76,7 @@ class Authorize
 
     public function getIdentity()
     {
-        return $this->identityProvider->getIdentity();
+        return 'bjyauthorize-identity';
     }
 
     public function isAllowed($resource, $privilege)
@@ -112,6 +112,9 @@ class Authorize
                 }
             }
         }
+
+        $parentRoles = $this->identityProvider->getIdentityRoles();
+        $this->acl->addRole($this->getIdentity(), $parentRoles);
     }
 
     protected function addRoles($roles)

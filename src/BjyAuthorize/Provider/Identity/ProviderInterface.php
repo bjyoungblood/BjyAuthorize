@@ -5,9 +5,9 @@ namespace BjyAuthorize\Provider\Identity;
 interface ProviderInterface
 {
     /**
-     * @return Zend\Acl\Role\RoleInterface
+     * @return array
      */
-    public function getIdentity();
+    public function getIdentityRoles();
     public function getDefaultRole();
     public function setDefaultRole($role);
 }

@@ -4,7 +4,7 @@ namespace BjyAuthorize\Provider\Identity;
 
 use BjyAuthorize\Acl\Role;
 use Zend\Db\Adapter\Adapter;
-use Zend\Db\ResultSet\HydratingResultSet;
+use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\Sql\Where;
 use Zend\Db\Sql\Sql;
 
@@ -18,18 +18,33 @@ class ZfcUserZendDb implements ProviderInterface
         $this->adapter = $adapter;
     }
 
-    public function getIdentity()
+    public function getIdentityRoles()
     {
         $authService = $this->userService->getAuthService();
-
-        $sql = new Sql($this->adapter);
-        $select = $sql->select();
 
         if (!$authService->hasIdentity()) {
             // get default/guest role
             return $this->getDefaultRole();
         } else {
             // get roles associated with the logged in user
+            $sql = new Sql($this->adapter);
+            $select = $sql->select()
+                ->from('user_role_linker');
+
+            $where = new Where();
+            $where->equalTo('user_id', $authService->getIdentity()->getUserId());
+
+            $statement = $sql->prepareStatementForSqlObject($select->where($where));
+
+            $resultSet = new ResultSet;
+            $results = $resultSet->setDataSource($statement->execute())->toArray();
+
+            $roles = array();
+            foreach ($results as $i) {
+                $roles[] = $i['role_id'];
+            }
+
+            return $roles;
         }
     }
  
