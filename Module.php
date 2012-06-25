@@ -16,6 +16,16 @@ class Module implements
 {
     public function onBootstrap(Event $e)
     {
+        $app        = $e->getTarget();
+        $sm         = $app->getServiceManager();
+        $service    = $sm->get('BjyAuthorize\Service\Authorize');
+        $strategy   = $sm->get('BjyAuthorize\View\UnauthorizedStrategy');
+
+        foreach ($service->getGuards() as $guard) {
+            $app->events()->attach('route', array($guard, 'onRoute'), -1000);
+        }
+
+        $app->events()->attach($strategy);
     }
 
     public function getServiceConfiguration()
@@ -28,6 +38,12 @@ class Module implements
                     $provider = new Provider\Identity\ZfcUserZendDb($adapter);
                     $provider->setUserService($sm->get('zfcuser_user_service'));
                     return $provider;
+                },
+                'BjyAuthorize\View\UnauthorizedStrategy' => function ($sm) {
+                    $template = $sm->get('BjyAuthorize\Service\Authorize')->getTemplate();
+                    $strategy = new View\UnauthorizedStrategy;
+                    $strategy->setTemplate($template);
+                    return $strategy;
                 },
             ),
         );

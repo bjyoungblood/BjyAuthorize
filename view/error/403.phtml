@@ -1,0 +1,12 @@
+<h1>403 Forbidden</h1>
+<p>
+    <?php if ($error == 'error-unauthorized-controller') : ?>
+        You are not authorized to access <?=$controller;?>
+        <?php if ($action) : ?>
+        ::<?=$action;?>Action()
+        <?php endif;?>
+        .
+    <?php else : ?>
+    An unknown error occured.
+    <?php endif;?>
+</p>

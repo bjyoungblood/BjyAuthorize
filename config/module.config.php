@@ -27,5 +27,14 @@ return array(
                 ),
             ),
         ),
+        'guards' => array(
+            'BjyAuthorize\Guard\Controller' => array(
+                array('controller' => 'index', 'action' => 'index', 'roles' => array('guest','user')),
+            ),
+        ),
+    ),
+
+    'view_manager' => array(
+        'template_path_stack' => array(__DIR__ . '/../view'),
     ),
 );

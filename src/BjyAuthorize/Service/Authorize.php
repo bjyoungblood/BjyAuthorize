@@ -15,7 +15,9 @@ class Authorize
     protected $resourceProviders = array();
     protected $ruleProviders = array();
     protected $identityProvider;
+    protected $guards = array();
     protected $identity;
+    protected $template = 'error/403';
     protected $loaded = false;
 
     const TYPE_ALLOW = 'allow';
@@ -25,6 +27,10 @@ class Authorize
     {
         $this->acl = new \Zend\Acl\Acl;
         $this->sl = $serviceLocator;
+
+        if (isset($config['template'])) {
+            $this->template = $config['template'];
+        }
 
         if (isset($config['role_providers'])) {
             foreach ($config['role_providers'] as $class => $options) {
@@ -50,7 +56,9 @@ class Authorize
         }
 
         if (isset($config['guards'])) {
-
+            foreach ($config['guards'] as $class => $options) {
+                $this->addGuard(new $class($options, $this));
+            }
         }
     }
 
@@ -78,18 +86,47 @@ class Authorize
         return $this;
     }
 
+    public function addGuard($guard)
+    {
+        $this->guards[] = $guard;
+
+        if ($guard instanceof ResourceProvider) {
+            $this->addResourceProvider($guard);
+        }
+
+        if ($guard instanceof RuleProvider) {
+            $this->addRuleProvider($guard);
+        }
+
+        return $this;
+    }
+
+    public function getGuards()
+    {
+        return $this->guards;
+    }
+
+    public function getTemplate()
+    {
+        return $this->template;
+    }
+
     public function getIdentity()
     {
         return 'bjyauthorize-identity';
     }
 
-    public function isAllowed($resource, $privilege)
+    public function isAllowed($resource, $privilege = null)
     {
         if (!$this->loaded) {
             $this->load();
         }
 
-        return $this->acl->isAllowed($this->getIdentity(), $resource, $privilege);
+        try {
+            return $this->acl->isAllowed($this->getIdentity(), $resource, $privilege);
+        } catch (\Zend\Acl\Exception\InvalidArgumentException $e) {
+            return false;
+        }
     }
 
     protected function load()
@@ -119,6 +156,8 @@ class Authorize
 
         $parentRoles = $this->identityProvider->getIdentityRoles();
         $this->acl->addRole($this->getIdentity(), $parentRoles);
+
+        $this->loaded = true;
     }
 
     protected function addRoles($roles)
@@ -137,6 +176,8 @@ class Authorize
         foreach ($resources as $key => $value) {
             if (is_string($key)) {
                 $key = new \Zend\Acl\Resource\GenericResource($key);
+            } else if (is_int($key)) {
+                $key = new \Zend\Acl\Resource\GenericResource($value);
             }
 
             if (is_array($value)) {
