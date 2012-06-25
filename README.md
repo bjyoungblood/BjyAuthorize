@@ -103,3 +103,10 @@ return array(
     ),
 );
 ```
+
+Helpers and Plugins
+-------------------
+There are view helpers and controller plugins registered for this module.
+In either a controller or a view script, you can call
+```$this->isAllowed($resource[, $privilege])```, which will query the ACL
+using the currently authenticated (or default) user's roles.
