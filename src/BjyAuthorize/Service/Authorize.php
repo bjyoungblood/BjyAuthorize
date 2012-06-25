@@ -26,27 +26,31 @@ class Authorize
         $this->acl = new \Zend\Acl\Acl;
         $this->sl = $serviceLocator;
 
-        if (isset($config['roleProviders'])) {
-            foreach ($config['roleProviders'] as $class => $options) {
+        if (isset($config['role_providers'])) {
+            foreach ($config['role_providers'] as $class => $options) {
                 $this->addRoleProvider(new $class($options));
             }
         }
 
-        if (isset($config['resourceProviders'])) {
-            foreach ($config['resourceProviders'] as $class => $options) {
+        if (isset($config['resource_providers'])) {
+            foreach ($config['resource_providers'] as $class => $options) {
                 $this->addResourceProvider(new $class($options));
             }
         }
 
-        if (isset($config['ruleProviders'])) {
-            foreach ($config['ruleProviders'] as $class => $options) {
+        if (isset($config['rule_providers'])) {
+            foreach ($config['rule_providers'] as $class => $options) {
                 $this->addRuleProvider(new $class($options));
             }
         }
 
-        if (isset($config['identityProvider'])) {
-            $this->setIdentityProvider($serviceLocator->get($config['identityProvider']));
+        if (isset($config['identity_provider'])) {
+            $this->setIdentityProvider($serviceLocator->get($config['identity_provider']));
             $this->identityProvider->setDefaultRole($config['default_role']);
+        }
+
+        if (isset($config['guards'])) {
+
         }
     }
 
