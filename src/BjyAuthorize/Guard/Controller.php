@@ -23,7 +23,7 @@ class Controller implements RuleProviderInterface, ResourceProviderInterface
                 $rule['roles'] = array($rule['roles']);
             }
 
-            $resourceName = static::getResourceName($rule['controller'], $rule['action']);
+            $resourceName = static::getResourceName($rule['controller'], isset($rule['action']) ? $rule['action'] : null);
             $this->rules[$resourceName] = $rule['roles'];
         }
     }

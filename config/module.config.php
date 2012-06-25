@@ -30,11 +30,22 @@ return array(
         'guards' => array(
             'BjyAuthorize\Guard\Controller' => array(
                 array('controller' => 'index', 'action' => 'index', 'roles' => array('guest','user')),
+                array('controller' => 'index', 'action' => 'stuff', 'roles' => array('user')),
+                array('controller' => 'zfcuser', 'roles' => array())
             ),
+        ),
+    ),
+
+    'controller' => array(
+        'map' => array(
+            'isallowed' => 'BjyAuthorize\Controller\Plugin\IsAllowed',
         ),
     ),
 
     'view_manager' => array(
         'template_path_stack' => array(__DIR__ . '/../view'),
+        'helper_map' => array(
+            'isallowed' => 'BjyAuthorize\View\Helper\IsAllowed',
+        ),
     ),
 );

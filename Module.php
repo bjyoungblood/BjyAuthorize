@@ -45,6 +45,17 @@ class Module implements
                     $strategy->setTemplate($template);
                     return $strategy;
                 },
+                'BjyAuthorize\Controller\Plugin\IsAllowed' => function ($sm) {
+                    $plugin = new Controller\Plugin\IsAllowed();
+                    $plugin->setAuthorizeService($sm->get('BjyAuthorize\Service\Authorize'));
+                    return $plugin;
+                },
+
+                'BjyAuthorize\View\Helper\IsAllowed' => function ($sm) {
+                    $helper = new View\Helper\IsAllowed();
+                    $helper->setAuthorizeService($sm->get('BjyAuthorize\Service\Authorize'));
+                    return $helper;
+                },
             ),
         );
     }
