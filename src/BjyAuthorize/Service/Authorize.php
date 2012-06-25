@@ -19,6 +19,7 @@ class Authorize
     protected $identity;
     protected $template = 'error/403';
     protected $loaded = false;
+    protected $sl;
 
     const TYPE_ALLOW = 'allow';
     const TYPE_DENY = 'deny';
@@ -34,19 +35,19 @@ class Authorize
 
         if (isset($config['role_providers'])) {
             foreach ($config['role_providers'] as $class => $options) {
-                $this->addRoleProvider(new $class($options));
+                $this->addRoleProvider(new $class($options, $serviceLocator));
             }
         }
 
         if (isset($config['resource_providers'])) {
             foreach ($config['resource_providers'] as $class => $options) {
-                $this->addResourceProvider(new $class($options));
+                $this->addResourceProvider(new $class($options, $serviceLocator));
             }
         }
 
         if (isset($config['rule_providers'])) {
             foreach ($config['rule_providers'] as $class => $options) {
-                $this->addRuleProvider(new $class($options));
+                $this->addRuleProvider(new $class($options, $serviceLocator));
             }
         }
 
@@ -195,6 +196,7 @@ class Authorize
 
         if (count($rule) === 4) {
             list($roles, $resources, $privileges, $assertion) = $rule;
+            $assertion = $this->sl->get($assertion);
         } else if (count($rule) === 3) {
             list($roles, $resources, $privileges) = $rule;
         } else if (count($rule) === 2) {

@@ -56,6 +56,12 @@ class Module implements
                     $helper->setAuthorizeService($sm->get('BjyAuthorize\Service\Authorize'));
                     return $helper;
                 },
+
+                'BjyAuthorize\Provider\Role\ZendDb' => function ($sm) {
+                    $provider = new Provider\Role\ZendDb;
+                    $provider->setAdapter($sm->get('Zend\Db\Adapter\Adapter'));
+                    return $provider;
+                }
             ),
         );
     }

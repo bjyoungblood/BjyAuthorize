@@ -11,7 +11,7 @@ class Config implements ProviderInterface
     public function __construct(array $config = array())
     {
         $roles = array();
-        foreach ($config as $key => $value) {            
+        foreach ($config as $key => $value) {
             if (is_numeric($key)) {
                 $roles = array_merge($roles, $this->loadRole($value));
             } else {
@@ -24,12 +24,6 @@ class Config implements ProviderInterface
 
     public function loadRole($name, $options = array(), $parent = null)
     {
-        if (isset($options['default']) && $options['default'] === true) {
-            $default = true;
-        } else {
-            $default = false;
-        }
-
         if (isset($options['children']) && count($options['children']) > 0) {
             $children = $options['children'];
         } else {
@@ -37,7 +31,7 @@ class Config implements ProviderInterface
         }
 
         $roles = array();
-        $role = new Role($name, $default, $parent);
+        $role = new Role($name, $parent);
         $roles[] = $role;
 
         foreach ($children as $key => $value) {

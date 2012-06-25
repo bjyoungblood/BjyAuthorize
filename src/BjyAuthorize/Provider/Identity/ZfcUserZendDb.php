@@ -47,23 +47,23 @@ class ZfcUserZendDb implements ProviderInterface
             return $roles;
         }
     }
- 
+
     public function getUserService()
     {
         return $this->userService;
     }
- 
+
     public function setUserService($userService)
     {
         $this->userService = $userService;
         return $this;
     }
- 
+
     public function getDefaultRole()
     {
         return $this->defaultRole;
     }
- 
+
     public function setDefaultRole($defaultRole)
     {
         $this->defaultRole = $defaultRole;
