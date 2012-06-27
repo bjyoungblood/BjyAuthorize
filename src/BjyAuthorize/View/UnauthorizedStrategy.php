@@ -25,7 +25,7 @@ class UnauthorizedStrategy implements ListenerAggregateInterface
 
     public function attach(EventManagerInterface $events)
     {
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH_ERROR, array($this, 'prepareViewModel'));
+        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH_ERROR, array($this, 'prepareViewModel'), -5000);
     }
 
     public function detach(EventManagerInterface $events)
