@@ -32,12 +32,11 @@ class ZfcUserZendDb implements ProviderInterface
                 ->from('user_role_linker');
 
             $where = new Where();
-            $where->equalTo('user_id', $authService->getIdentity()->getUserId());
+            $where->equalTo('user_id', $authService->getIdentity()->getId());
 
             $statement = $sql->prepareStatementForSqlObject($select->where($where));
 
-            $resultSet = new ResultSet;
-            $results = $resultSet->setDataSource($statement->execute())->toArray();
+            $results = $statement->execute();
 
             $roles = array();
             foreach ($results as $i) {
