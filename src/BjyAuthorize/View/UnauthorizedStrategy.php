@@ -51,7 +51,7 @@ class UnauthorizedStrategy implements ListenerAggregateInterface
     {
         // Do nothing if no error in the event
         $error = $e->getError();
-        if (empty($error)) {
+        if ($error !== 'error-unauthorized-controller') {
             return;
         }
 
@@ -69,7 +69,7 @@ class UnauthorizedStrategy implements ListenerAggregateInterface
         ));
 
         $model->setTemplate($this->getTemplate());
-        $e->setResult($model);
+        $e->getViewModel()->addChild($model);
 
         $response = $e->getResponse();
         if (!$response) {
