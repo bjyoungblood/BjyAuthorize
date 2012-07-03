@@ -1,0 +1,32 @@
+{
+    "name": "bjyoungblood/BjyAuthorize",
+    "description": "Clean Acl implementation to be as integrable and extendable as ZfcUser that will ease its usage with modules and applications. By default, it provides simple setup via config files or by using Zend\Db. This module also comes with out-of-the-box support for and integration with ZfcUser.",
+    "type": "library",
+    "keywords": [
+        "zf2",
+        "acl",
+        "zfc-user"
+    ],
+    "homepage": "https://github.com/bjyoungblood/BjyAuthorize",
+    "authors": [
+        {
+            "name": "Ben Youngblood",
+            "email": "bx.youngblood@gmail.com",
+            "homepage": "http://bjyoungblood.com/"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "zendframework/zendframework": "dev-master",
+        "zf-commons/zfc-base": "dev-master",
+        "zf-commons/zfc-user": "dev-master"
+    },
+    "autoload": {
+        "psr-0": {
+            "BjyAuthorize": "src/"
+        },
+        "classmap": [
+            "./"
+        ]
+    }
+}
