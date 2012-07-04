@@ -1,6 +1,6 @@
 {
     "name": "bjyoungblood/BjyAuthorize",
-    "description": "Clean Acl implementation to be as integrable and extendable as ZfcUser that will ease its usage with modules and applications. By default, it provides simple setup via config files or by using Zend\Db. This module also comes with out-of-the-box support for and integration with ZfcUser.",
+    "description": "Clean Acl implementation to be as integrable and extendable as ZfcUser",
     "type": "library",
     "keywords": [
         "zf2",
