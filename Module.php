@@ -22,10 +22,10 @@ class Module implements
         $strategy   = $sm->get('BjyAuthorize\View\UnauthorizedStrategy');
 
         foreach ($service->getGuards() as $guard) {
-            $app->events()->attach('route', array($guard, 'onRoute'), -1000);
+            $app->getEventManager()->attach('route', array($guard, 'onRoute'), -1000);
         }
 
-        $app->events()->attach($strategy);
+        $app->getEventManager()->attach($strategy);
     }
 
     public function getServiceConfiguration()

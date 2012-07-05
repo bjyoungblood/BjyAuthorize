@@ -78,7 +78,7 @@ class Controller implements RuleProviderInterface, ResourceProviderInterface
                 ->setParam('controller', $controller)
                 ->setParam('action', $action);
 
-            $app->events()->trigger('dispatch.error', $e);
+            $app->getEventManager()->trigger('dispatch.error', $e);
         }
     }
 }
