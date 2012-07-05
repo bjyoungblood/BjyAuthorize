@@ -8,11 +8,6 @@ its usage with modules and applications. By default, it provides simple
 setup via config files or by using Zend\Db. This module also comes with
 out-of-the-box support for and integration with ZfcUser.
 
-Todo
-----
- - Ability to change error template (might already be possible)
- - Ability to change table names for RDBMS-based providers
-
 Usage and Configuration
 -----------------------
 Here is an annotated sample configuration file:
@@ -40,8 +35,8 @@ return array(
          * Zend\Db adapter.
          */
         'role_providers' => array(
-            
-            /* here, 'guest' and 'user are defined as top-level roles, with 
+
+            /* here, 'guest' and 'user are defined as top-level roles, with
              * 'admin' inheriting from user
              */
             'BjyAuthorize\Provider\Role\Config' => array(
@@ -53,7 +48,11 @@ return array(
 
             // this will load roles from the user_role table in a database
             // format: user_role(role_id(varchar), parent(varchar))
-            'BjyAuthorize\Provider\Role\ZendDb' => array()
+            'BjyAuthorize\Provider\Role\ZendDb' => array(
+                'table'             => 'user_role',
+                'role_id_field'     => 'role_id',
+                'parent_role_field' => 'parent',
+            ),
         ),
 
         // resource providers provide a list of resources that will be tracked
@@ -73,7 +72,7 @@ return array(
         'rule_providers' => array(
             'BjyAuthorize\Provider\Rule\Config' => array(
                 'allow' => array(
-                    // allow guests and users (and admins, through inheritance) 
+                    // allow guests and users (and admins, through inheritance)
                     // the "wear" privilege on the resource "pants"
                     array(array('guest', 'user'), 'pants', 'wear')
                 ),
