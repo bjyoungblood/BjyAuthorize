@@ -10,8 +10,12 @@ class Role implements RoleInterface
     protected $default;
     protected $parent;
 
-    public function __construct($roleId = null, RoleInterface $parent = null)
+    public function __construct($roleId = null, $parent = null)
     {
+        if (isset($parent) && !($parent instanceof RoleInterface)) {
+            $parent = new Role($parent);
+        }
+
         $this->roleId   = $roleId;
         $this->parent   = $parent;
     }
