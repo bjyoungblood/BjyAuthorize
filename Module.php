@@ -33,18 +33,28 @@ class Module implements
         return array(
             'factories' => array(
                 'BjyAuthorize\Service\Authorize' => 'BjyAuthorize\Service\AuthorizeFactory',
+
                 'BjyAuthorize\Provider\Identity\ZfcUserZendDb' => function ($sm) {
                     $adapter = $sm->get('zfcuser_zend_db_adapter');
                     $provider = new Provider\Identity\ZfcUserZendDb($adapter);
                     $provider->setUserService($sm->get('zfcuser_user_service'));
                     return $provider;
                 },
+
+                'BjyAuthorize\Provider\Identity\ZfcUserDoctrine' => function ($sm) {
+                    $em = $sm->get('doctrine.entitymanager.orm_default');
+                    $provider = new Provider\Identity\ZfcUserDoctrine($em);
+                    $provider->setUserService($sm->get('zfcuser_user_service'));
+                    return $provider;
+                },
+
                 'BjyAuthorize\View\UnauthorizedStrategy' => function ($sm) {
                     $template = $sm->get('BjyAuthorize\Service\Authorize')->getTemplate();
                     $strategy = new View\UnauthorizedStrategy;
                     $strategy->setTemplate($template);
                     return $strategy;
                 },
+
                 'BjyAuthorize\Controller\Plugin\IsAllowed' => function ($sm) {
                     $plugin = new Controller\Plugin\IsAllowed();
                     $plugin->setAuthorizeService($sm->get('BjyAuthorize\Service\Authorize'));
