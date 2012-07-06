@@ -21,6 +21,9 @@
         "zf-commons/zfc-base": "dev-master",
         "zf-commons/zfc-user": "dev-master"
     },
+    "suggest": {
+        "zf-commons/zfc-user-doctrine-orm": "dev-master"
+    },
     "autoload": {
         "psr-0": {
             "BjyAuthorize": "src/"
