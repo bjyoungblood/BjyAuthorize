@@ -163,8 +163,16 @@ class Authorize
 
     protected function addRoles($roles)
     {
+        if (!is_array($roles)) {
+            $roles = array($roles);
+        }
+
         foreach ($roles as $i) {
-            if ($i->getParent() === null) {
+            if ($this->acl->hasRole($i)) {
+                continue;
+            }
+            if ($i->getParent() !== null) {
+                $this->addRoles($i->getParent());
                 $this->acl->addRole($i, $i->getParent());
             } else {
                 $this->acl->addRole($i);
