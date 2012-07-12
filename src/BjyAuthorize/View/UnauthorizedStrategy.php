@@ -49,25 +49,34 @@ class UnauthorizedStrategy implements ListenerAggregateInterface
 
     public function prepareViewModel(MvcEvent $e)
     {
-        // Do nothing if no error in the event
-        $error = $e->getError();
-        if ($error !== 'error-unauthorized-controller') {
-            return;
-        }
-
         // Do nothing if the result is a response object
         $result = $e->getResult();
         if ($result instanceof Response) {
             return;
         }
 
-        $model = new ViewModel(array(
-            'error'      => $e->getParam('error'),
-            'controller' => $e->getParam('controller'),
-            'action'     => $e->getParam('action'),
-            'identity'   => $e->getParam('identity'),
-        ));
-
+        $error = $e->getError();
+        switch($error)
+        {
+            case 'error-unauthorized-controller':
+                $model = new ViewModel(array(
+                    'error'      => $e->getParam('error'),
+                    'controller' => $e->getParam('controller'),
+                    'action'     => $e->getParam('action'),
+                    'identity'   => $e->getParam('identity'),
+                ));
+                break;
+            case 'error-unauthorized-route':
+                $model = new ViewModel(array(
+                    'error'      => $e->getParam('error'),
+                    'route'      => $e->getParam('route'),
+                    'identity'   => $e->getParam('identity'),
+                ));
+                break;
+            default:
+                // Do nothing if no error in the event
+                return;
+        }
         $model->setTemplate($this->getTemplate());
         $e->getViewModel()->addChild($model);
 
