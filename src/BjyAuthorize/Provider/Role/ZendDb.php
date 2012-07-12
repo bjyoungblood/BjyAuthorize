@@ -43,10 +43,19 @@ class ZendDb implements ProviderInterface
         $rowset = $tableGateway->selectWith($sql);
 
         $roles = array();
+        // Pass One: Build each object
         foreach ($rowset as $row) {
-            $roles[] = new Role($row[$this->roleIdFieldName], $row[$this->parentRoleFieldName]);
+            $roleId = $row[$this->roleIdFieldName];
+            $roles[$roleId] = new Role($roleId, $row[$this->parentRoleFieldName]);
+        }
+        // Pass Two: Re-inject parent objects to preserve hierarchy
+        foreach ($roles as $roleId=>$roleObj) {
+            $parentRoleObj = $roleObj->getParent();
+            if ($parentRoleObj) {
+                $roleObj->setParent($roles[$parentRoleObj->getRoleId()]);
+            }
         }
 
-        return $roles;
+        return array_values($roles);
     }
 }
