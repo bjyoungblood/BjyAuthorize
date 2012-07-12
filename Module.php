@@ -71,7 +71,12 @@ class Module implements
                     $provider = new Provider\Role\ZendDb;
                     $provider->setAdapter($sm->get('Zend\Db\Adapter\Adapter'));
                     return $provider;
-                }
+                },
+
+                'BjyAuthorize\Provider\Role\Doctrine' => function ($sm) {
+                    $provider = new Provider\Role\Doctrine;
+                    return $provider;
+                },
             ),
         );
     }
