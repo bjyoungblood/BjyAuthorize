@@ -85,8 +85,7 @@ return array(
             ),
         ),
 
-        /* Currently, only controller guards currently exist, though I may expand
-         * to routes or something in the future
+        /* Currently, only controller and route guards exist
          */
         'guards' => array(
             /* If this guard is specified here (i.e. it is enabled), it will block
@@ -97,6 +96,16 @@ return array(
                 array('controller' => 'index', 'action' => 'index', 'roles' => array('guest','user')),
                 array('controller' => 'index', 'action' => 'stuff', 'roles' => array('user')),
                 array('controller' => 'zfcuser', 'roles' => array())
+            ),
+
+            /* If this guard is specified here (i.e. it is enabled), it will block
+             * access to all routes unless they are specified here.
+             */
+            'BjyAuthorize\Guard\Route' => array(
+                array('route' => 'zfcuser', 'roles' => array('user'),
+                array('route' => 'zfcuser/logout', 'roles' => array('user'),
+                array('route' => 'zfcuser/login', 'roles' => array('guest'),
+                array('route' => 'zfcuser/register', 'roles' => array('guest'),
             ),
         ),
     ),
