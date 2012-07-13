@@ -14,18 +14,9 @@ return array(
         ),
     ),
 
-    'controller' => array(
-        'map' => array(
-            'isallowed' => 'BjyAuthorize\Controller\Plugin\IsAllowed',
-        ),
-    ),
-
     'view_manager' => array(
         'template_map' => array(
             'error/403' => __DIR__ . '/../view/error/403.phtml',
-        ),
-        'helper_map' => array(
-            'isallowed' => 'BjyAuthorize\View\Helper\IsAllowed',
         ),
     ),
 );

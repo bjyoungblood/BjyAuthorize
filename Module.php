@@ -55,18 +55,6 @@ class Module implements
                     return $strategy;
                 },
 
-                'BjyAuthorize\Controller\Plugin\IsAllowed' => function ($sm) {
-                    $plugin = new Controller\Plugin\IsAllowed();
-                    $plugin->setAuthorizeService($sm->get('BjyAuthorize\Service\Authorize'));
-                    return $plugin;
-                },
-
-                'BjyAuthorize\View\Helper\IsAllowed' => function ($sm) {
-                    $helper = new View\Helper\IsAllowed();
-                    $helper->setAuthorizeService($sm->get('BjyAuthorize\Service\Authorize'));
-                    return $helper;
-                },
-
                 'BjyAuthorize\Provider\Role\ZendDb' => function ($sm) {
                     $provider = new Provider\Role\ZendDb;
                     $provider->setAdapter($sm->get('Zend\Db\Adapter\Adapter'));
@@ -77,6 +65,34 @@ class Module implements
                     $provider = new Provider\Role\Doctrine;
                     return $provider;
                 },
+            ),
+        );
+    }
+
+    public function getViewHelperConfiguration()
+    {
+        return array(
+            'factories' => array(
+                'isAllowed' => function($sm) {
+                    $sm = $sm->getServiceLocator(); // get the main SM instance
+                    $helper = new View\Helper\IsAllowed();
+                    $helper->setAuthorizeService($sm->get('BjyAuthorize\Service\Authorize'));
+                    return $helper;
+                }
+            ),
+        );
+    }
+
+    public function getControllerPluginConfiguration()
+    {
+        return array(
+            'factories' => array(
+                'isAllowed' => function($sm) {
+                    $sm = $sm->getServiceLocator(); // get the main SM instance
+                    $helper = new Controller\Plugin\IsAllowed();
+                    $helper->setAuthorizeService($sm->get('BjyAuthorize\Service\Authorize'));
+                    return $helper;
+                }
             ),
         );
     }
