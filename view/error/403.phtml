@@ -6,6 +6,8 @@
         ::<?=$action;?>Action()
         <?php endif;?>
         .
+    <?php elseif ($error == 'error-unauthorized-route') : ?>
+        You are not authorized to access <?php echo $route;?>.
     <?php else : ?>
     An unknown error occured.
     <?php endif;?>
