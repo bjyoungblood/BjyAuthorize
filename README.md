@@ -11,6 +11,7 @@ out-of-the-box support for and integration with ZfcUser.
 Usage and Configuration
 -----------------------
 Here is an annotated sample configuration file:
+# create this file in config/autoload/BjyAuthorize.local.php
 
 ```php
 <?php
@@ -102,10 +103,10 @@ return array(
              * access to all routes unless they are specified here.
              */
             'BjyAuthorize\Guard\Route' => array(
-                array('route' => 'zfcuser', 'roles' => array('user'),
-                array('route' => 'zfcuser/logout', 'roles' => array('user'),
-                array('route' => 'zfcuser/login', 'roles' => array('guest'),
-                array('route' => 'zfcuser/register', 'roles' => array('guest'),
+                array('route' => 'zfcuser', 'roles' => array('user')),
+                array('route' => 'zfcuser/logout', 'roles' => array('user')),
+                array('route' => 'zfcuser/login', 'roles' => array('guest')),
+                array('route' => 'zfcuser/register', 'roles' => array('guest')),
             ),
         ),
     ),
