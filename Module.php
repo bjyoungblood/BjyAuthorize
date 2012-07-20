@@ -28,7 +28,7 @@ class Module implements
         $app->getEventManager()->attach($strategy);
     }
 
-    public function getServiceConfiguration()
+    public function getServiceConfig()
     {
         return array(
             'factories' => array(
@@ -69,7 +69,7 @@ class Module implements
         );
     }
 
-    public function getViewHelperConfiguration()
+    public function getViewHelperConfig()
     {
         return array(
             'factories' => array(
@@ -83,7 +83,7 @@ class Module implements
         );
     }
 
-    public function getControllerPluginConfiguration()
+    public function getControllerPluginConfig()
     {
         return array(
             'factories' => array(
