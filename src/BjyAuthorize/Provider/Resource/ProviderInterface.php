@@ -5,7 +5,7 @@ namespace BjyAuthorize\Provider\Resource;
 interface ProviderInterface
 {
     /**
-     * @return array of \Zend\Acl\Resource\ResourceInterface
+     * @return array of \Zend\Permissions\Acl\Resource\ResourceInterface
      */
     public function getResources();
 }

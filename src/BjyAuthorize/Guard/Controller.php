@@ -4,7 +4,7 @@ namespace BjyAuthorize\Guard;
 
 use BjyAuthorize\Provider\Rule\ProviderInterface as RuleProviderInterface;
 use BjyAuthorize\Provider\Resource\ProviderInterface as ResourceProviderInterface;
-use Zend\Acl\Resource\GenericResource;
+use Zend\Permissions\Acl\Resource\GenericResource;
 use Zend\Mvc\MvcEvent;
 
 class Controller implements RuleProviderInterface, ResourceProviderInterface

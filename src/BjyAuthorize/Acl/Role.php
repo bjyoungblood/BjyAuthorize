@@ -2,7 +2,7 @@
 
 namespace BjyAuthorize\Acl;
 
-use Zend\Acl\Role\RoleInterface;
+use Zend\Permissions\Acl\Role\RoleInterface;
 
 class Role implements RoleInterface
 {
