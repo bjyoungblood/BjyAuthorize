@@ -26,7 +26,7 @@ class Authorize
 
     public function __construct(array $config = array(), ServiceLocatorInterface $serviceLocator)
     {
-        $this->acl = new \Zend\Acl\Acl;
+        $this->acl = new \Zend\Permissions\Acl\Acl;
         $this->sl = $serviceLocator;
 
         if (isset($config['template'])) {
@@ -125,7 +125,7 @@ class Authorize
 
         try {
             return $this->acl->isAllowed($this->getIdentity(), $resource, $privilege);
-        } catch (\Zend\Acl\Exception\InvalidArgumentException $e) {
+        } catch (\Zend\Permissions\Acl\Exception\InvalidArgumentException $e) {
             return false;
         }
     }
@@ -184,9 +184,9 @@ class Authorize
     {
         foreach ($resources as $key => $value) {
             if (is_string($key)) {
-                $key = new \Zend\Acl\Resource\GenericResource($key);
+                $key = new \Zend\Permissions\Acl\Resource\GenericResource($key);
             } else if (is_int($key)) {
-                $key = new \Zend\Acl\Resource\GenericResource($value);
+                $key = new \Zend\Permissions\Acl\Resource\GenericResource($value);
             }
 
             if (is_array($value)) {
