@@ -117,6 +117,11 @@ class Authorize
         return 'bjyauthorize-identity';
     }
 
+    public function getAcl()
+    {
+        return $this->acl;
+    }
+
     public function isAllowed($resource, $privilege = null)
     {
         if (!$this->loaded) {
