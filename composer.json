@@ -1,5 +1,5 @@
 {
-    "name": "bjyoungblood/BjyAuthorize",
+    "name": "bjyoungblood/bjy-authorize",
     "description": "Clean Acl implementation to be as integrable and extendable as ZfcUser",
     "type": "library",
     "keywords": [
