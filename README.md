@@ -1,6 +1,13 @@
 BjyAuthorize
 ============
 
+Composer/Packagist Users
+========================
+
+Please note the name of this project's package has changed to bjyoungblood/bjy-authorize
+in order to match composer/packagist's new naming conventions. Please update your composer.json
+to use the new package name.
+
 Goal
 ----
 This module is designed provide a facade for Zend\Acl that will ease
