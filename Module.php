@@ -17,9 +17,10 @@ class Module implements
     public function onBootstrap(EventInterface $e)
     {
         $app        = $e->getTarget();
+        $config     = $app->getConfig();
         $sm         = $app->getServiceManager();
         $service    = $sm->get('BjyAuthorize\Service\Authorize');
-        $strategy   = $sm->get('BjyAuthorize\View\UnauthorizedStrategy');
+        $strategy   = $sm->get($config['bjyauthorize']['unauthorized_strategy']);
 
         foreach ($service->getGuards() as $guard) {
             $app->getEventManager()->attach('route', array($guard, 'onRoute'), -1000);

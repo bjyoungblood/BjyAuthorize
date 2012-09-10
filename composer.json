@@ -1,6 +1,6 @@
 {
     "name": "bjyoungblood/bjy-authorize",
-    "description": "Clean Acl implementation to be as integrable and extendable as ZfcUser",
+    "description": "Easy-use loader and manager for Zend\Acl with built-in route and dispatch protection",
     "type": "library",
     "keywords": [
         "zf2",
@@ -17,7 +17,7 @@
     ],
     "require": {
         "php": ">=5.3.3",
-        "zendframework/zendframework": "dev-master",
+        "zendframework/zendframework": "2.0.*",
         "zf-commons/zfc-base": "dev-master",
         "zf-commons/zfc-user": "dev-master"
     },
