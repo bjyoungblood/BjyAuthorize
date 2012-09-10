@@ -25,7 +25,7 @@ class UnauthorizedStrategy implements ListenerAggregateInterface
 
     public function attach(EventManagerInterface $events)
     {
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH_ERROR, array($this, 'prepareViewModel'), -5000);
+        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH_ERROR, array($this, 'onDispatchError'), -5000);
     }
 
     public function detach(EventManagerInterface $events)
@@ -47,7 +47,7 @@ class UnauthorizedStrategy implements ListenerAggregateInterface
         return $this->template;
     }
 
-    public function prepareViewModel(MvcEvent $e)
+    public function onDispatchError(MvcEvent $e)
     {
         // Do nothing if the result is a response object
         $result = $e->getResult();
@@ -72,7 +72,11 @@ class UnauthorizedStrategy implements ListenerAggregateInterface
                 $viewVariables['route'] = $e->getParam('route');
                 break;
             default:
-                // Do nothing if no error in the event
+                /*
+                 * do nothing if there is no error in the event or the error
+                 * does not match one of our predefined errors (we don't want
+                 * our 403.phtml to handle other types of errors)
+                 */
                 return;
         }
 
