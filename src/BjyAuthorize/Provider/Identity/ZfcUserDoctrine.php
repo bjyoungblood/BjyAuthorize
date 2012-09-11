@@ -10,6 +10,8 @@ class ZfcUserDoctrine implements ProviderInterface
     protected $userService;
     protected $defaultRole;
 
+    protected $tableName = 'user_role_linker';
+
     public function __construct(EntityManager $em)
     {
         $this->em = $em;
@@ -26,7 +28,7 @@ class ZfcUserDoctrine implements ProviderInterface
             // get roles associated with the logged in user
             $builder = new \Doctrine\DBAL\Query\QueryBuilder($this->em->getConnection());
             $builder->select("linker.role_id")
-                ->from('user_role_linker', 'linker')
+                ->from($this->tableName, 'linker')
                 ->where('linker.user_id = :user_id')
                 ->setParameter('user_id', $authService->getIdentity()->getId());
 

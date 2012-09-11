@@ -13,6 +13,8 @@ class ZfcUserZendDb implements ProviderInterface
     protected $userService;
     protected $defaultRole;
 
+    protected $tableName = 'user_role_linker';
+
     public function __construct(Adapter $adapter)
     {
         $this->adapter = $adapter;
@@ -29,7 +31,7 @@ class ZfcUserZendDb implements ProviderInterface
             // get roles associated with the logged in user
             $sql = new Sql($this->adapter);
             $select = $sql->select()
-                ->from('user_role_linker');
+                ->from($this->tableName);
 
             $where = new Where();
             $where->equalTo('user_id', $authService->getIdentity()->getId());
