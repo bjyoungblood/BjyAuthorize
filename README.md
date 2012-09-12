@@ -15,11 +15,43 @@ its usage with modules and applications. By default, it provides simple
 setup via config files or by using Zend\Db. This module also comes with
 out-of-the-box support for and integration with ZfcUser.
 
-Usage and Configuration
------------------------
-Here is an annotated sample configuration file:
-# create this file in config/autoload/BjyAuthorize.global.php
+Requirements
+------------
+* [Zend Framework 2](https://github.com/zendframework/zf2) (latest master)
+* [ZfcBase](https://github.com/ZF-Commons/ZfcBase) (latest master)
+* [ZfcUser](https://github.com/ZF-Commons/ZfcUser) (latest master)
 
+Installation
+------------
+### (1) Installation
+
+Choose one of the two available installation methods:
+
+#### Composer
+
+Currently this medthod of installation is not working.
+
+#### Git Submodule
+
+1. Follow the [ZfcUser](https://github.com/ZF-Commons/ZfcUser) installation instructions to install that module and it's dependencies.
+
+2. Clone this project into your `./vendor/` directory
+```
+cd vendor;
+git clone git://github.com/bjyoungblood/BjyAuthorize.git;
+```
+###  (2) Configuration
+
+1. Ensure that this module and it's dependencies are enabled in your `application.config.php` file in the following order:
+    * ZfcBase
+    * ZfcUser
+    * BjyAuthorize
+3. Import the SQL schema located in `./vendor/BjyAuthorize/data/schema.sql`.
+4. Copy `./vendor/CdliTwoStageSignup/config/module.config.php` to
+   `./config/autoload/module.bjyauthorize.global.php`.
+5. Fill in the required configuration variable values in  `./config/autoload/module.bjyauthorize.global.php` 
+
+Here is an annotated sample configuration file:
 ```php
 <?php
 
@@ -103,7 +135,9 @@ return array(
             'BjyAuthorize\Guard\Controller' => array(
                 array('controller' => 'index', 'action' => 'index', 'roles' => array('guest','user')),
                 array('controller' => 'index', 'action' => 'stuff', 'roles' => array('user')),
-                array('controller' => 'zfcuser', 'roles' => array())
+                array('controller' => 'zfcuser', 'roles' => array()),
+                // Below is the default index action used by the [ZendSkeletonApplication](https://github.com/zendframework/ZendSkeletonApplication)
+                // array('controller' => 'Application\Controller\Index', 'roles' => array('guest', 'user')),
             ),
 
             /* If this guard is specified here (i.e. it is enabled), it will block
@@ -114,6 +148,8 @@ return array(
                 array('route' => 'zfcuser/logout', 'roles' => array('user')),
                 array('route' => 'zfcuser/login', 'roles' => array('guest')),
                 array('route' => 'zfcuser/register', 'roles' => array('guest')),
+                // Below is the default index action used by the [ZendSkeletonApplication](https://github.com/zendframework/ZendSkeletonApplication)
+                array('route' => 'home', 'roles' => array('guest', 'user')),
             ),
         ),
     ),
@@ -126,3 +162,12 @@ There are view helpers and controller plugins registered for this module.
 In either a controller or a view script, you can call
 ```$this->isAllowed($resource[, $privilege])```, which will query the ACL
 using the currently authenticated (or default) user's roles.
+
+DISCLAIMER
+----------
+This code is considered proof-of-concept, and has not been vetted or tested for
+inclusion in a production environment.  Use of this code in such environments is
+at your own risk. 
+
+Released under the _________.  See file LICENSE included with the source 
+code for this project for a copy of the licensing terms. 
