@@ -40,6 +40,7 @@ Currently this medthod of installation is not working.
 cd vendor;
 git clone git://github.com/bjyoungblood/BjyAuthorize.git;
 ```
+
 ###  (2) Configuration
 
 1. Ensure that this module and it's dependencies are enabled in your `application.config.php` file in the following order:
