@@ -1,6 +1,6 @@
 {
     "name": "bjyoungblood/bjy-authorize",
-    "description": "Easy-use loader and manager for Zend\Acl with built-in route and dispatch protection",
+    "description": "Easy-use loader and manager for Zend\\Acl with built-in route and dispatch protection",
     "type": "library",
     "keywords": [
         "zf2",
