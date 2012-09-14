@@ -48,9 +48,9 @@ git clone git://github.com/bjyoungblood/BjyAuthorize.git;
     * ZfcUser
     * BjyAuthorize
 3. Import the SQL schema located in `./vendor/BjyAuthorize/data/schema.sql`.
-4. Copy `./vendor/CdliTwoStageSignup/config/module.config.php` to
+4. Copy `./vendor/BjyAuthorize/config/module.config.php` to
    `./config/autoload/module.bjyauthorize.global.php`.
-5. Fill in the required configuration variable values in  `./config/autoload/module.bjyauthorize.global.php` 
+5. Fill in the required configuration variable values in  `./config/autoload/module.bjyauthorize.global.php`
 
 Here is an annotated sample configuration file:
 ```php
@@ -164,11 +164,7 @@ In either a controller or a view script, you can call
 ```$this->isAllowed($resource[, $privilege])```, which will query the ACL
 using the currently authenticated (or default) user's roles.
 
-DISCLAIMER
-----------
-This code is considered proof-of-concept, and has not been vetted or tested for
-inclusion in a production environment.  Use of this code in such environments is
-at your own risk. 
-
-Released under the _________.  See file LICENSE included with the source 
-code for this project for a copy of the licensing terms. 
+License
+-------
+Released under the MIT License.  See file LICENSE included with the source
+code for this project for a copy of the licensing terms.
