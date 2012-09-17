@@ -13,7 +13,8 @@ class Route implements RuleProviderInterface, ResourceProviderInterface
 
     protected $rules = array();
 
-    public function __construct(array $rules, $security)
+
+    public function setOptions(array $rules, $security)
     {
         $this->securityService = $security;
 

@@ -67,6 +67,9 @@ class Module implements
                     return $provider;
                 },
             ),
+            'invokables' => array(
+                'BjyAuthorize\Guard\Route' => 'BjyAuthorize\Guard\Route',
+            )
         );
     }
 

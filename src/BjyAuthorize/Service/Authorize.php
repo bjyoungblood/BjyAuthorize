@@ -58,7 +58,9 @@ class Authorize
 
         if (isset($config['guards'])) {
             foreach ($config['guards'] as $class => $options) {
-                $this->addGuard(new $class($options, $this));
+                $guard = $serviceLocator->get($class);
+                $guard->setOptions($options, $this);
+                $this->addGuard($guard);
             }
         }
     }
