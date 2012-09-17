@@ -23,7 +23,7 @@ class Module implements
         $strategy   = $sm->get($config['bjyauthorize']['unauthorized_strategy']);
 
         foreach ($service->getGuards() as $guard) {
-            $app->getEventManager()->attach('route', array($guard, 'onRoute'), -1000);
+            $app->getEventManager()->attach($guard);
         }
 
         $app->getEventManager()->attach($strategy);

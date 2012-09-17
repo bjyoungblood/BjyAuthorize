@@ -6,12 +6,19 @@ use BjyAuthorize\Provider\Rule\ProviderInterface as RuleProviderInterface;
 use BjyAuthorize\Provider\Resource\ProviderInterface as ResourceProviderInterface;
 use Zend\Permissions\Acl\Resource\GenericResource;
 use Zend\Mvc\MvcEvent;
+use Zend\EventManager\EventManagerInterface;
+use Zend\EventManager\ListenerAggregateInterface;
 
-class Route implements RuleProviderInterface, ResourceProviderInterface
+class Route implements RuleProviderInterface, ResourceProviderInterface, ListenerAggregateInterface
 {
     protected $securityService;
 
     protected $rules = array();
+
+    /**
+     * @var \Zend\Stdlib\CallbackHandler[]
+     */
+    protected $listeners = array();
 
     public function __construct(array $rules, $security)
     {
@@ -25,6 +32,20 @@ class Route implements RuleProviderInterface, ResourceProviderInterface
 
             $resourceName = 'route/'.$rule['route'];
             $this->rules[$resourceName] = $rule['roles'];
+        }
+    }
+
+    public function attach(EventManagerInterface $events)
+    {
+        $this->listeners[] = $events->attach(MvcEvent::EVENT_ROUTE, array($this, 'onRoute'), -1000);
+    }
+
+    public function detach(EventManagerInterface $events)
+    {
+        foreach ($this->listeners as $index => $listener) {
+            if ($events->detach($listener)) {
+                unset($this->listeners[$index]);
+            }
         }
     }
 
