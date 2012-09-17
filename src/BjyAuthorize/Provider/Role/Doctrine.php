@@ -5,17 +5,21 @@ namespace BjyAuthorize\Provider\Role;
 use BjyAuthorize\Acl\Role;
 use Doctrine\ORM\EntityManager;
 
-class Doctrine implements ProviderInterface
+use Zend\ServiceManager\ServiceManagerAwareInterface;
+use Zend\ServiceManager\ServiceManager;
+
+class Doctrine implements ProviderInterface, ServiceManagerAwareInterface
 {
     protected $em;
+    protected $sm;
 
     protected $tableName           = 'user_role';
     protected $roleIdFieldName     = 'role_id';
     protected $parentRoleFieldName = 'parent';
 
-    public function __construct($options, $serviceManager)
+    public function setOptions($options)
     {
-        $this->em = $serviceManager->get('doctrine.entitymanager.orm_default');
+        $this->em = $this->sm->get('doctrine.entitymanager.orm_default');
 
         if (isset($options['table'])) {
             $this->tableName = $options['table'];
@@ -44,5 +48,15 @@ class Doctrine implements ProviderInterface
             $roles[] = new Role($row[$this->roleIdFieldName], $row[$this->parentRoleFieldName]);
         }
         return $roles;
+    }
+
+    /**
+     * Set service manager instance
+     *
+     * @param ServiceManager $serviceManager
+     */
+    public function setServiceManager(ServiceManager $serviceManager)
+    {
+        $this->sm = $serviceManager;
     }
 }

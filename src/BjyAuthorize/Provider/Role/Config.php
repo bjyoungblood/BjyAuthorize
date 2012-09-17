@@ -8,7 +8,7 @@ class Config implements ProviderInterface
 {
     protected $roles = array();
 
-    public function __construct(array $config = array())
+    public function setOptions(array $config = array())
     {
         $roles = array();
         foreach ($config as $key => $value) {

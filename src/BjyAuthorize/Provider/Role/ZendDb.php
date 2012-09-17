@@ -8,7 +8,10 @@ use Zend\Db\TableGateway\TableGateway;
 use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Where;
 
-class ZendDb implements ProviderInterface
+use Zend\ServiceManager\ServiceManagerAwareInterface;
+use Zend\ServiceManager\ServiceManager;
+
+class ZendDb implements ProviderInterface, ServiceManagerAwareInterface
 {
     protected $sm;
 
@@ -16,9 +19,8 @@ class ZendDb implements ProviderInterface
     protected $roleIdFieldName     = 'role_id';
     protected $parentRoleFieldName = 'parent';
 
-    public function __construct($options, $serviceManager)
+    public function setOptions($options)
     {
-        $this->sm = $serviceManager;
 
         if (isset($options['table'])) {
             $this->tableName = $options['table'];
@@ -57,5 +59,15 @@ class ZendDb implements ProviderInterface
         }
 
         return array_values($roles);
+    }
+
+    /**
+     * Set service manager instance
+     *
+     * @param ServiceManager $serviceManager
+     */
+    public function setServiceManager(ServiceManager $serviceManager)
+    {
+        $this->serviceManager = $serviceManager;
     }
 }

@@ -4,5 +4,5 @@ namespace BjyAuthorize\Acl\Guard;
 
 interface GuardInterface
 {
-    public function getResources();
+    public function setOptions();
 }

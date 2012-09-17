@@ -55,18 +55,15 @@ class Module implements
                     $strategy->setTemplate($template);
                     return $strategy;
                 },
-
-                'BjyAuthorize\Provider\Role\ZendDb' => function ($sm) {
-                    $provider = new Provider\Role\ZendDb;
-                    $provider->setAdapter($sm->get('Zend\Db\Adapter\Adapter'));
-                    return $provider;
-                },
-
-                'BjyAuthorize\Provider\Role\Doctrine' => function ($sm) {
-                    $provider = new Provider\Role\Doctrine;
-                    return $provider;
-                },
             ),
+            'invokables' => array(
+                'BjyAuthorize\Guard\Route' => 'BjyAuthorize\Guard\Route',
+                'BjyAuthorize\Guard\Controller' => 'BjyAuthorize\Guard\Controller',
+                'BjyAuthorize\Provider\Rule\Config' => 'BjyAuthorize\Provider\Rule\Config',
+                'BjyAuthorize\Provider\Role\Doctrine' => 'BjyAuthorize\Provider\Role\Doctrine',
+                'BjyAuthorize\Provider\Role\ZendDb' => 'BjyAuthorize\Provider\Role\ZendDb',
+                'BjyAuthorize\Provider\Resource\Config' => 'BjyAuthorize\Provider\Resource\Config',
+            )
         );
     }
 

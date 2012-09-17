@@ -6,14 +6,16 @@ use BjyAuthorize\Provider\Rule\ProviderInterface as RuleProviderInterface;
 use BjyAuthorize\Provider\Resource\ProviderInterface as ResourceProviderInterface;
 use Zend\Permissions\Acl\Resource\GenericResource;
 use Zend\Mvc\MvcEvent;
+use BjyAuthorize\Guard\GuardInterface;
 
-class Route implements RuleProviderInterface, ResourceProviderInterface
+class Route implements RuleProviderInterface, ResourceProviderInterface, GuardInterface
 {
     protected $securityService;
 
     protected $rules = array();
 
-    public function __construct(array $rules, $security)
+
+    public function setOptions(array $rules, $security)
     {
         $this->securityService = $security;
 

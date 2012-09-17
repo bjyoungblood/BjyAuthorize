@@ -6,7 +6,7 @@ class Config implements ProviderInterface
 {
     protected $resources = array();
 
-    public function __construct(array $config = array())
+    public function setOptions(array $config = array())
     {
         $this->resources = $config;
     }
