@@ -218,6 +218,10 @@ class Authorize
             throw new \InvalidArgumentException('Invalid rule definition: ' . print_r($rule, true));
         }
 
+        if (is_string($assertion)) {
+            $assertion = $this->sl->get($assertion);
+        }
+
         if ($type === static::TYPE_ALLOW) {
             $this->acl->allow($roles, $resources, $privileges, $assertion);
         } else {
