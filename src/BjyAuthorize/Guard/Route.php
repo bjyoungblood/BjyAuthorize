@@ -4,12 +4,12 @@ namespace BjyAuthorize\Guard;
 
 use BjyAuthorize\Provider\Rule\ProviderInterface as RuleProviderInterface;
 use BjyAuthorize\Provider\Resource\ProviderInterface as ResourceProviderInterface;
-use Zend\Permissions\Acl\Resource\GenericResource;
-use Zend\Mvc\MvcEvent;
-use Zend\EventManager\EventManagerInterface;
-use Zend\EventManager\ListenerAggregateInterface;
 
-class Route implements RuleProviderInterface, ResourceProviderInterface, ListenerAggregateInterface
+use Zend\EventManager\EventManagerInterface;
+use Zend\Mvc\MvcEvent;
+use Zend\Permissions\Acl\Resource\GenericResource;
+
+class Route implements GuardInterface, RuleProviderInterface, ResourceProviderInterface
 {
     protected $securityService;
 

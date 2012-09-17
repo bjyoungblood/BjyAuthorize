@@ -2,11 +2,11 @@
 
 namespace BjyAuthorize;
 
+use Zend\EventManager\EventInterface;
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\ModuleManager\Feature\BootstrapListenerInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 use Zend\ModuleManager\Feature\ServiceProviderInterface;
-use Zend\EventManager\EventInterface;
 
 class Module implements
     AutoloaderProviderInterface,

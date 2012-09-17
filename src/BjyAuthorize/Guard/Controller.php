@@ -4,14 +4,21 @@ namespace BjyAuthorize\Guard;
 
 use BjyAuthorize\Provider\Rule\ProviderInterface as RuleProviderInterface;
 use BjyAuthorize\Provider\Resource\ProviderInterface as ResourceProviderInterface;
-use Zend\Permissions\Acl\Resource\GenericResource;
-use Zend\Mvc\MvcEvent;
 
-class Controller implements RuleProviderInterface, ResourceProviderInterface
+use Zend\EventManager\EventManagerInterface;
+use Zend\Mvc\MvcEvent;
+use Zend\Permissions\Acl\Resource\GenericResource;
+
+class Controller implements GuardInterface, RuleProviderInterface, ResourceProviderInterface
 {
     protected $securityService;
 
     protected $rules = array();
+
+    /**
+     * @var \Zend\Stdlib\CallbackHandler[]
+     */
+    protected $listeners = array();
 
     public function __construct(array $rules, $security)
     {
@@ -25,6 +32,20 @@ class Controller implements RuleProviderInterface, ResourceProviderInterface
 
             $resourceName = static::getResourceName($rule['controller'], isset($rule['action']) ? $rule['action'] : null);
             $this->rules[$resourceName] = $rule['roles'];
+        }
+    }
+
+    public function attach(EventManagerInterface $events)
+    {
+        $this->listeners[] = $events->attach(MvcEvent::EVENT_ROUTE, array($this, 'onRoute'), -1000);
+    }
+
+    public function detach(EventManagerInterface $events)
+    {
+        foreach ($this->listeners as $index => $listener) {
+            if ($events->detach($listener)) {
+                unset($this->listeners[$index]);
+            }
         }
     }
 
