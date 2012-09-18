@@ -35,19 +35,25 @@ class Authorize
 
         if (isset($config['role_providers'])) {
             foreach ($config['role_providers'] as $class => $options) {
-                $this->addRoleProvider(new $class($options, $serviceLocator));
+                $provider = $serviceLocator->get($class);
+                $provider->setOptions($options, $this);
+                $this->addRoleProvider($provider);
             }
         }
 
         if (isset($config['resource_providers'])) {
             foreach ($config['resource_providers'] as $class => $options) {
-                $this->addResourceProvider(new $class($options, $serviceLocator));
+                $provider = $serviceLocator->get($class);
+                $provider->setOptions($options, $this);
+                $this->addResourceProvider($provider);
             }
         }
 
         if (isset($config['rule_providers'])) {
             foreach ($config['rule_providers'] as $class => $options) {
-                $this->addRuleProvider(new $class($options, $serviceLocator));
+                $provider = $serviceLocator->get($class);
+                $provider->setOptions($options, $this);
+                $this->addRuleProvider($provider);
             }
         }
 

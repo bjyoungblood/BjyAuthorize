@@ -70,6 +70,10 @@ class Module implements
             'invokables' => array(
                 'BjyAuthorize\Guard\Route' => 'BjyAuthorize\Guard\Route',
                 'BjyAuthorize\Guard\Controller' => 'BjyAuthorize\Guard\Controller',
+                'BjyAuthorize\Provider\Rule\Config' => 'BjyAuthorize\Provider\Rule\Config',
+                'BjyAuthorize\Provider\Role\Doctrine' => 'BjyAuthorize\Provider\Role\Doctrine',
+                'BjyAuthorize\Provider\Role\ZendDb' => 'BjyAuthorize\Provider\Role\ZendDb',
+                'BjyAuthorize\Provider\Resource\Config' => 'BjyAuthorize\Provider\Resource\Config',
             )
         );
     }

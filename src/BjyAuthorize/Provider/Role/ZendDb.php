@@ -16,7 +16,7 @@ class ZendDb implements ProviderInterface
     protected $roleIdFieldName     = 'role_id';
     protected $parentRoleFieldName = 'parent';
 
-    public function __construct($options, $serviceManager)
+    public function setOptions($options, $serviceManager)
     {
         $this->sm = $serviceManager;
 
