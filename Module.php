@@ -69,6 +69,7 @@ class Module implements
             ),
             'invokables' => array(
                 'BjyAuthorize\Guard\Route' => 'BjyAuthorize\Guard\Route',
+                'BjyAuthorize\Guard\Controller' => 'BjyAuthorize\Guard\Controller',
             )
         );
     }
