@@ -32,6 +32,13 @@ class Module implements
     public function getServiceConfig()
     {
         return array(
+            'initializers' => array(
+                function ($instance, $sm) {
+                    if ($instance instanceof Service\AuthorizeAwareInterface) {
+                        $instance->setAuthorizeService($sm->get('BjyAuthorize\Service\Authorize'));
+                    }
+                }
+            ),
             'factories' => array(
                 'BjyAuthorize\Service\Authorize' => 'BjyAuthorize\Service\AuthorizeFactory',
 
