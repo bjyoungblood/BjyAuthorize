@@ -85,6 +85,12 @@ class Module implements
                     $helper = new View\Helper\GetRoles();
                     $helper->setAuthorizeService($sm->get('BjyAuthorize\Service\Authorize'));
                     return $helper;
+                },
+                'hasRole' => function($sm) {
+                    $sm = $sm->getServiceLocator(); // get the main SM instance
+                    $helper = new View\Helper\HasRole();
+                    $helper->setAuthorizeService($sm->get('BjyAuthorize\Service\Authorize'));
+                    return $helper;
                 }
             ),
         );
@@ -103,6 +109,12 @@ class Module implements
                 'getRoles' => function($sm) {
                     $sm = $sm->getServiceLocator(); // get the main SM instance
                     $helper = new Controller\Plugin\GetRoles();
+                    $helper->setAuthorizeService($sm->get('BjyAuthorize\Service\Authorize'));
+                    return $helper;
+                },
+                'hasRole' => function($sm) {
+                    $sm = $sm->getServiceLocator(); // get the main SM instance
+                    $helper = new Controller\Plugin\HasRole();
                     $helper->setAuthorizeService($sm->get('BjyAuthorize\Service\Authorize'));
                     return $helper;
                 }
