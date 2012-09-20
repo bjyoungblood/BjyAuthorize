@@ -127,12 +127,16 @@ class Authorize
         if (!$this->loaded) {
             $this->load();
         }
-
         try {
             return $this->acl->isAllowed($this->getIdentity(), $resource, $privilege);
         } catch (\Zend\Permissions\Acl\Exception\InvalidArgumentException $e) {
             return false;
         }
+    }
+
+    public function getRoles()
+    {
+        return $this->identityProvider->getIdentityRoles();
     }
 
     protected function load()

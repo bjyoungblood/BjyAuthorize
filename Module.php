@@ -79,6 +79,12 @@ class Module implements
                     $helper = new View\Helper\IsAllowed();
                     $helper->setAuthorizeService($sm->get('BjyAuthorize\Service\Authorize'));
                     return $helper;
+                },
+                'getRoles' => function($sm) {
+                    $sm = $sm->getServiceLocator(); // get the main SM instance
+                    $helper = new View\Helper\GetRoles();
+                    $helper->setAuthorizeService($sm->get('BjyAuthorize\Service\Authorize'));
+                    return $helper;
                 }
             ),
         );
@@ -91,6 +97,12 @@ class Module implements
                 'isAllowed' => function($sm) {
                     $sm = $sm->getServiceLocator(); // get the main SM instance
                     $helper = new Controller\Plugin\IsAllowed();
+                    $helper->setAuthorizeService($sm->get('BjyAuthorize\Service\Authorize'));
+                    return $helper;
+                },
+                'getRoles' => function($sm) {
+                    $sm = $sm->getServiceLocator(); // get the main SM instance
+                    $helper = new Controller\Plugin\GetRoles();
                     $helper->setAuthorizeService($sm->get('BjyAuthorize\Service\Authorize'));
                     return $helper;
                 }
