@@ -168,6 +168,10 @@ In either a controller or a view script, you can call
 ```$this->getRoles()```, which will query the ACL
 using the currently authenticated user and return their roles
 
+In either a controller or a view script, you can call
+```$this->hasRole('role_name')```, which will query the ACL
+using the currently authenticated user and return true if that user has that role, false if not
+
 DISCLAIMER
 ----------
 This code is considered proof-of-concept, and has not been vetted or tested for
