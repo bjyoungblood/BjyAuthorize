@@ -164,6 +164,10 @@ In either a controller or a view script, you can call
 ```$this->isAllowed($resource[, $privilege])```, which will query the ACL
 using the currently authenticated (or default) user's roles.
 
+In either a controller or a view script, you can call
+```$this->getRoles()```, which will query the ACL
+using the currently authenticated user and return their roles
+
 DISCLAIMER
 ----------
 This code is considered proof-of-concept, and has not been vetted or tested for
