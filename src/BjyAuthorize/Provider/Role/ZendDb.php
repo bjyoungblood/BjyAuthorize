@@ -51,7 +51,7 @@ class ZendDb implements ProviderInterface
         // Pass Two: Re-inject parent objects to preserve hierarchy
         foreach ($roles as $roleId=>$roleObj) {
             $parentRoleObj = $roleObj->getParent();
-            if ($parentRoleObj) {
+            if ($parentRoleObj && $parentRoleObj->getRoleId()) {
                 $roleObj->setParent($roles[$parentRoleObj->getRoleId()]);
             }
         }
