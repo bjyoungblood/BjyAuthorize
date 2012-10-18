@@ -86,6 +86,11 @@ class Authorize
         $this->identityProvider = $provider;
         return $this;
     }
+	
+	public function getIdentityProvider()
+    {
+        return $this->identityProvider;
+    }
 
     public function addGuard($guard)
     {
@@ -160,7 +165,7 @@ class Authorize
             }
         }
 
-        $parentRoles = $this->identityProvider->getIdentityRoles();
+        $parentRoles = $this->getIdentityProvider()->getIdentityRoles();
         $this->acl->addRole($this->getIdentity(), $parentRoles);
 
         $this->loaded = true;
