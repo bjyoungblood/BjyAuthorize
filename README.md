@@ -48,7 +48,7 @@ git clone git://github.com/bjyoungblood/BjyAuthorize.git;
     * ZfcUser
     * BjyAuthorize
 3. Import the SQL schema located in `./vendor/BjyAuthorize/data/schema.sql`.
-4. Copy `./vendor/BjyAuthorize/config/module.config.php` to
+4. Copy `./vendor/BjyAuthorize/config/module.bjyauthorize.global.php.dist` to
    `./config/autoload/module.bjyauthorize.global.php`.
 5. Fill in the required configuration variable values in  `./config/autoload/module.bjyauthorize.global.php`
 
