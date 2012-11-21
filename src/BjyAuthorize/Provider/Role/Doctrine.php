@@ -49,7 +49,13 @@ class Doctrine implements ProviderInterface
         foreach ($roles as $roleId=>$roleObj) {
             $parentRoleObj = $roleObj->getParent();
             if ($parentRoleObj && $parentRoleObj->getRoleId()) {
-                $roleObj->setParent($roles[$parentRoleObj->getRoleId()]);
+                if(isset($roles[$parentRoleObj->getRoleId()])) {
+                    $roleObj->setParent($roles[$parentRoleObj->getRoleId()]);
+                } else {
+                    // If this Provider can't find the parent, maybe a previous
+                    // loaded provider has it, so set the Id back again
+                    $roleObj->setParent($parentRoleObj->getRoleId());
+                }
             }
         }
         return array_values($roles);
