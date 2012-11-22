@@ -87,7 +87,7 @@ class Authorize
         return $this;
     }
 	
-	public function getIdentityProvider()
+    public function getIdentityProvider()
     {
         return $this->identityProvider;
     }
@@ -171,19 +171,26 @@ class Authorize
         $this->loaded = true;
     }
 
-    protected function addRoles($roles)
+    protected function addRoles(&$roles)
     {
         if (!is_array($roles)) {
             $roles = array($roles);
         }
-
-        foreach ($roles as $i) {
-            if ($this->acl->hasRole($i)) {
+        
+        foreach($roles as &$i) {
+            if($this->acl->hasRole($i)) {
+                $stRole = $this->acl->getRole($i);
+                if($stRole !== $i) {
+                    $i = $stRole; //always prefer the first added role
+                }
                 continue;
             }
+            
             if ($i->getParent() !== null) {
-                $this->addRoles($i->getParent());
-                $this->acl->addRole($i, $i->getParent());
+                $parent = $i->getParent();
+                $this->addRoles($parent);
+                $i->setParent($parent);  //re-attach parent
+                $this->acl->addRole($i, $parent);
             } else {
                 $this->acl->addRole($i);
             }
