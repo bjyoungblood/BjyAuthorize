@@ -10,6 +10,7 @@ use Zend\Mvc\Application;
 use Zend\Mvc\MvcEvent;
 use Zend\Stdlib\ResponseInterface as Response;
 use Zend\View\Model\ViewModel;
+use BjyAuthorize\Exception\UnAuthorizedException;
 
 class UnauthorizedStrategy implements ListenerAggregateInterface
 {
@@ -70,6 +71,14 @@ class UnauthorizedStrategy implements ListenerAggregateInterface
                 break;
             case 'error-unauthorized-route':
                 $viewVariables['route'] = $e->getParam('route');
+                break;
+            case Application::ERROR_EXCEPTION:
+                if (!($e->getParam('exception') instanceof UnAuthorizedException)) {
+                    return;
+                }
+
+                $viewVariables['reason'] = $e->getParam('exception')->getMessage();
+                $viewVariables['error'] = 'error-unauthorized';
                 break;
             default:
                 /*
