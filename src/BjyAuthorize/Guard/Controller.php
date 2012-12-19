@@ -150,11 +150,10 @@ class Controller implements GuardInterface, RuleProviderInterface, ResourceProvi
             return;
         }
 
-        $event
-            ->setError('error-unauthorized-controller')
-            ->setParam('identity', $service->getIdentity())
-            ->setParam('controller', $controller)
-            ->setParam('action', $action);
+        $event->setError('error-unauthorized-controller');
+        $event->setParam('identity', $service->getIdentity());
+        $event->setParam('controller', $controller);
+        $event->setParam('action', $action);
 
         /* @var $app \Zend\Mvc\ApplicationInterface */
         $app = $event->getTarget();

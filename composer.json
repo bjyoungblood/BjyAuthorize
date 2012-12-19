@@ -22,6 +22,9 @@
         "zf-commons/zfc-base": "dev-master",
         "zf-commons/zfc-user": "dev-master"
     },
+    "require-dev": {
+        "doctrine/doctrine-orm-module": "0.*"
+    },
     "suggest": {
         "zf-commons/zfc-user-doctrine-orm": "dev-master"
     },

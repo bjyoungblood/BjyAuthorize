@@ -28,7 +28,7 @@ class ZendDb implements ProviderInterface
     /**
      * @var string
      */
-    protected $adapterName         = 'Zend\Db\Adapter\Adapter';
+    protected $adapterName         = 'bjyauthorize_zend_db_adapter';
 
     /**
      * @var string
