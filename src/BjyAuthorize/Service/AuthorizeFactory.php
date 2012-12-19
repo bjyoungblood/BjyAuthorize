@@ -1,4 +1,10 @@
 <?php
+/**
+ * BjyAuthorize Module (https://github.com/bjyoungblood/BjyAuthorize)
+ *
+ * @link https://github.com/bjyoungblood/BjyAuthorize for the canonical source repository
+ * @license http://framework.zend.com/license/new-bsd New BSD License
+ */
 
 namespace BjyAuthorize\Service;
 
@@ -6,15 +12,23 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Permissions\Acl\Acl;
 
+/**
+ * Factory responsible of building the {@see \BjyAuthorize\Service\Authorize} service
+ *
+ * @author Ben Youngblood <bx.youngblood@gmail.com>
+ */
 class AuthorizeFactory implements FactoryInterface
 {
-    public function createService(ServiceLocatorInterface $sl)
+    /**
+     * {@inheritDoc}
+     *
+     * @return Authorize
+     */
+    public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $sl->get('Configuration');
+        $config = $serviceLocator->get('Config');
         $config = $config['bjyauthorize'];
 
-        $service = new Authorize($config, $sl);
-
-        return $service;
+        return new Authorize($config, $serviceLocator);
     }
 }

@@ -7,27 +7,41 @@ use BjyAuthorize\Provider\Resource\ProviderInterface as ResourceProvider;
 use BjyAuthorize\Provider\Rule\ProviderInterface as RuleProvider;
 use BjyAuthorize\Provider\Identity\ProviderInterface as IdentityProvider;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\Permissions\Acl\Acl;
+use Zend\Permissions\Acl\Exception\InvalidArgumentException;
+use Zend\Permissions\Acl\Resource\GenericResource;
+use BjyAuthorize\Acl\Role;
 
 class Authorize
 {
     protected $acl;
+
     protected $roleProviders = array();
+
     protected $resourceProviders = array();
+
     protected $ruleProviders = array();
+
     protected $identityProvider;
+
     protected $guards = array();
+
     protected $identity;
+
     protected $template = 'error/403';
+
     protected $loaded = false;
-    protected $sl;
+
+    protected $serviceLocator;
 
     const TYPE_ALLOW = 'allow';
+
     const TYPE_DENY = 'deny';
 
-    public function __construct(array $config = array(), ServiceLocatorInterface $serviceLocator)
+    public function __construct(array $config, ServiceLocatorInterface $serviceLocator)
     {
-        $this->acl = new \Zend\Permissions\Acl\Acl;
-        $this->sl = $serviceLocator;
+        $this->acl = new Acl;
+        $this->serviceLocator  = $serviceLocator;
 
         if (isset($config['template'])) {
             $this->template = $config['template'];
@@ -66,28 +80,32 @@ class Authorize
     public function addRoleProvider(RoleProvider $provider)
     {
         $this->roleProviders[] = $provider;
+
         return $this;
     }
 
     public function addResourceProvider(ResourceProvider $provider)
     {
         $this->resourceProviders[] = $provider;
+
         return $this;
     }
 
     public function addRuleProvider(RuleProvider $provider)
     {
         $this->ruleProviders[] = $provider;
+
         return $this;
     }
 
     public function setIdentityProvider(IdentityProvider $provider)
     {
         $this->identityProvider = $provider;
+
         return $this;
     }
 
-	public function getIdentityProvider()
+    public function getIdentityProvider()
     {
         return $this->identityProvider;
     }
@@ -135,7 +153,7 @@ class Authorize
 
         try {
             return $this->acl->isAllowed($this->getIdentity(), $resource, $privilege);
-        } catch (\Zend\Permissions\Acl\Exception\InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) {
             return false;
         }
     }
@@ -177,10 +195,12 @@ class Authorize
             $roles = array($roles);
         }
 
+        /* @var $i Role */
         foreach ($roles as $i) {
             if ($this->acl->hasRole($i)) {
                 continue;
             }
+
             if ($i->getParent() !== null) {
                 $this->addRoles($i->getParent());
                 $this->acl->addRole($i, $i->getParent());
@@ -194,9 +214,9 @@ class Authorize
     {
         foreach ($resources as $key => $value) {
             if (is_string($key)) {
-                $key = new \Zend\Permissions\Acl\Resource\GenericResource($key);
-            } else if (is_int($key)) {
-                $key = new \Zend\Permissions\Acl\Resource\GenericResource($value);
+                $key = new GenericResource($key);
+            } elseif (is_int($key)) {
+                $key = new GenericResource($value);
             }
 
             if (is_array($value)) {
@@ -210,21 +230,21 @@ class Authorize
 
     protected function loadRule(array $rule, $type)
     {
-        $roles = $resources = $privileges = $assertion = null;
+        $privileges = $assertion = null;
 
         if (count($rule) === 4) {
             list($roles, $resources, $privileges, $assertion) = $rule;
-            $assertion = $this->sl->get($assertion);
-        } else if (count($rule) === 3) {
+            $assertion = $this->serviceLocator->get($assertion);
+        } elseif (count($rule) === 3) {
             list($roles, $resources, $privileges) = $rule;
-        } else if (count($rule) === 2) {
+        } elseif (count($rule) === 2) {
             list($roles, $resources) = $rule;
         } else {
             throw new \InvalidArgumentException('Invalid rule definition: ' . print_r($rule, true));
         }
 
         if (is_string($assertion)) {
-            $assertion = $this->sl->get($assertion);
+            $assertion = $this->serviceLocator->get($assertion);
         }
 
         if ($type === static::TYPE_ALLOW) {

@@ -1,7 +1,8 @@
 {
     "name": "bjyoungblood/bjy-authorize",
-    "description": "Easy-use loader and manager for Zend\\Acl with built-in route and dispatch protection",
+    "description": "Zend\\Acl based firewall system for ZF2 dispatch protection",
     "type": "library",
+    "license": "BSD-3-Clause",
     "keywords": [
         "zf2",
         "acl",
@@ -26,10 +27,7 @@
     },
     "autoload": {
         "psr-0": {
-            "BjyAuthorize": "src/"
-        },
-        "classmap": [
-            "./"
-        ]
+            "BjyAuthorize\\": "src/"
+        }
     }
 }

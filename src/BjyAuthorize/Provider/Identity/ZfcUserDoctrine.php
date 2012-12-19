@@ -1,22 +1,53 @@
 <?php
+/**
+ * BjyAuthorize Module (https://github.com/bjyoungblood/BjyAuthorize)
+ *
+ * @link https://github.com/bjyoungblood/BjyAuthorize for the canonical source repository
+ * @license http://framework.zend.com/license/new-bsd New BSD License
+ */
 
 namespace BjyAuthorize\Provider\Identity;
 
-use BjyAuthorize\Acl\Role;
 use Doctrine\ORM\EntityManager;
+use ZfcUser\Service\User;
 
+/**
+ * Identity provider based on {@see \Doctrine\ORM\EntityManager}
+ *
+ * @author Ben Youngblood <bx.youngblood@gmail.com>
+ */
 class ZfcUserDoctrine implements ProviderInterface
 {
+    /**
+     * @var EntityManager
+     */
+    protected $entityManager;
+
+    /**
+     * @var User
+     */
     protected $userService;
+
+    /**
+     * @var string|\Zend\Permissions\Acl\Role\RoleInterface
+     */
     protected $defaultRole;
 
     protected $tableName = 'user_role_linker';
 
-    public function __construct(EntityManager $em)
+    /**
+     * @param EntityManager $entityManager
+     * @param User          $userService
+     */
+    public function __construct(EntityManager $entityManager, User $userService)
     {
-        $this->em = $em;
+        $this->entityManager = $entityManager;
+        $this->userService   = $userService;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getIdentityRoles()
     {
         $authService = $this->userService->getAuthService();
@@ -26,41 +57,38 @@ class ZfcUserDoctrine implements ProviderInterface
             return $this->getDefaultRole();
         } else {
             // get roles associated with the logged in user
-            $builder = new \Doctrine\DBAL\Query\QueryBuilder($this->em->getConnection());
+            $builder = $this->entityManager->getConnection()->createQueryBuilder();
             $builder->select("linker.role_id")
                 ->from($this->tableName, 'linker')
                 ->where('linker.user_id = :user_id')
                 ->setParameter('user_id', $authService->getIdentity()->getId());
-
             $result = $builder->execute();
 
             $roles = array();
-            foreach($result as $row) {
+
+            foreach ($result as $row) {
                 $roles[] = $row['role_id'];
             }
+
             return $roles;
         }
     }
 
-    public function getUserService()
-    {
-        return $this->userService;
-    }
-
-    public function setUserService($userService)
-    {
-        $this->userService = $userService;
-        return $this;
-    }
-
+    /**
+     * {@inheritDoc}
+     */
     public function getDefaultRole()
     {
         return $this->defaultRole;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function setDefaultRole($defaultRole)
     {
         $this->defaultRole = $defaultRole;
+
         return $this;
     }
 }
