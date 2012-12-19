@@ -28,7 +28,7 @@ class Role implements RoleInterface
     protected $parent;
 
     /**
-     * @param string|null $roleId
+     * @param string|null               $roleId
      * @param RoleInterface|string|null $parent
      */
     public function __construct($roleId = null, $parent = null)
@@ -57,6 +57,7 @@ class Role implements RoleInterface
     public function setRoleId($roleId)
     {
         $this->roleId = $roleId;
+
         return $this;
     }
 

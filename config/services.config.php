@@ -14,7 +14,10 @@ return array(
     'initializers' => array(
         function ($instance, ServiceLocatorInterface $serviceLocator) {
             if ($instance instanceof Service\AuthorizeAwareInterface) {
-                $instance->setAuthorizeService($serviceLocator->get('BjyAuthorize\Service\Authorize'));
+                /* @var $authorize \BjyAuthorize\Service\Authorize */
+                $authorize = $serviceLocator->get('BjyAuthorize\Service\Authorize');
+
+                $instance->setAuthorizeService($authorize);
             }
         }
     ),
@@ -32,7 +35,7 @@ return array(
         },
 
         'BjyAuthorize\Provider\Identity\ZfcUserDoctrine' => function (ServiceLocatorInterface $serviceLocator) {
-            /* @var $adapter \Doctrine\Common\Persistence\ObjectManager */
+            /* @var $objectManager \Doctrine\ORM\EntityManager */
             $objectManager = $serviceLocator->get('doctrine.entitymanager.orm_default');
             /* @var $userService \ZfcUser\Service\User */
             $userService   = $serviceLocator->get('zfcuser_user_service');
@@ -57,7 +60,10 @@ return array(
         },
 
         'BjyAuthorize\Provider\Role\Doctrine' => function (ServiceLocatorInterface $serviceLocator) {
-            return new Provider\Role\Doctrine(array(), $serviceLocator);
+            /* @var $objectManager \Doctrine\ORM\EntityManager */
+            $objectManager = $serviceLocator->get('doctrine.entitymanager.orm_default');
+
+            return new Provider\Role\Doctrine(array(), $objectManager);
         },
     ),
 );

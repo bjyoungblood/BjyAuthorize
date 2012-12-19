@@ -1,4 +1,10 @@
 <?php
+/**
+ * BjyAuthorize Module (https://github.com/bjyoungblood/BjyAuthorize)
+ *
+ * @link https://github.com/bjyoungblood/BjyAuthorize for the canonical source repository
+ * @license http://framework.zend.com/license/new-bsd New BSD License
+ */
 
 namespace BjyAuthorize\View;
 
@@ -11,6 +17,12 @@ use Zend\Stdlib\ResponseInterface as Response;
 use Zend\View\Model\ViewModel;
 use BjyAuthorize\Exception\UnAuthorizedException;
 
+/**
+ * Dispatch error handler, catches exceptions related with authorization and
+ * configures the application response accordingly.
+ *
+ * @author Ben Youngblood <bx.youngblood@gmail.com>
+ */
 class UnauthorizedStrategy implements ListenerAggregateInterface
 {
     /**
@@ -23,11 +35,17 @@ class UnauthorizedStrategy implements ListenerAggregateInterface
      */
     protected $listeners = array();
 
+    /**
+     * {@inheritDoc}
+     */
     public function attach(EventManagerInterface $events)
     {
         $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH_ERROR, array($this, 'onDispatchError'), -5000);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function detach(EventManagerInterface $events)
     {
         foreach ($this->listeners as $index => $listener) {
@@ -37,20 +55,34 @@ class UnauthorizedStrategy implements ListenerAggregateInterface
         }
     }
 
+    /**
+     * @param string $template
+     */
     public function setTemplate($template)
     {
-        $this->template = $template;
+        $this->template = (string) $template;
     }
 
+    /**
+     * @return string
+     */
     public function getTemplate()
     {
         return $this->template;
     }
 
+    /**
+     * Callback used when a dispatch error occurs. Modifies the
+     * response object with an according error if the application
+     * event contains an exception related with authorization.
+     *
+     * @param MvcEvent $event
+     */
     public function onDispatchError(MvcEvent $event)
     {
         // Do nothing if the result is a response object
         $result = $event->getResult();
+
         if ($result instanceof Response) {
             return;
         }
@@ -62,11 +94,10 @@ class UnauthorizedStrategy implements ListenerAggregateInterface
         );
 
         $error = $event->getError();
-        switch($error)
-        {
+        switch ($error) {
             case 'error-unauthorized-controller':
                 $viewVariables['controller'] = $event->getParam('controller');
-                $viewVariables['action'] = $event->getParam('action');
+                $viewVariables['action']     = $event->getParam('action');
                 break;
             case 'error-unauthorized-route':
                 $viewVariables['route'] = $event->getParam('route');
@@ -77,7 +108,7 @@ class UnauthorizedStrategy implements ListenerAggregateInterface
                 }
 
                 $viewVariables['reason'] = $event->getParam('exception')->getMessage();
-                $viewVariables['error'] = 'error-unauthorized';
+                $viewVariables['error']  = 'error-unauthorized';
                 break;
             default:
                 /*
@@ -85,6 +116,7 @@ class UnauthorizedStrategy implements ListenerAggregateInterface
                  * does not match one of our predefined errors (we don't want
                  * our 403.phtml to handle other types of errors)
                  */
+
                 return;
         }
 

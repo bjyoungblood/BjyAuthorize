@@ -9,7 +9,6 @@
 namespace BjyAuthorize\Provider\Identity;
 
 use Zend\Db\Adapter\Adapter;
-use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\Sql\Where;
 use Zend\Db\Sql\Sql;
 use ZfcUser\Service\User;
@@ -89,6 +88,7 @@ class ZfcUserZendDb implements ProviderInterface
     public function setUserService($userService)
     {
         $this->userService = $userService;
+
         return $this;
     }
 
@@ -106,6 +106,7 @@ class ZfcUserZendDb implements ProviderInterface
     public function setDefaultRole($defaultRole)
     {
         $this->defaultRole = $defaultRole;
+
         return $this;
     }
 }

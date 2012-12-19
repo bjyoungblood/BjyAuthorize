@@ -1,4 +1,10 @@
 <?php
+/**
+ * BjyAuthorize Module (https://github.com/bjyoungblood/BjyAuthorize)
+ *
+ * @link https://github.com/bjyoungblood/BjyAuthorize for the canonical source repository
+ * @license http://framework.zend.com/license/new-bsd New BSD License
+ */
 
 namespace BjyAuthorize\Service;
 
@@ -11,22 +17,45 @@ use Zend\Permissions\Acl\Acl;
 use Zend\Permissions\Acl\Exception\InvalidArgumentException;
 use Zend\Permissions\Acl\Resource\GenericResource;
 use BjyAuthorize\Acl\Role;
+use BjyAuthorize\Guard\GuardInterface;
+use Zend\Permissions\Acl\Resource\ResourceInterface;
 
+/**
+ * Authorize service
+ *
+ * @author Ben Youngblood <bx.youngblood@gmail.com>
+ */
 class Authorize
 {
+    /**
+     * @var Acl
+     */
     protected $acl;
 
+    /**
+     * @var RoleProvider[]
+     */
     protected $roleProviders = array();
 
+    /**
+     * @var ResourceProvider[]
+     */
     protected $resourceProviders = array();
 
+    /**
+     * @var RuleProvider[]
+     */
     protected $ruleProviders = array();
 
+    /**
+     * @var IdentityProvider
+     */
     protected $identityProvider;
 
+    /**
+     * @var GuardInterface[]
+     */
     protected $guards = array();
-
-    protected $identity;
 
     protected $template = 'error/403';
 
@@ -38,6 +67,10 @@ class Authorize
 
     const TYPE_DENY = 'deny';
 
+    /**
+     * @param array                   $config
+     * @param ServiceLocatorInterface $serviceLocator
+     */
     public function __construct(array $config, ServiceLocatorInterface $serviceLocator)
     {
         $this->acl = new Acl;
@@ -77,6 +110,11 @@ class Authorize
         }
     }
 
+    /**
+     * @param RoleProvider $provider
+     *
+     * @return self
+     */
     public function addRoleProvider(RoleProvider $provider)
     {
         $this->roleProviders[] = $provider;
@@ -84,6 +122,11 @@ class Authorize
         return $this;
     }
 
+    /**
+     * @param ResourceProvider $provider
+     *
+     * @return self
+     */
     public function addResourceProvider(ResourceProvider $provider)
     {
         $this->resourceProviders[] = $provider;
@@ -91,6 +134,11 @@ class Authorize
         return $this;
     }
 
+    /**
+     * @param RuleProvider $provider
+     *
+     * @return self
+     */
     public function addRuleProvider(RuleProvider $provider)
     {
         $this->ruleProviders[] = $provider;
@@ -98,6 +146,11 @@ class Authorize
         return $this;
     }
 
+    /**
+     * @param IdentityProvider $provider
+     *
+     * @return self
+     */
     public function setIdentityProvider(IdentityProvider $provider)
     {
         $this->identityProvider = $provider;
@@ -105,12 +158,20 @@ class Authorize
         return $this;
     }
 
+    /**
+     * @return IdentityProvider
+     */
     public function getIdentityProvider()
     {
         return $this->identityProvider;
     }
 
-    public function addGuard($guard)
+    /**
+     * @param GuardInterface $guard
+     *
+     * @return self
+     */
+    public function addGuard(GuardInterface $guard)
     {
         $this->guards[] = $guard;
 
@@ -125,26 +186,44 @@ class Authorize
         return $this;
     }
 
+    /**
+     * @return GuardInterface[]
+     */
     public function getGuards()
     {
         return $this->guards;
     }
 
+    /**
+     * @return string
+     */
     public function getTemplate()
     {
         return $this->template;
     }
 
+    /**
+     * @return string
+     */
     public function getIdentity()
     {
         return 'bjyauthorize-identity';
     }
 
+    /**
+     * @return Acl
+     */
     public function getAcl()
     {
         return $this->acl;
     }
 
+    /**
+     * @param string|ResourceInterface $resource
+     * @param string                   $privilege
+     *
+     * @return bool
+     */
     public function isAllowed($resource, $privilege = null)
     {
         if (!$this->loaded) {
@@ -158,10 +237,13 @@ class Authorize
         }
     }
 
+    /**
+     * Initializes the service
+     */
     protected function load()
     {
-        foreach ($this->roleProviders as $i) {
-            $this->addRoles($i->getRoles());
+        foreach ($this->roleProviders as $provider) {
+            $this->addRoles($provider->getRoles());
         }
 
         foreach ($this->resourceProviders as $provider) {
@@ -189,27 +271,34 @@ class Authorize
         $this->loaded = true;
     }
 
+    /**
+     * @param \Zend\Permissions\Acl\Role\RoleInterface[] $roles
+     */
     protected function addRoles($roles)
     {
         if (!is_array($roles)) {
             $roles = array($roles);
         }
 
-        /* @var $i Role */
-        foreach ($roles as $i) {
-            if ($this->acl->hasRole($i)) {
+        /* @var $role Role */
+        foreach ($roles as $role) {
+            if ($this->acl->hasRole($role)) {
                 continue;
             }
 
-            if ($i->getParent() !== null) {
-                $this->addRoles($i->getParent());
-                $this->acl->addRole($i, $i->getParent());
+            if ($role->getParent() !== null) {
+                $this->addRoles($role->getParent());
+                $this->acl->addRole($role, $role->getParent());
             } else {
-                $this->acl->addRole($i);
+                $this->acl->addRole($role);
             }
         }
     }
 
+    /**
+     * @param string[]|\Zend\Permissions\Acl\Resource\ResourceInterface[] $resources
+     * @param mixed|null                                                  $parent
+     */
     protected function loadResource(array $resources, $parent = null)
     {
         foreach ($resources as $key => $value) {
@@ -228,6 +317,12 @@ class Authorize
         }
     }
 
+    /**
+     * @param mixed $rule
+     * @param mixed $type
+     *
+     * @throws \InvalidArgumentException
+     */
     protected function loadRule(array $rule, $type)
     {
         $privileges = $assertion = null;

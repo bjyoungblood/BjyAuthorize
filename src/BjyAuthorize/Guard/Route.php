@@ -39,7 +39,7 @@ class Route implements GuardInterface, RuleProviderInterface, ResourceProviderIn
     protected $listeners = array();
 
     /**
-     * @param array                            $rules
+     * @param array                   $rules
      * @param ServiceLocatorInterface $serviceLocator
      */
     public function __construct(array $rules, ServiceLocatorInterface $serviceLocator)
