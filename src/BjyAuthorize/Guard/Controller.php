@@ -11,7 +11,7 @@ use Zend\Permissions\Acl\Resource\GenericResource;
 
 class Controller implements GuardInterface, RuleProviderInterface, ResourceProviderInterface
 {
-    protected $securityService;
+    protected $serviceLocator;
 
     protected $rules = array();
 
@@ -20,9 +20,9 @@ class Controller implements GuardInterface, RuleProviderInterface, ResourceProvi
      */
     protected $listeners = array();
 
-    public function __construct(array $rules, $security)
+    public function __construct(array $rules, $serviceLocator)
     {
-        $this->securityService = $security;
+        $this->serviceLocator = $serviceLocator;
 
         foreach ($rules as $rule)
         {

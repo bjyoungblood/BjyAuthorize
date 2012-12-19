@@ -58,7 +58,7 @@ class Authorize
 
         if (isset($config['guards'])) {
             foreach ($config['guards'] as $class => $options) {
-                $this->addGuard(new $class($options, $this));
+                $this->addGuard(new $class($options, $serviceLocator));
             }
         }
     }
@@ -86,7 +86,7 @@ class Authorize
         $this->identityProvider = $provider;
         return $this;
     }
-	
+
 	public function getIdentityProvider()
     {
         return $this->identityProvider;

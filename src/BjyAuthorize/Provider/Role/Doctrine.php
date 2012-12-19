@@ -37,12 +37,21 @@ class Doctrine implements ProviderInterface
         $builder->select($this->roleIdFieldName,$this->parentRoleFieldName)
             ->from($this->tableName, $this->tableName);
 
-        $result = $builder->execute();
+        $rowset = $builder->execute();
 
         $roles = array();
-        foreach($result as $row) {
-            $roles[] = new Role($row[$this->roleIdFieldName], $row[$this->parentRoleFieldName]);
+        // Pass One: Build each object
+        foreach ($rowset as $row) {
+            $roleId = $row[$this->roleIdFieldName];
+            $roles[$roleId] = new Role($roleId, $row[$this->parentRoleFieldName]);
         }
-        return $roles;
+        // Pass Two: Re-inject parent objects to preserve hierarchy
+        foreach ($roles as $roleId=>$roleObj) {
+            $parentRoleObj = $roleObj->getParent();
+            if ($parentRoleObj && $parentRoleObj->getRoleId()) {
+                $roleObj->setParent($roles[$parentRoleObj->getRoleId()]);
+            }
+        }
+        return array_values($roles);
     }
 }

@@ -12,6 +12,7 @@ class ZendDb implements ProviderInterface
 {
     protected $sm;
 
+    protected $adapterName         = 'bjyauthorize_zend_db_adapter';
     protected $tableName           = 'user_role';
     protected $roleIdFieldName     = 'role_id';
     protected $parentRoleFieldName = 'parent';
@@ -19,6 +20,10 @@ class ZendDb implements ProviderInterface
     public function __construct($options, $serviceManager)
     {
         $this->sm = $serviceManager;
+
+        if (isset($options['adapter'])) {
+            $this->adapterName = $options['adapter'];
+        }
 
         if (isset($options['table'])) {
             $this->tableName = $options['table'];
@@ -35,7 +40,7 @@ class ZendDb implements ProviderInterface
 
     public function getRoles()
     {
-        $tableGateway = new TableGateway($this->tableName, $this->sm->get('bjyauthorize_zend_db_adapter'));
+        $tableGateway = new TableGateway($this->tableName, $this->sm->get($this->adapterName));
 
         $sql = new Select;
         $sql->from($this->tableName);
