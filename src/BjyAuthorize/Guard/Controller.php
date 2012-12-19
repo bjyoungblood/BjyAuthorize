@@ -16,6 +16,7 @@ use Zend\Mvc\MvcEvent;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Mvc\ApplicationInterface;
 use BjyAuthorize\Service\Authorize;
+use Zend\Http\Request as HttpRequest;
 
 /**
  * Controller Guard listener, allows checking of permissions
@@ -138,18 +139,25 @@ class Controller implements GuardInterface, RuleProviderInterface, ResourceProvi
         $match      = $event->getRouteMatch();
         $controller = $match->getParam('controller');
         $action     = $match->getParam('action');
-        $resource   = $this->getResourceName($controller, $action);
+        $request    = $event->getRequest();
+        $method     = $request instanceof HttpRequest ? strtolower($request->getMethod()) : null;
 
-        if (!$service->isAllowed($resource)) {
-            $event
-                ->setError('error-unauthorized-controller')
-                ->setParam('identity', $service->getIdentity())
-                ->setParam('controller', $controller)
-                ->setParam('action', $action);
+        $authorized = $service->isAllowed($this->getResourceName($controller))
+            || $service->isAllowed($this->getResourceName($controller, $action))
+            || ($method && $service->isAllowed($this->getResourceName($controller, $method)));
 
-            /* @var $app \Zend\Mvc\ApplicationInterface */
-            $app = $event->getTarget();
-            $app->getEventManager()->trigger('dispatch.error', $event);
+        if ($authorized) {
+            return;
         }
+
+        $event
+            ->setError('error-unauthorized-controller')
+            ->setParam('identity', $service->getIdentity())
+            ->setParam('controller', $controller)
+            ->setParam('action', $action);
+
+        /* @var $app \Zend\Mvc\ApplicationInterface */
+        $app = $event->getTarget();
+        $app->getEventManager()->trigger('dispatch.error', $event);
     }
 }
