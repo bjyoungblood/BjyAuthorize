@@ -1,56 +1,52 @@
 BjyAuthorize
 ============
 
-Composer/Packagist Users
-========================
-
-Please note the name of this project's package has changed to bjyoungblood/bjy-authorize
-in order to match composer/packagist's new naming conventions. Please update your composer.json
-to use the new package name.
-
-Goal
-----
-This module is designed provide a facade for Zend\Acl that will ease
-its usage with modules and applications. By default, it provides simple
-setup via config files or by using Zend\Db. This module also comes with
-out-of-the-box support for and integration with ZfcUser.
+This module is designed provide a facade for `Zend\Permissions\Acl` that will
+ease its usage with modules and applications. By default, it provides simple
+setup via config files or by using Zend\Db or Doctrine ORM. This module also
+comes with out-of-the-box support for and integration with ZfcUser.
 
 Requirements
 ------------
-* [Zend Framework 2](https://github.com/zendframework/zf2) (latest master)
-* [ZfcBase](https://github.com/ZF-Commons/ZfcBase) (latest master)
-* [ZfcUser](https://github.com/ZF-Commons/ZfcUser) (latest master)
+
+ * [Zend Framework 2](https://github.com/zendframework/zf2)
+ * [ZfcBase](https://github.com/ZF-Commons/ZfcBase)
+ * [ZfcUser](https://github.com/ZF-Commons/ZfcUser)
+
+Optionally, you can also use
+[ZfcUserDoctrineORM](https://github.com/ZF-Commons/ZfcUserDoctrineORM) and
+use doctrine to fetch roles for your users.
 
 Installation
 ------------
-### (1) Installation
-
-Choose one of the two available installation methods:
 
 #### Composer
 
-Currently this medthod of installation is not working.
+```sh
+php composer.phar require bjyoungblood/bjy-authorize
+```
+
+And type `dev-master` when asked for a version to pick.
 
 #### Git Submodule
 
-1. Follow the [ZfcUser](https://github.com/ZF-Commons/ZfcUser) installation instructions to install that module and it's dependencies.
-
-2. Clone this project into your `./vendor/` directory
+ 1. Install [ZfcUser](https://github.com/ZF-Commons/ZfcUser) (follow it's installation docs)
+ 2. Clone this project into your `./vendor/` directory
 ```
 cd vendor;
 git clone git://github.com/bjyoungblood/BjyAuthorize.git;
 ```
 
-###  (2) Configuration
+### Configuration
 
-1. Ensure that this module and it's dependencies are enabled in your `application.config.php` file in the following order:
-    * ZfcBase
-    * ZfcUser
-    * BjyAuthorize
-3. Import the SQL schema located in `./vendor/BjyAuthorize/data/schema.sql`.
-4. Copy `./vendor/BjyAuthorize/config/module.config.php` to
-   `./config/autoload/module.bjyauthorize.global.php`.
-5. Fill in the required configuration variable values in  `./config/autoload/module.bjyauthorize.global.php`
+ 1. Ensure that this module and it's dependencies are enabled in your `application.config.php` file in the following order:
+     * ZfcBase
+     * ZfcUser
+     * BjyAuthorize
+ 3. Import the SQL schema located in `./vendor/BjyAuthorize/data/schema.sql`.
+ 4. Copy `./vendor/BjyAuthorize/config/module.config.php` to
+    `./config/autoload/module.bjyauthorize.global.php`.
+ 5. Fill in the required configuration variable values in  `./config/autoload/module.bjyauthorize.global.php`
 
 Here is an annotated sample configuration file:
 ```php
@@ -159,6 +155,7 @@ return array(
 
 Helpers and Plugins
 -------------------
+
 There are view helpers and controller plugins registered for this module.
 In either a controller or a view script, you can call
 ```$this->isAllowed($resource[, $privilege])```, which will query the ACL
@@ -169,7 +166,7 @@ Whenever you need to stop processing your action you can throw an UnAuthorizedEx
 ```
 function cafeAction() {
     if (!$this->isAllowed('alcohol', 'consume')) {
-        throw new UnAuthorizedException("Grow a beard first!");
+        throw new \BjyAuthorize\Exception\UnAuthorizedException('Grow a beard first!');
     }
 
     // party on ...
@@ -178,5 +175,5 @@ function cafeAction() {
 
 License
 -------
-Released under the MIT License.  See file LICENSE included with the source
+Released under the MIT License. See file LICENSE included with the source
 code for this project for a copy of the licensing terms.

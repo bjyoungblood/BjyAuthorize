@@ -1,7 +1,8 @@
 {
     "name": "bjyoungblood/bjy-authorize",
-    "description": "Easy-use loader and manager for Zend\\Acl with built-in route and dispatch protection",
+    "description": "Zend\\Acl based firewall system for ZF2 dispatch protection",
     "type": "library",
+    "license": "BSD-3-Clause",
     "keywords": [
         "zf2",
         "acl",
@@ -15,21 +16,22 @@
             "homepage": "http://bjyoungblood.com/"
         }
     ],
+    "minimum-stability": "dev",
     "require": {
         "php": ">=5.3.3",
         "zendframework/zendframework": "2.*",
         "zf-commons/zfc-base": "dev-master",
         "zf-commons/zfc-user": "dev-master"
     },
+    "require-dev": {
+        "doctrine/doctrine-orm-module": "0.*"
+    },
     "suggest": {
         "zf-commons/zfc-user-doctrine-orm": "dev-master"
     },
     "autoload": {
         "psr-0": {
-            "BjyAuthorize": "src/"
-        },
-        "classmap": [
-            "./"
-        ]
+            "BjyAuthorize\\": "src/"
+        }
     }
 }

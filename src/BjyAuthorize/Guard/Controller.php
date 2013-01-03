@@ -1,4 +1,10 @@
 <?php
+/**
+ * BjyAuthorize Module (https://github.com/bjyoungblood/BjyAuthorize)
+ *
+ * @link https://github.com/bjyoungblood/BjyAuthorize for the canonical source repository
+ * @license http://framework.zend.com/license/new-bsd New BSD License
+ */
 
 namespace BjyAuthorize\Guard;
 
@@ -7,12 +13,27 @@ use BjyAuthorize\Provider\Resource\ProviderInterface as ResourceProviderInterfac
 
 use Zend\EventManager\EventManagerInterface;
 use Zend\Mvc\MvcEvent;
-use Zend\Permissions\Acl\Resource\GenericResource;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\Mvc\ApplicationInterface;
+use BjyAuthorize\Service\Authorize;
+use Zend\Http\Request as HttpRequest;
 
+/**
+ * Controller Guard listener, allows checking of permissions
+ * during {@see \Zend\Mvc\MvcEvent::EVENT_DISPATCH}
+ *
+ * @author Ben Youngblood <bx.youngblood@gmail.com>
+ */
 class Controller implements GuardInterface, RuleProviderInterface, ResourceProviderInterface
 {
+    /**
+     * @var ServiceLocatorInterface
+     */
     protected $serviceLocator;
 
+    /**
+     * @var array[]
+     */
     protected $rules = array();
 
     /**
@@ -20,26 +41,36 @@ class Controller implements GuardInterface, RuleProviderInterface, ResourceProvi
      */
     protected $listeners = array();
 
-    public function __construct(array $rules, $serviceLocator)
+    /**
+     * @param array                   $rules
+     * @param ServiceLocatorInterface $serviceLocator
+     */
+    public function __construct(array $rules, ServiceLocatorInterface $serviceLocator)
     {
         $this->serviceLocator = $serviceLocator;
 
-        foreach ($rules as $rule)
-        {
+        foreach ($rules as $rule) {
             if (!is_array($rule['roles'])) {
                 $rule['roles'] = array($rule['roles']);
             }
 
-            $resourceName = static::getResourceName($rule['controller'], isset($rule['action']) ? $rule['action'] : null);
+            $action                     = isset($rule['action']) ? $rule['action'] : null;
+            $resourceName               = $this->getResourceName($rule['controller'], $action);
             $this->rules[$resourceName] = $rule['roles'];
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function attach(EventManagerInterface $events)
     {
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_ROUTE, array($this, 'onRoute'), -1000);
+        $this->listeners[] = $events->attach(MvcEvent::EVENT_ROUTE, array($this, 'onDispatch'), -1000);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function detach(EventManagerInterface $events)
     {
         foreach ($this->listeners as $index => $listener) {
@@ -49,16 +80,23 @@ class Controller implements GuardInterface, RuleProviderInterface, ResourceProvi
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getResources()
     {
         $resources = array();
-        foreach ($this->rules as $resource => $roles) {
+
+        foreach (array_keys($this->rules) as $resource) {
             $resources[] = $resource;
         }
 
         return $resources;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getRules()
     {
         $rules = array();
@@ -69,37 +107,56 @@ class Controller implements GuardInterface, RuleProviderInterface, ResourceProvi
         return array('allow' => $rules);
     }
 
-    public static function getResourceName($controller, $action = null)
+    /**
+     * Retrieves the resource name for a given controller
+     *
+     * @param string $controller
+     * @param string $action
+     *
+     * @return string
+     */
+    public function getResourceName($controller, $action = null)
     {
-        if (!isset($action)) {
-            $resourceName = sprintf('controller/%s', $controller);
-        } else {
-            $resourceName = sprintf('controller/%s:%s', $controller, $action);
+        if (isset($action)) {
+            return sprintf('controller/%s:%s', $controller, $action);
         }
 
-        return $resourceName;
+        return sprintf('controller/%s', $controller);
     }
 
-    public static function onRoute(MvcEvent $e)
+    /**
+     * Event callback to be triggered on dispatch, causes application error triggering
+     * in case of failed authorization check
+     *
+     * @param MvcEvent $event
+     *
+     * @return void
+     */
+    public function onDispatch(MvcEvent $event)
     {
-        $app        = $e->getTarget();
-        $service    = $app->getServiceManager()->get('BjyAuthorize\Service\Authorize');
-        $match      = $app->getMvcEvent()->getRouteMatch();
+        /* @var $service \BjyAuthorize\Service\Authorize */
+        $service    = $this->serviceLocator->get('BjyAuthorize\Service\Authorize');
+        $match      = $event->getRouteMatch();
         $controller = $match->getParam('controller');
         $action     = $match->getParam('action');
+        $request    = $event->getRequest();
+        $method     = $request instanceof HttpRequest ? strtolower($request->getMethod()) : null;
 
-        $controllerResource = sprintf('controller/%s', $controller);
-        $actionResource = sprintf('controller/%s:%s', $controller, $action);
+        $authorized = $service->isAllowed($this->getResourceName($controller))
+            || $service->isAllowed($this->getResourceName($controller, $action))
+            || ($method && $service->isAllowed($this->getResourceName($controller, $method)));
 
-        $allowed = $service->isAllowed($controllerResource) || $service->isAllowed($actionResource);
-
-        if (!$allowed) {
-            $e->setError('error-unauthorized-controller')
-                ->setParam('identity', $service->getIdentity())
-                ->setParam('controller', $controller)
-                ->setParam('action', $action);
-
-            $app->getEventManager()->trigger('dispatch.error', $e);
+        if ($authorized) {
+            return;
         }
+
+        $event->setError('error-unauthorized-controller');
+        $event->setParam('identity', $service->getIdentity());
+        $event->setParam('controller', $controller);
+        $event->setParam('action', $action);
+
+        /* @var $app \Zend\Mvc\ApplicationInterface */
+        $app = $event->getTarget();
+        $app->getEventManager()->trigger(MvcEvent::EVENT_DISPATCH_ERROR, $event);
     }
 }

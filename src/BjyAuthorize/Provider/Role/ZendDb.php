@@ -1,25 +1,57 @@
 <?php
+/**
+ * BjyAuthorize Module (https://github.com/bjyoungblood/BjyAuthorize)
+ *
+ * @link https://github.com/bjyoungblood/BjyAuthorize for the canonical source repository
+ * @license http://framework.zend.com/license/new-bsd New BSD License
+ */
 
 namespace BjyAuthorize\Provider\Role;
 
 use BjyAuthorize\Acl\Role;
-use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\Db\Sql\Select;
-use Zend\Db\Sql\Where;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
+/**
+ * Role provider based on a {@see \Zend\Db\Adaper\Adapter}
+ *
+ * @author Ben Youngblood <bx.youngblood@gmail.com>
+ */
 class ZendDb implements ProviderInterface
 {
-    protected $sm;
+    /**
+     * @var ServiceLocatorInterface
+     */
+    protected $serviceLocator;
 
+    /**
+     * @var string
+     */
     protected $adapterName         = 'bjyauthorize_zend_db_adapter';
+
+    /**
+     * @var string
+     */
     protected $tableName           = 'user_role';
+
+    /**
+     * @var string
+     */
     protected $roleIdFieldName     = 'role_id';
+
+    /**
+     * @var string
+     */
     protected $parentRoleFieldName = 'parent';
 
-    public function __construct($options, $serviceManager)
+    /**
+     * @param                         $options
+     * @param ServiceLocatorInterface $serviceLocator
+     */
+    public function __construct($options, ServiceLocatorInterface $serviceLocator)
     {
-        $this->sm = $serviceManager;
+        $this->serviceLocator = $serviceLocator;
 
         if (isset($options['adapter'])) {
             $this->adapterName = $options['adapter'];
@@ -38,24 +70,32 @@ class ZendDb implements ProviderInterface
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getRoles()
     {
-        $tableGateway = new TableGateway($this->tableName, $this->sm->get($this->adapterName));
+        /* @var $adapter \Zend\Db\Adapter\Adapter */
+        $adapter      = $this->serviceLocator->get($this->adapterName);
+        $tableGateway = new TableGateway($this->tableName, $adapter);
+        $sql          = new Select;
 
-        $sql = new Select;
         $sql->from($this->tableName);
 
         $rowset = $tableGateway->selectWith($sql);
+        $roles  = array();
 
-        $roles = array();
         // Pass One: Build each object
         foreach ($rowset as $row) {
             $roleId = $row[$this->roleIdFieldName];
             $roles[$roleId] = new Role($roleId, $row[$this->parentRoleFieldName]);
         }
+
         // Pass Two: Re-inject parent objects to preserve hierarchy
-        foreach ($roles as $roleId=>$roleObj) {
+        /* @var $roleObj Role */
+        foreach ($roles as $roleObj) {
             $parentRoleObj = $roleObj->getParent();
+
             if ($parentRoleObj && $parentRoleObj->getRoleId()) {
                 $roleObj->setParent($roles[$parentRoleObj->getRoleId()]);
             }

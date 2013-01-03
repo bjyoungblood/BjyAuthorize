@@ -1,4 +1,10 @@
 <?php
+/**
+ * BjyAuthorize Module (https://github.com/bjyoungblood/BjyAuthorize)
+ *
+ * @link https://github.com/bjyoungblood/BjyAuthorize for the canonical source repository
+ * @license http://framework.zend.com/license/new-bsd New BSD License
+ */
 
 namespace BjyAuthorize\Guard;
 
@@ -7,12 +13,24 @@ use BjyAuthorize\Provider\Resource\ProviderInterface as ResourceProviderInterfac
 
 use Zend\EventManager\EventManagerInterface;
 use Zend\Mvc\MvcEvent;
-use Zend\Permissions\Acl\Resource\GenericResource;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
+/**
+ * Route Guard listener, allows checking of permissions
+ * during {@see \Zend\Mvc\MvcEvent::EVENT_ROUTE}
+ *
+ * @author Ben Youngblood <bx.youngblood@gmail.com>
+ */
 class Route implements GuardInterface, RuleProviderInterface, ResourceProviderInterface
 {
+    /**
+     * @var ServiceLocatorInterface
+     */
     protected $serviceLocator;
 
+    /**
+     * @var array[]
+     */
     protected $rules = array();
 
     /**
@@ -20,26 +38,34 @@ class Route implements GuardInterface, RuleProviderInterface, ResourceProviderIn
      */
     protected $listeners = array();
 
-    public function __construct(array $rules, $serviceLocator)
+    /**
+     * @param array                   $rules
+     * @param ServiceLocatorInterface $serviceLocator
+     */
+    public function __construct(array $rules, ServiceLocatorInterface $serviceLocator)
     {
         $this->serviceLocator = $serviceLocator;
 
-        foreach ($rules as $rule)
-        {
+        foreach ($rules as $rule) {
             if (!is_array($rule['roles'])) {
                 $rule['roles'] = array($rule['roles']);
             }
 
-            $resourceName = 'route/'.$rule['route'];
-            $this->rules[$resourceName] = $rule['roles'];
+            $this->rules['route/' . $rule['route']] = $rule['roles'];
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function attach(EventManagerInterface $events)
     {
         $this->listeners[] = $events->attach(MvcEvent::EVENT_ROUTE, array($this, 'onRoute'), -1000);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function detach(EventManagerInterface $events)
     {
         foreach ($this->listeners as $index => $listener) {
@@ -49,19 +75,27 @@ class Route implements GuardInterface, RuleProviderInterface, ResourceProviderIn
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getResources()
     {
         $resources = array();
-        foreach ($this->rules as $resource => $roles) {
+
+        foreach (array_keys($this->rules) as $resource) {
             $resources[] = $resource;
         }
 
         return $resources;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getRules()
     {
         $rules = array();
+
         foreach ($this->rules as $resource => $roles) {
             $rules[] = array($roles, $resource);
         }
@@ -69,20 +103,31 @@ class Route implements GuardInterface, RuleProviderInterface, ResourceProviderIn
         return array('allow' => $rules);
     }
 
-    public static function onRoute(MvcEvent $e)
+    /**
+     * Event callback to be triggered on dispatch, causes application error triggering
+     * in case of failed authorization check
+     *
+     * @param MvcEvent $event
+     *
+     * @return void
+     */
+    public function onRoute(MvcEvent $event)
     {
-        $app        = $e->getTarget();
-        $service    = $app->getServiceManager()->get('BjyAuthorize\Service\Authorize');
-        $match      = $app->getMvcEvent()->getRouteMatch();
+        $service    = $this->serviceLocator->get('BjyAuthorize\Service\Authorize');
+        $match      = $event->getRouteMatch();
         $routeName  = $match->getMatchedRouteName();
-        $allowed = $service->isAllowed('route/' . $routeName);
 
-        if (!$allowed) {
-            $e->setError('error-unauthorized-route')
-              ->setParam('route', $routeName)
-              ->setParam('identity', $service->getIdentity());
-
-            $app->getEventManager()->trigger('dispatch.error', $e);
+        if ($service->isAllowed('route/' . $routeName)) {
+            return;
         }
+
+        $event->setError('error-unauthorized-route');
+        $event->setParam('route', $routeName);
+        $event->setParam('identity', $service->getIdentity());
+
+        /* @var $app \Zend\Mvc\Application */
+        $app = $event->getTarget();
+
+        $app->getEventManager()->trigger(MvcEvent::EVENT_DISPATCH_ERROR, $event);
     }
 }
