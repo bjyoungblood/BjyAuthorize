@@ -57,8 +57,9 @@ class Authorize
      */
     protected $guards = array();
 
-    protected $template = 'error/403';
-
+    /**
+     * @var bool
+     */
     protected $loaded = false;
 
     protected $serviceLocator;
@@ -73,12 +74,8 @@ class Authorize
      */
     public function __construct(array $config, ServiceLocatorInterface $serviceLocator)
     {
-        $this->acl = new Acl;
-        $this->serviceLocator  = $serviceLocator;
-
-        if (isset($config['template'])) {
-            $this->template = $config['template'];
-        }
+        $this->acl            = new Acl;
+        $this->serviceLocator = $serviceLocator;
 
         if (isset($config['role_providers'])) {
             foreach ($config['role_providers'] as $class => $options) {
@@ -192,14 +189,6 @@ class Authorize
     public function getGuards()
     {
         return $this->guards;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTemplate()
-    {
-        return $this->template;
     }
 
     /**

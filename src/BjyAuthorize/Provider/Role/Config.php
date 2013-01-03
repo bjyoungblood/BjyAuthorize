@@ -47,7 +47,7 @@ class Config implements ProviderInterface
      *
      * @return array
      */
-    public function loadRole($name, $options = array(), $parent = null)
+    protected function loadRole($name, $options = array(), $parent = null)
     {
         if (isset($options['children']) && count($options['children']) > 0) {
             $children = $options['children'];
@@ -55,8 +55,8 @@ class Config implements ProviderInterface
             $children = array();
         }
 
-        $roles = array();
-        $role = new Role($name, $parent);
+        $roles   = array();
+        $role    = new Role($name, $parent);
         $roles[] = $role;
 
         foreach ($children as $key => $value) {

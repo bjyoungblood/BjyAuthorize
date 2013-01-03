@@ -45,14 +45,9 @@ return array(
         },
 
         'BjyAuthorize\View\UnauthorizedStrategy' => function (ServiceLocatorInterface $serviceLocator) {
-            /* @var $authorize \BjyAuthorize\Service\Authorize */
-            $authorize = $serviceLocator->get('BjyAuthorize\Service\Authorize');
-            $template  = $authorize->getTemplate();
-            $strategy  = new View\UnauthorizedStrategy();
+            $config = $serviceLocator->get('Config');
 
-            $strategy->setTemplate($template);
-
-            return $strategy;
+            return new View\UnauthorizedStrategy($config['bjyauthorize']['template']);
         },
 
         'BjyAuthorize\Provider\Role\ZendDb' => function (ServiceLocatorInterface $serviceLocator) {

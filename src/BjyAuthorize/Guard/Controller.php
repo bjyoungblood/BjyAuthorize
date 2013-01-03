@@ -157,6 +157,6 @@ class Controller implements GuardInterface, RuleProviderInterface, ResourceProvi
 
         /* @var $app \Zend\Mvc\ApplicationInterface */
         $app = $event->getTarget();
-        $app->getEventManager()->trigger('dispatch.error', $event);
+        $app->getEventManager()->trigger(MvcEvent::EVENT_DISPATCH_ERROR, $event);
     }
 }

@@ -28,12 +28,20 @@ class UnauthorizedStrategy implements ListenerAggregateInterface
     /**
      * @var string
      */
-    protected $template = 'error/403';
+    protected $template;
 
     /**
      * @var \Zend\Stdlib\CallbackHandler[]
      */
     protected $listeners = array();
+
+    /**
+     * @param string $template name of the template to use on unauthorized requests
+     */
+    public function __construct($template)
+    {
+        $this->template = (string) $template;
+    }
 
     /**
      * {@inheritDoc}
@@ -77,6 +85,8 @@ class UnauthorizedStrategy implements ListenerAggregateInterface
      * event contains an exception related with authorization.
      *
      * @param MvcEvent $event
+     *
+     * @return void
      */
     public function onDispatchError(MvcEvent $event)
     {
@@ -93,8 +103,7 @@ class UnauthorizedStrategy implements ListenerAggregateInterface
            'identity'   => $event->getParam('identity'),
         );
 
-        $error = $event->getError();
-        switch ($error) {
+        switch ($event->getError()) {
             case 'error-unauthorized-controller':
                 $viewVariables['controller'] = $event->getParam('controller');
                 $viewVariables['action']     = $event->getParam('action');
@@ -125,12 +134,9 @@ class UnauthorizedStrategy implements ListenerAggregateInterface
         $event->getViewModel()->addChild($model);
 
         $response = $event->getResponse();
-
-        if (!$response) {
-            $response = new HttpResponse();
-            $event->setResponse($response);
-        }
+        $response = $response ?: new HttpResponse();
 
         $response->setStatusCode(403);
+        $event->setResponse($response);
     }
 }

@@ -33,6 +33,9 @@ class ZfcUserDoctrine implements ProviderInterface
      */
     protected $defaultRole;
 
+    /**
+     * @var string
+     */
     protected $tableName = 'user_role_linker';
 
     /**
@@ -88,7 +91,5 @@ class ZfcUserDoctrine implements ProviderInterface
     public function setDefaultRole($defaultRole)
     {
         $this->defaultRole = $defaultRole;
-
-        return $this;
     }
 }

@@ -8,17 +8,14 @@
 
 return array(
     'bjyauthorize' => array(
-        'default_role' => 'guest',
-        'identity_provider' => 'BjyAuthorize\Provider\Identity\ZfcUserZendDb',
+        'default_role'          => 'guest',
+        'identity_provider'     => 'BjyAuthorize\Provider\Identity\ZfcUserZendDb',
         'unauthorized_strategy' => 'BjyAuthorize\View\UnauthorizedStrategy',
-        'role_providers' => array(
-        ),
-        'resource_providers' => array(
-        ),
-        'rule_providers' => array(
-        ),
-        'guards' => array(
-        ),
+        'role_providers'        => array(),
+        'resource_providers'    => array(),
+        'rule_providers'        => array(),
+        'guards'                => array(),
+        'template'              => 'error/403',
     ),
     'service_manager' => array(
         'aliases' => array(

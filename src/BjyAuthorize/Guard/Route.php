@@ -51,8 +51,7 @@ class Route implements GuardInterface, RuleProviderInterface, ResourceProviderIn
                 $rule['roles'] = array($rule['roles']);
             }
 
-            $resourceName = 'route/'.$rule['route'];
-            $this->rules[$resourceName] = $rule['roles'];
+            $this->rules['route/' . $rule['route']] = $rule['roles'];
         }
     }
 
@@ -82,6 +81,7 @@ class Route implements GuardInterface, RuleProviderInterface, ResourceProviderIn
     public function getResources()
     {
         $resources = array();
+
         foreach (array_keys($this->rules) as $resource) {
             $resources[] = $resource;
         }
@@ -95,6 +95,7 @@ class Route implements GuardInterface, RuleProviderInterface, ResourceProviderIn
     public function getRules()
     {
         $rules = array();
+
         foreach ($this->rules as $resource => $roles) {
             $rules[] = array($roles, $resource);
         }
@@ -115,16 +116,18 @@ class Route implements GuardInterface, RuleProviderInterface, ResourceProviderIn
         $service    = $this->serviceLocator->get('BjyAuthorize\Service\Authorize');
         $match      = $event->getRouteMatch();
         $routeName  = $match->getMatchedRouteName();
-        $allowed    = $service->isAllowed('route/' . $routeName);
 
-        if (!$allowed) {
-            $event->setError('error-unauthorized-route')
-              ->setParam('route', $routeName)
-              ->setParam('identity', $service->getIdentity());
-
-            /* @var $app \Zend\Mvc\Application */
-            $app = $event->getTarget();
-            $app->getEventManager()->trigger('dispatch.error', $event);
+        if ($service->isAllowed('route/' . $routeName)) {
+            return;
         }
+
+        $event->setError('error-unauthorized-route');
+        $event->setParam('route', $routeName);
+        $event->setParam('identity', $service->getIdentity());
+
+        /* @var $app \Zend\Mvc\Application */
+        $app = $event->getTarget();
+
+        $app->getEventManager()->trigger(MvcEvent::EVENT_DISPATCH_ERROR, $event);
     }
 }
