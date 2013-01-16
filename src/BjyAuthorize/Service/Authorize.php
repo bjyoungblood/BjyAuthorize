@@ -27,6 +27,10 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
  */
 class Authorize
 {
+    const TYPE_ALLOW = 'allow';
+
+    const TYPE_DENY = 'deny';
+
     /**
      * @var Acl
      */
@@ -62,11 +66,10 @@ class Authorize
      */
     protected $loaded = false;
 
+    /**
+     * @var \Zend\ServiceManager\ServiceLocatorInterface
+     */
     protected $serviceLocator;
-
-    const TYPE_ALLOW = 'allow';
-
-    const TYPE_DENY = 'deny';
 
     /**
      * @param array                   $config
@@ -74,24 +77,24 @@ class Authorize
      */
     public function __construct(array $config, ServiceLocatorInterface $serviceLocator)
     {
-        $this->acl            = new Acl;
+        $this->acl            = new Acl();
         $this->serviceLocator = $serviceLocator;
 
         if (isset($config['role_providers'])) {
             foreach ($config['role_providers'] as $class => $options) {
-                $this->addRoleProvider(new $class($options, $serviceLocator));
+                $this->addRoleProvider($this->getOrCreateService($class, $options));
             }
         }
 
         if (isset($config['resource_providers'])) {
             foreach ($config['resource_providers'] as $class => $options) {
-                $this->addResourceProvider(new $class($options, $serviceLocator));
+                $this->addResourceProvider($this->getOrCreateService($class, $options));
             }
         }
 
         if (isset($config['rule_providers'])) {
             foreach ($config['rule_providers'] as $class => $options) {
-                $this->addRuleProvider(new $class($options, $serviceLocator));
+                $this->addRuleProvider($this->getOrCreateService($class, $options));
             }
         }
 
@@ -102,7 +105,7 @@ class Authorize
 
         if (isset($config['guards'])) {
             foreach ($config['guards'] as $class => $options) {
-                $this->addGuard(new $class($options, $serviceLocator));
+                $this->addGuard($this->getOrCreateService($class, $options));
             }
         }
     }
@@ -336,5 +339,20 @@ class Authorize
         } else {
             $this->acl->deny($roles, $resources, $privileges, $assertion);
         }
+    }
+
+    /**
+     * @param string $class
+     * @param array  $options
+     *
+     * @return object
+     */
+    private function getOrCreateService($class, $options)
+    {
+        if ($this->serviceLocator->has($class)) {
+            return $this->serviceLocator->get($class);
+        }
+
+        return new $class($options, $this->serviceLocator);
     }
 }

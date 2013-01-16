@@ -29,9 +29,8 @@ return array(
             $adapter     = $serviceLocator->get('zfcuser_zend_db_adapter');
             /* @var $userService \ZfcUser\Service\User */
             $userService = $serviceLocator->get('zfcuser_user_service');
-            $provider    = new Provider\Identity\ZfcUserZendDb($adapter, $userService);
 
-            return $provider;
+            return new Provider\Identity\ZfcUserZendDb($adapter, $userService);
         },
 
         'BjyAuthorize\Provider\Identity\ZfcUserDoctrine' => function (ServiceLocatorInterface $serviceLocator) {
@@ -39,9 +38,8 @@ return array(
             $objectManager = $serviceLocator->get('doctrine.entitymanager.orm_default');
             /* @var $userService \ZfcUser\Service\User */
             $userService   = $serviceLocator->get('zfcuser_user_service');
-            $provider      = new Provider\Identity\ZfcUserDoctrine($objectManager, $userService);
 
-            return $provider;
+            return new Provider\Identity\ZfcUserDoctrine($objectManager, $userService);
         },
 
         'BjyAuthorize\View\UnauthorizedStrategy' => function (ServiceLocatorInterface $serviceLocator) {
@@ -54,11 +52,6 @@ return array(
             return new Provider\Role\ZendDb(array(), $serviceLocator);
         },
 
-        'BjyAuthorize\Provider\Role\Doctrine' => function (ServiceLocatorInterface $serviceLocator) {
-            /* @var $objectManager \Doctrine\ORM\EntityManager */
-            $objectManager = $serviceLocator->get('doctrine.entitymanager.orm_default');
-
-            return new Provider\Role\Doctrine(array(), $objectManager);
-        },
+        'BjyAuthorize\Provider\Role\Doctrine' => 'BjyAuthorize\Service\DoctrineRoleProviderFactory',
     ),
 );

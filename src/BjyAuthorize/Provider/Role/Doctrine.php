@@ -65,6 +65,7 @@ class Doctrine implements ProviderInterface
     public function getRoles()
     {
         // get roles associated with the logged in user
+        $roles  = array();
         $rowset = $this
             ->entityManager
             ->getConnection()
@@ -72,11 +73,10 @@ class Doctrine implements ProviderInterface
             ->select($this->roleIdFieldName, $this->parentRoleFieldName)
             ->from($this->tableName, $this->tableName)
             ->execute();
-        $roles = array();
 
         // Pass One: Build each object
         foreach ($rowset as $row) {
-            $roleId = $row[$this->roleIdFieldName];
+            $roleId         = $row[$this->roleIdFieldName];
             $roles[$roleId] = new Role($roleId, $row[$this->parentRoleFieldName]);
         }
 

@@ -90,6 +90,10 @@ return array(
                 'role_id_field'     => 'role_id',
                 'parent_role_field' => 'parent',
             ),
+
+            // this will load roles from the 'BjyAuthorize\Provider\Role\Doctrine'
+            // service
+            'BjyAuthorize\Provider\Role\Doctrine' => array(),
         ),
 
         // resource providers provide a list of resources that will be tracked
