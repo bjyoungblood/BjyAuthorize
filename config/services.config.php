@@ -49,7 +49,11 @@ return array(
         },
 
         'BjyAuthorize\Provider\Role\ZendDb' => function (ServiceLocatorInterface $serviceLocator) {
-            return new Provider\Role\ZendDb(array(), $serviceLocator);
+            $config = $serviceLocator->get('Config');
+
+            foreach ($config['bjyauthorize']['role_providers'] as $class => $options) {
+                return new $class($options, $serviceLocator);
+            }
         },
 
         'BjyAuthorize\Provider\Role\Doctrine' => 'BjyAuthorize\Service\DoctrineRoleProviderFactory',
