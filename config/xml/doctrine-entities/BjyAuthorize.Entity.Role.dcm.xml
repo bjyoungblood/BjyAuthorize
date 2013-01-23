@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                  http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="BjyAuthorize\Entity\Role" table="bjy_auth_role">
+
+        <id name="id" type="string" column="id" />
+
+        <field name="default" type="boolean" nullable="false" />
+        <many-to-one field="parent" target-entity="BjyAuthorize\Entity\Role" />
+    </entity>
+
+</doctrine-mapping>
