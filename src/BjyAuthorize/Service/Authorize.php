@@ -207,6 +207,10 @@ class Authorize
      */
     public function getAcl()
     {
+        if (!$this->loaded) {
+            $this->load();
+        }
+
         return $this->acl;
     }
 
