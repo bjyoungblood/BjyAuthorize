@@ -42,15 +42,6 @@ return array(
             return new Provider\Identity\ZfcUserDoctrine($objectManager, $userService);
         },
 
-        'BjyAuthorize\Provider\Identity\ZfcUserSimple' => function (ServiceLocatorInterface $serviceLocator) {
-            $simpleIdentityProvider = new Provider\Identity\ZfcUserSimple($serviceLocator->get('zfcuser_user_service'));
-            $config = $serviceLocator->get('Config');
-            $simpleIdentityProvider->setDefaultRole($config['bjyauthorize']['default_role']);
-            $simpleIdentityProvider->setDefaultAuthorizedRole($config['bjyauthorize']['authorized_role']);
-
-            return $simpleIdentityProvider;
-        },
-
         'BjyAuthorize\View\UnauthorizedStrategy' => function (ServiceLocatorInterface $serviceLocator) {
             $config = $serviceLocator->get('Config');
 

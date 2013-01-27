@@ -9,7 +9,7 @@
 namespace BjyAuthorize\Provider\Identity;
 
 use Zend\Permissions\Acl\Role\RoleInterface;
-use ZfcUser\Service\User;
+use Zend\Authentication\AuthenticationService;
 
 /**
  * Simple identity provider to handle simply guest|user
@@ -19,9 +19,9 @@ use ZfcUser\Service\User;
 class ZfcUserSimple implements ProviderInterface
 {
     /**
-     * @var User
+     * @var AuthenticationService
      */
-    protected $userService;
+    protected $authService;
 
     /**
      * @var string|\Zend\Permissions\Acl\Role\RoleInterface
@@ -31,14 +31,14 @@ class ZfcUserSimple implements ProviderInterface
     /**
      * @var string|\Zend\Permissions\Acl\Role\RoleInterface
      */
-    protected $defaultAuthorizedRole;
+    protected $authenticatedRole;
 
     /**
-     * @param User          $userService
+     * @param AuthenticationService          $authService
      */
-    public function __construct(User $userService)
+    public function __construct(AuthenticationService $authService)
     {
-        $this->userService   = $userService;
+        $this->authService   = $authService;
     }
 
     /**
@@ -46,15 +46,15 @@ class ZfcUserSimple implements ProviderInterface
      */
     public function getIdentityRoles()
     {
-        $defaultAuthorizedRole = $this->defaultAuthorizedRole instanceof RoleInterface ?
-            $this->defaultAuthorizedRole->getRoleId() : $this->defaultAuthorizedRole;
+        if ($this->authService->getIdentity()) {
+            $AuthorizedRole = $this->authenticatedRole instanceof RoleInterface ?
+                $this->authenticatedRole->getRoleId() : $this->authenticatedRole;
+
+            return array($AuthorizedRole);
+        }
+
         $defaultRole = $this->defaultRole instanceof RoleInterface ?
             $this->defaultRole->getRoleId() : $this->defaultRole;
-
-        if ($this->userService->getAuthService()->getIdentity()) {
-
-            return array($defaultAuthorizedRole);
-        }
 
         return array($defaultRole);
     }
@@ -80,18 +80,18 @@ class ZfcUserSimple implements ProviderInterface
      *
      * @return string
      */
-    public function getDefaultAuthorizedRole()
+    public function getAuthenticatedRole()
     {
-        return $this->defaultAuthorizedRole;
+        return $this->authenticatedRole;
     }
 
     /**
      * Set the role that's used if you're authorized
      *
-     * @param string $defaultAuthorizedRole
+     * @param string $authenticatedRole
      */
-    public function setDefaultAuthorizedRole($defaultAuthorizedRole)
+    public function setAuthenticatedRole($authenticatedRole)
     {
-        $this->defaultAuthorizedRole = $defaultAuthorizedRole;
+        $this->authenticatedRole = $authenticatedRole;
     }
 }
