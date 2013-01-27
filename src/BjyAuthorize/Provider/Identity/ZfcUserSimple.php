@@ -8,6 +8,7 @@
 
 namespace BjyAuthorize\Provider\Identity;
 
+use Zend\Permissions\Acl\Role\RoleInterface;
 use ZfcUser\Service\User;
 
 /**
@@ -28,7 +29,7 @@ class ZfcUserSimple implements ProviderInterface
     protected $defaultRole;
 
     /**
-     * @var string
+     * @var string|\Zend\Permissions\Acl\Role\RoleInterface
      */
     protected $defaultAuthorizedRole;
 
@@ -45,12 +46,17 @@ class ZfcUserSimple implements ProviderInterface
      */
     public function getIdentityRoles()
     {
+        $defaultAuthorizedRole = $this->defaultAuthorizedRole instanceof RoleInterface ?
+            $this->defaultAuthorizedRole->getRoleId() : $this->defaultAuthorizedRole;
+        $defaultRole = $this->defaultRole instanceof RoleInterface ?
+            $this->defaultRole->getRoleId() : $this->defaultRole;
+
         if ($this->userService->getAuthService()->getIdentity()) {
 
-            return array($this->defaultAuthorizedRole);
+            return array($defaultAuthorizedRole);
         }
 
-        return array($this->defaultRole);
+        return array($defaultRole);
     }
 
     /**

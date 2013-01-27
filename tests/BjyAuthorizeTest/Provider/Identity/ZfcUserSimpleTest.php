@@ -63,4 +63,38 @@ class ZfcUserSimpleTest extends PHPUnit_Framework_TestCase
         $roles = $simpleIdentityProvider->getIdentityRoles();
         $this->assertEquals($roles, array('guest'));
     }
+
+    public function testZfcUserSimpleIfAuthenticatedWithRoleInterface()
+    {
+        $user = $this->getMock('ZfcUser\Service\User', array('getAuthService'));
+        $authentication = $this->getMock('Zend\Authentication\AuthenticationService', array('getIdentity'));
+        $authentication->expects($this->once())->method('getIdentity')->will($this->returnValue('foo'));
+        $user->expects($this->once())->method('getAuthService')->will($this->returnValue($authentication));
+        $simpleIdentityProvider = new \BjyAuthorize\Provider\Identity\ZfcUserSimple($user);
+        $defaultRole = $this->getMock('Zend\Permissions\Acl\Role\RoleInterface', array('getRoleId'));
+        $defaultRole->expects($this->once())->method('getRoleId')->will($this->returnValue('guest'));
+        $defaultAuthorizedRole = $this->getMock('Zend\Permissions\Acl\Role\RoleInterface', array('getRoleId'));
+        $defaultAuthorizedRole->expects($this->once())->method('getRoleId')->will($this->returnValue('user'));
+        $simpleIdentityProvider->setDefaultRole($defaultRole);
+        $simpleIdentityProvider->setDefaultAuthorizedRole($defaultAuthorizedRole);
+        $roles = $simpleIdentityProvider->getIdentityRoles();
+        $this->assertEquals($roles, array('user'));
+    }
+
+    public function testZfcUserSimpleIfUnauthenticatedWithRoleInterface()
+    {
+        $user = $this->getMock('ZfcUser\Service\User', array('getAuthService'));
+        $authentication = $this->getMock('Zend\Authentication\AuthenticationService', array('getIdentity'));
+        $authentication->expects($this->once())->method('getIdentity')->will($this->returnValue(null));
+        $user->expects($this->once())->method('getAuthService')->will($this->returnValue($authentication));
+        $simpleIdentityProvider = new \BjyAuthorize\Provider\Identity\ZfcUserSimple($user);
+        $defaultRole = $this->getMock('Zend\Permissions\Acl\Role\RoleInterface', array('getRoleId'));
+        $defaultRole->expects($this->once())->method('getRoleId')->will($this->returnValue('guest'));
+        $defaultAuthorizedRole = $this->getMock('Zend\Permissions\Acl\Role\RoleInterface', array('getRoleId'));
+        $defaultAuthorizedRole->expects($this->once())->method('getRoleId')->will($this->returnValue('user'));
+        $simpleIdentityProvider->setDefaultRole($defaultRole);
+        $simpleIdentityProvider->setDefaultAuthorizedRole($defaultAuthorizedRole);
+        $roles = $simpleIdentityProvider->getIdentityRoles();
+        $this->assertEquals($roles, array('guest'));
+    }
 }
