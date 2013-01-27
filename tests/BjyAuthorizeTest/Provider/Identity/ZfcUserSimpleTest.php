@@ -6,7 +6,7 @@
  * @license http://framework.zend.com/license/new-bsd New BSD License
  */
 
-namespace BjyAuthorizeTest\View;
+namespace BjyAuthorizeTest\Provider\Identity;
 
 use PHPUnit_Framework_TestCase;
 
