@@ -8,7 +8,7 @@
 
 namespace BjyAuthorize\Entity;
 
-interface RoleUserInterface
+interface UserRoleInterface
 {
     /**
      * Get role.

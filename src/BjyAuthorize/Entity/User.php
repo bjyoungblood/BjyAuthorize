@@ -13,7 +13,7 @@ use ZfcUser\Entity\UserInterface;
 
 class User implements
     UserInterface,
-    RoleUserInterface
+    UserRoleInterface
 {
     /**
      * @var int
