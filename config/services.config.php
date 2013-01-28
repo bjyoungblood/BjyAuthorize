@@ -71,12 +71,11 @@ return array(
             /* @var $objectManager \Doctrine\ORM\EntityManager */
             $objectManager = $serviceLocator->get('doctrine.entitymanager.orm_default');
 
-            $config = $serviceLocator->get('Configuration');
+            $appConfig = $serviceLocator->get('Configuration');
 
-            if (isset($config['bjy_authorize']['role_providers']['BjyAuthorize\Provider\Role\DoctrineEntity'])) {
-                $config = $config['bjy_authorize']['role_providers']['BjyAuthorize\Provider\Role\DoctrineEntity'];
-            } else {
-                $config = array();
+            $config = array();
+            if (isset($appConfig['bjy_authorize']['role_providers']['BjyAuthorize\Provider\Role\DoctrineEntity'])) {
+                $config = $appConfig['bjy_authorize']['role_providers']['BjyAuthorize\Provider\Role\DoctrineEntity'];
             }
 
             return new Provider\Role\DoctrineEntity($config, $objectManager);
