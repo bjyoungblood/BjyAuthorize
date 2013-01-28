@@ -30,18 +30,4 @@ return array(
             'error/403' => __DIR__ . '/../view/error/403.phtml',
         ),
     ),
-    'doctrine' => array(
-        'driver' => array(
-            'bjyauthorize_entity' => array(
-                'class' => 'Doctrine\ORM\Mapping\Driver\XmlDriver',
-                'paths' => __DIR__ . '/xml/doctrine-entities'
-            ),
-
-            'orm_default' => array(
-                'drivers' => array(
-                    'BjyAuthorize\Entity'  => 'bjyauthorize_entity'
-                )
-            )
-        )
-    ),
 );
