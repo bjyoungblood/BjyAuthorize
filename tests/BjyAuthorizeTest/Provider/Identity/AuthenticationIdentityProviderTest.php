@@ -12,7 +12,7 @@ use PHPUnit_Framework_TestCase;
 use BjyAuthorize\Provider\Identity\AuthenticationIdentityProvider;
 
 /**
- * {@see \BjyAuthorize\Provider\IdentityAuthenticationIdentityProvider\} test
+ * {@see \BjyAuthorize\Provider\Identity\AuthenticationIdentityProvider} test
  *
  * @author Ingo Walz <ingo.walz@googlemail.com>
  */
