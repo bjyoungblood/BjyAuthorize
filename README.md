@@ -65,6 +65,14 @@ return array(
          * for ZfcUser, this will be your default identity provider
          */
         'identity_provider' => 'BjyAuthorize\Provider\Identity\ZfcUserZendDb',
+        /* If you only have a default role and an authenticated role, you can
+         * use the 'AuthenticationIdentityProvider' to allow/restrict access
+         * with the guards based on the state 'logged in' and 'not logged in'.
+         *
+         * 'default_role'       => 'guest',         // not authenticated
+         * 'authenticated_role' => 'user',          // authenticated
+         * 'identity_provider'  => 'BjyAuthorize\Provider\Identity\AuthenticationIdentityProvider',
+         */
 
         /* role providers simply provide a list of roles that should be inserted
          * into the Zend\Acl instance. the module comes with two providers, one
