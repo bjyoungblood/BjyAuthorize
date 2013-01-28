@@ -24,6 +24,7 @@ class ZfcUserDoctrineEntityFactory implements FactoryInterface
      * {@inheritDoc}
      *
      * @param ServiceLocatorInterface $serviceLocator
+     *
      * @return \BjyAuthorize\Provider\Role\DoctrineEntity
      */
     public function createService(ServiceLocatorInterface $serviceLocator)

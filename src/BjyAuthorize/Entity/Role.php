@@ -8,14 +8,12 @@
 
 namespace BjyAuthorize\Entity;
 
-use Zend\Permissions\Acl\Role\RoleInterface;
-
 /**
- * 
+ * An entity that represents a role. 
  *
  * @author Tom Oram <tom@scl.co.uk>
  */
-class Role implements RoleInterface, RoleEntityInterface
+class Role implements RoleEntityInterface
 {
     /**
      * @var int
@@ -46,6 +44,8 @@ class Role implements RoleInterface, RoleEntityInterface
      * Set the id.
      *
      * @param int $id
+     *
+     * @return void
      */
     public function setId($id)
     {
@@ -66,6 +66,8 @@ class Role implements RoleInterface, RoleEntityInterface
      * Set the role id.
      *
      * @param string $roleId
+     *
+     * @return void
      */
     public function setRoleId($roleId)
     {
@@ -86,6 +88,8 @@ class Role implements RoleInterface, RoleEntityInterface
      * Set the parent role.
      *
      * @param Role $role
+     *
+     * @return void
      */
     public function setParent(Role $parent)
     {

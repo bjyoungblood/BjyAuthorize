@@ -8,12 +8,17 @@
 
 namespace BjyAuthorize\Entity;
 
+/**
+ * Interface for a use that is aware of Role entities.
+ *
+ * @author Tom Oram <tom@scl.co.uk>
+ */
 interface UserRoleInterface
 {
     /**
      * Get role.
      *
-     * @return \Traversable
+     * @return \Zend\Permissions\Acl\Role\RoleInterface\RoleInterface[]
      */
     public function getRoles();
 }

@@ -8,16 +8,15 @@
 
 namespace BjyAuthorize\Entity;
 
-interface RoleEntityInterface
-{
-    /**
-     * Returns the string identifier of the Role
-     *
-     * @return string
-     * @todo Should this be in here or just leave it in Acl Role Interface?
-     */
-    public function getRoleId();
+use Zend\Permissions\Acl\Role\RoleInterface;
 
+/**
+ * Interface for a role entity
+ *
+ * @author Tom Oram <tom@scl.co.uk>
+ */
+interface RoleEntityInterface extends RoleInterface
+{
     /**
      * Get the parent role
      *

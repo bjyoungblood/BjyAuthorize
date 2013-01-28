@@ -12,7 +12,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use ZfcUser\Entity\User as ZfcUserEntity;
 
 /**
- * 
+ * A basic user entity that is aware of roles.
+ *
  * @author Tom Oram <tom@scl.co.uk>
  */
 class User extends ZfcUserEntity implements UserRoleInterface
@@ -44,6 +45,8 @@ class User extends ZfcUserEntity implements UserRoleInterface
      * Add a role to the user.
      *
      * @param Role $role
+     *
+     * @return void
      */
     public function addRole($role)
     {
