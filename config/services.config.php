@@ -42,12 +42,7 @@ return array(
             return new Provider\Identity\ZfcUserDoctrine($objectManager, $userService);
         },
 
-        'BjyAuthorize\Provider\Identity\ZfcUserDoctrineEntity' => function (ServiceLocatorInterface $serviceLocator) {
-            /* @var $authService \Zend\Authentication\AuthenticationService */
-            $authService   = $serviceLocator->get('zfcuser_user_service')->getAuthService();
-
-            return new Provider\Identity\ZfcUserDoctrineEntity($authService);
-        },
+        'BjyAuthorize\Provider\Identity\ZfcUserDoctrineEntity' => 'BjyAuthorize\Service\ZfcUserDoctrineEntityFactory',
 
         'BjyAuthorize\View\UnauthorizedStrategy' => function (ServiceLocatorInterface $serviceLocator) {
             $config = $serviceLocator->get('Config');

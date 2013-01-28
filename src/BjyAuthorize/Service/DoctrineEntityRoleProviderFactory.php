@@ -31,7 +31,7 @@ class DoctrineEntityRoleProviderFactory implements FactoryInterface
     private function getDoctrineEntityRoleProviderConfig(ServiceLocatorInterface $serviceLocator)
     {
         /* @var $config array */
-        $config = $serviceLocator->get('Configuration');
+        $config = $serviceLocator->get('Config');
 
         if (!isset($config['bjy_authorize'])) {
             return array();
