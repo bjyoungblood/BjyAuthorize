@@ -16,7 +16,7 @@ use Zend\Authentication\AuthenticationService;
  *
  * @author Ingo Walz <ingo.walz@googlemail.com>
  */
-class ZfcUserSimple implements ProviderInterface
+class AuthenticationIdentityProvider implements ProviderInterface
 {
     /**
      * @var AuthenticationService
@@ -76,7 +76,7 @@ class ZfcUserSimple implements ProviderInterface
     }
 
     /**
-     * Get the rule that's used if you're authorized
+     * Get the rule that's used if you're authenticated
      *
      * @return string
      */
@@ -86,7 +86,7 @@ class ZfcUserSimple implements ProviderInterface
     }
 
     /**
-     * Set the role that's used if you're authorized
+     * Set the role that's used if you're authenticated
      *
      * @param string $authenticatedRole
      */

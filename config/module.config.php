@@ -22,7 +22,7 @@ return array(
             'bjyauthorize_zend_db_adapter' => 'Zend\Db\Adapter\Adapter',
         ),
         'factories' => array(
-            'BjyAuthorize\Provider\Identity\ZfcUserSimple' => 'BjyAuthorize\Service\ZfcUserSimpleServiceFactory'
+            'BjyAuthorize\Provider\Identity\AuthenticationIdentityProvider' => 'BjyAuthorize\Service\AuthenticationIdentityProviderServiceFactory'
         ),
     ),
     'view_manager' => array(

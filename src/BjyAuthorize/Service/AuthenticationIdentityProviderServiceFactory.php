@@ -9,16 +9,16 @@
 
 namespace BjyAuthorize\Service;
 
-use BjyAuthorize\Provider\Identity\ZfcUserSimple;
+use BjyAuthorize\Provider\Identity\AuthenticationIdentityProvider;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Simple identity provider factory
+ * Simple authentication provider factory
  *
  * @author Ingo Walz <ingo.walz@googlemail.com>
  */
-class ZfcUserSimpleServiceFactory implements FactoryInterface
+class AuthenticationIdentityProviderServiceFactory implements FactoryInterface
 {
     /**
      * {@inheritDoc}
@@ -26,7 +26,8 @@ class ZfcUserSimpleServiceFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $user = $serviceLocator->get('zfcuser_user_service');
-        $simpleIdentityProvider = new ZfcUserSimple($user->getAuthService());
+
+        $simpleIdentityProvider = new AuthenticationIdentityProvider($user->getAuthService());
         $config = $serviceLocator->get('Config');
         $simpleIdentityProvider->setDefaultRole($config['bjyauthorize']['default_role']);
         $simpleIdentityProvider->setAuthenticatedRole($config['bjyauthorize']['authenticated_role']);

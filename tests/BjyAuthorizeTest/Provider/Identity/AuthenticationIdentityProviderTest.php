@@ -9,52 +9,24 @@
 namespace BjyAuthorizeTest\Provider\Identity;
 
 use PHPUnit_Framework_TestCase;
+use BjyAuthorize\Provider\Identity\AuthenticationIdentityProvider;
 
 /**
- * {@see \BjyAuthorize\Provider\Identity\ZfcUserSimple} test
+ * {@see \BjyAuthorize\Provider\IdentityAuthenticationIdentityProvider\} test
  *
  * @author Ingo Walz <ingo.walz@googlemail.com>
  */
-class ZfcUserSimpleTest extends PHPUnit_Framework_TestCase
+class AuthenticationIdentityProviderTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @covers BjyAuthorize\Service\ZfcUserSimpleServiceFactory::createService
-     * @covers BjyAuthorize\Provider\Identity\ZfcUserSimple::getDefaultRole
-     * @covers BjyAuthorize\Provider\Identity\ZfcUserSimple::getAuthenticatedRole
+     * @covers BjyAuthorize\Provider\Identity\AuthenticationIdentityProvider::getIdentityRoles
      */
-    public function testZfcUserSimpleFactory()
-    {
-        $config = array(
-            'bjyauthorize' => array(
-                'default_role'          => 'guest',
-                'authenticated_role'       => 'user'
-            ),
-        );
-
-        $services = include __DIR__ . '/../../../../config/module.config.php';
-        $serviceManagerConfig = new \Zend\Mvc\Service\ServiceManagerConfig($services['service_manager']);
-        $serviceManager = new \Zend\ServiceManager\ServiceManager($serviceManagerConfig);
-
-        $user = $this->getMock('ZfcUser\Service\User', array('getAuthService'));
-        $auth = $this->getMock('Zend\Authentication\AuthenticationService');
-        $user->expects($this->once())->method('getAuthService')->will($this->returnValue($auth));
-        $serviceManager->setService("zfcuser_user_service", $user);
-        $serviceManager->setService("Config", $config);
-        $simpleIdentitiyProvider = $serviceManager->get('BjyAuthorize\Provider\Identity\ZfcUserSimple');
-
-        $this->assertEquals($simpleIdentitiyProvider->getDefaultRole(), 'guest');
-        $this->assertEquals($simpleIdentitiyProvider->getAuthenticatedRole(), 'user');
-    }
-
-    /**
-     * @covers BjyAuthorize\Provider\Identity\ZfcUserSimple::getIdentityRoles
-     */
-    public function testZfcUserSimpleIfAuthenticated()
+    public function testAuthenticationIdentityProviderIfAuthenticated()
     {
         $authentication = $this->getMock('Zend\Authentication\AuthenticationService', array('getIdentity'));
         $authentication->expects($this->once())->method('getIdentity')->will($this->returnValue('foo'));
 
-        $simpleIdentityProvider = new \BjyAuthorize\Provider\Identity\ZfcUserSimple($authentication);
+        $simpleIdentityProvider = new AuthenticationIdentityProvider($authentication);
         $simpleIdentityProvider->setDefaultRole('guest');
         $simpleIdentityProvider->setAuthenticatedRole('user');
         $roles = $simpleIdentityProvider->getIdentityRoles();
@@ -63,14 +35,14 @@ class ZfcUserSimpleTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers BjyAuthorize\Provider\Identity\ZfcUserSimple::getIdentityRoles
+     * @covers BjyAuthorize\Provider\Identity\AuthenticationIdentityProvider::getIdentityRoles
      */
-    public function testZfcUserSimpleIfUnauthenticated()
+    public function testAuthenticationIdentityProviderIfUnauthenticated()
     {
         $authentication = $this->getMock('Zend\Authentication\AuthenticationService', array('getIdentity'));
         $authentication->expects($this->once())->method('getIdentity')->will($this->returnValue(null));
 
-        $simpleIdentityProvider = new \BjyAuthorize\Provider\Identity\ZfcUserSimple($authentication);
+        $simpleIdentityProvider = new AuthenticationIdentityProvider($authentication);
         $simpleIdentityProvider->setDefaultRole('guest');
         $simpleIdentityProvider->setAuthenticatedRole('user');
         $roles = $simpleIdentityProvider->getIdentityRoles();
@@ -79,14 +51,14 @@ class ZfcUserSimpleTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers BjyAuthorize\Provider\Identity\ZfcUserSimple::getIdentityRoles
+     * @covers BjyAuthorize\Provider\Identity\AuthenticationIdentityProvider::getIdentityRoles
      */
-    public function testZfcUserSimpleIfAuthenticatedWithRoleInterface()
+    public function testAuthenticationIdentityProviderIfAuthenticatedWithRoleInterface()
     {
         $authentication = $this->getMock('Zend\Authentication\AuthenticationService', array('getIdentity'));
         $authentication->expects($this->once())->method('getIdentity')->will($this->returnValue('foo'));
 
-        $simpleIdentityProvider = new \BjyAuthorize\Provider\Identity\ZfcUserSimple($authentication);
+        $simpleIdentityProvider = new AuthenticationIdentityProvider($authentication);
         $authorizedRole = $this->getMock('Zend\Permissions\Acl\Role\RoleInterface', array('getRoleId'));
         $authorizedRole->expects($this->once())->method('getRoleId')->will($this->returnValue('user'));
 
@@ -97,14 +69,14 @@ class ZfcUserSimpleTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers BjyAuthorize\Provider\Identity\ZfcUserSimple::getIdentityRoles
+     * @covers BjyAuthorize\Provider\Identity\AuthenticationIdentityProvider::getIdentityRoles
      */
-    public function testZfcUserSimpleIfUnauthenticatedWithRoleInterface()
+    public function testAuthenticationIdentityProviderIfUnauthenticatedWithRoleInterface()
     {
         $authentication = $this->getMock('Zend\Authentication\AuthenticationService', array('getIdentity'));
         $authentication->expects($this->once())->method('getIdentity')->will($this->returnValue(null));
 
-        $simpleIdentityProvider = new \BjyAuthorize\Provider\Identity\ZfcUserSimple($authentication);
+        $simpleIdentityProvider = new AuthenticationIdentityProvider($authentication);
         $defaultRole = $this->getMock('Zend\Permissions\Acl\Role\RoleInterface', array('getRoleId'));
         $defaultRole->expects($this->once())->method('getRoleId')->will($this->returnValue('guest'));
 
