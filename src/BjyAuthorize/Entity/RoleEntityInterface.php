@@ -11,19 +11,12 @@ namespace BjyAuthorize\Entity;
 interface RoleEntityInterface
 {
     /**
-     * Get the id.
+     * Returns the string identifier of the Role
      *
      * @return string
+     * @todo Should this be in here or just leave it in Acl Role Interface?
      */
-    public function getId();
-
-    /**
-     * Set the id.
-     *
-     * @param string $id
-     * @return RoleInteface
-     */
-    public function setId($string);
+    public function getRoleId();
 
     /**
      * Get the parent role
@@ -31,12 +24,4 @@ interface RoleEntityInterface
      * @return Role
      */
     public function getParent();
-
-    /**
-     * Set the parent role.
-     *
-     * @param Role $role
-     * @return RoleInterface
-     */
-    public function setParent($parent);
 }

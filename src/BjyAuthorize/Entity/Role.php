@@ -13,9 +13,14 @@ use Zend\Permissions\Acl\Role\RoleInterface;
 class Role implements RoleInterface, RoleEntityInterface
 {
     /**
-     * @var string
+     * @var int
      */
     protected $id;
+
+    /**
+     * @var string
+     */
+    protected $roleId;
 
     /**
      * @var Role
@@ -25,17 +30,7 @@ class Role implements RoleInterface, RoleEntityInterface
     /**
      * Get the id.
      *
-     * @return string
-     */
-    public function getRoleId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Get the id.
-     *
-     * @return string
+     * @return int
      */
     public function getId()
     {
@@ -45,12 +40,34 @@ class Role implements RoleInterface, RoleEntityInterface
     /**
      * Set the id.
      *
-     * @param string $id
+     * @param int $id
      * @return RoleInteface
      */
     public function setId($id)
     {
         $this->id = $id;
+        return $this;
+    }
+
+    /**
+     * Get the role id.
+     *
+     * @return string
+     */
+    public function getRoleId()
+    {
+        return $this->roleId;
+    }
+
+    /**
+     * Set the role id.
+     *
+     * @param string $roleId
+     * @return RoleInteface
+     */
+    public function setRoleId($roleId)
+    {
+        $this->roleId = $roleId;
         return $this;
     }
 

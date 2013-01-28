@@ -8,6 +8,7 @@
 
 namespace BjyAuthorize\Provider\Identity;
 
+use BjyAuthorize\Entity\RoleEntityInterface;
 use Zend\Authentication\AuthenticationService;
 
 /**
@@ -49,6 +50,10 @@ class ZfcUserDoctrineEntity implements ProviderInterface
         $roles = array();
 
         $user = $this->authService->getIdentity();
+
+        if (!$user instanceof RoleEntityInterface) {
+            // @todo What happens here? Throw an exception? And if so which one?
+        }
 
         foreach ($user->getRoles() as $role) {
             $roles[] = $role->getId();

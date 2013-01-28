@@ -43,8 +43,8 @@ class DoctrineEntity implements ProviderInterface
 
         // Pass One: Build each object
         foreach ($result as $role) {
-            $roleId = $role->getId();
-            $parent = $role->getParent() ? $role->getParent()->getId() : null;
+            $roleId = $role->getRoleId();
+            $parent = $role->getParent() ? $role->getParent()->getRoleId() : null;
             $roles[$roleId] = new Role($roleId, $parent);
         }
 

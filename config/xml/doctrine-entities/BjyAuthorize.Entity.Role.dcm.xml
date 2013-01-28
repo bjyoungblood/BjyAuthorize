@@ -6,8 +6,11 @@
 
     <entity name="BjyAuthorize\Entity\Role" table="bjy_auth_role">
 
-        <id name="id" type="string" column="id" />
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO" />
+        </id>
 
+		<field name="roleId" type="string" length="255" column="role_id" unique="true" nullable="true" />
         <many-to-one field="parent" target-entity="BjyAuthorize\Entity\Role" />
     </entity>
 

@@ -6,7 +6,7 @@
 
     <entity name="BjyAuthorize\Entity\User" table="bjy_auth_user">
         <many-to-many field="roles" target-entity="BjyAuthorize\Entity\Role">
-            <join-table name="user_role">
+            <join-table name="bjy_auth_user_role">
                 <join-columns>
                     <join-column name="user_id" referenced-column-name="id" />
                 </join-columns>
