@@ -8,8 +8,7 @@
 
 namespace BjyAuthorize\Provider\Identity;
 
-use Doctrine\ORM\EntityManager;
-use ZfcUser\Service\User;
+use Zend\Authentication\AuthenticationService;
 
 /**
  * Identity provider which uses doctrine User and Role entities.
@@ -17,28 +16,60 @@ use ZfcUser\Service\User;
  * @author Ben Youngblood <bx.youngblood@gmail.com>
  * @author Tom Oram <tom@scl.co.uk>
  */
-class ZfcUserDoctrineEntity extends ZfcUserDoctrine
+class ZfcUserDoctrineEntity implements ProviderInterface
 {
+    /**
+     * @var AuthenticationService
+     */
+    protected $authService;
+
+    /**
+     * @var string|\Zend\Permissions\Acl\Role\RoleInterface
+     */
+    protected $defaultRole;
+
+    /**
+     * @param AuthenticationService $authService
+     */
+    public function __construct(AuthenticationService $authService)
+    {
+        $this->authService   = $authService;
+    }
+
     /**
      * {@inheritDoc}
      */
     public function getIdentityRoles()
     {
-        $authService = $this->userService->getAuthService();
-
-        if (!$authService->hasIdentity()) {
+        if (!$this->authService->hasIdentity()) {
             // get default/guest role
             return $this->getDefaultRole();
         }
 
         $roles = array();
 
-        $user = $authService->getIdentity();
+        $user = $this->authService->getIdentity();
 
         foreach ($user->getRoles() as $role) {
             $roles[] = $role->getId();
         }
 
         return $roles;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getDefaultRole()
+    {
+        return $this->defaultRole;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setDefaultRole($defaultRole)
+    {
+        $this->defaultRole = $defaultRole;
     }
 }

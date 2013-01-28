@@ -43,12 +43,10 @@ return array(
         },
 
         'BjyAuthorize\Provider\Identity\ZfcUserDoctrineEntity' => function (ServiceLocatorInterface $serviceLocator) {
-            /* @var $objectManager \Doctrine\ORM\EntityManager */
-            $objectManager = $serviceLocator->get('doctrine.entitymanager.orm_default');
-            /* @var $userService \ZfcUser\Service\User */
-            $userService   = $serviceLocator->get('zfcuser_user_service');
+            /* @var $authService \Zend\Authentication\AuthenticationService */
+            $authService   = $serviceLocator->get('zfcuser_user_service')->getAuthService();
 
-            return new Provider\Identity\ZfcUserDoctrineEntity($objectManager, $userService);
+            return new Provider\Identity\ZfcUserDoctrineEntity($authService);
         },
 
         'BjyAuthorize\View\UnauthorizedStrategy' => function (ServiceLocatorInterface $serviceLocator) {
@@ -67,18 +65,6 @@ return array(
 
         'BjyAuthorize\Provider\Role\Doctrine' => 'BjyAuthorize\Service\DoctrineRoleProviderFactory',
 
-        'BjyAuthorize\Provider\Role\DoctrineEntity' => function (ServiceLocatorInterface $serviceLocator) {
-            /* @var $objectManager \Doctrine\ORM\EntityManager */
-            $objectManager = $serviceLocator->get('doctrine.entitymanager.orm_default');
-
-            $appConfig = $serviceLocator->get('Configuration');
-
-            $config = array();
-            if (isset($appConfig['bjy_authorize']['role_providers']['BjyAuthorize\Provider\Role\DoctrineEntity'])) {
-                $config = $appConfig['bjy_authorize']['role_providers']['BjyAuthorize\Provider\Role\DoctrineEntity'];
-            }
-
-            return new Provider\Role\DoctrineEntity($config, $objectManager);
-        },
+        'BjyAuthorize\Provider\Role\DoctrineEntity' => 'BjyAuthorize\Service\DoctrineEntityRoleProviderFactory',
     ),
 );
