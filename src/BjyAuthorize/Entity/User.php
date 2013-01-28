@@ -11,6 +11,10 @@ namespace BjyAuthorize\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use ZfcUser\Entity\User as ZfcUserEntity;
 
+/**
+ * 
+ * @author Tom Oram <tom@scl.co.uk>
+ */
 class User extends ZfcUserEntity implements UserRoleInterface
 {
     /**
@@ -40,11 +44,9 @@ class User extends ZfcUserEntity implements UserRoleInterface
      * Add a role to the user.
      *
      * @param Role $role
-     * @return UserInterface
      */
     public function addRole($role)
     {
         $this->roles[] = $role;
-        return $this;
     }
 }
