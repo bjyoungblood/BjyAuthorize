@@ -20,24 +20,61 @@ use BjyAuthorize\Provider\Role\DoctrineEntity;
  */
 class DoctrineEntityRoleProviderFactory implements FactoryInterface
 {
+    const DEFAULT_ROLE_ENTITY_CLASS = 'BjyAuthorize\Entity\Role';
+
+    /**
+     * Fetchs the config for a DoctrineEntity Role Provider.
+     *
+     * @param ServiceLocatorInterface $serviceLocator
+     * @return array
+     */
+    private function getDoctrineEntityRoleProviderConfig(ServiceLocatorInterface $serviceLocator)
+    {
+        /* @var $config array */
+        $config = $serviceLocator->get('Configuration');
+
+        if (!isset($config['bjy_authorize'])) {
+            return array();
+        }
+
+        $config = $config['bjy_authorize'];
+
+        if (!isset($config['role_providers'])) {
+            return array();
+        }
+
+        $config = $config['role_providers'];
+
+        if (!isset($config['BjyAuthorize\Provider\Role\DoctrineEntity'])
+            || !is_array($config['BjyAuthorize\Provider\Role\DoctrineEntity'])
+        ) {
+            return array();
+        }
+
+        return $config['BjyAuthorize\Provider\Role\DoctrineEntity'];
+    }
+
     /**
      * {@inheritDoc}
      *
+     * @param ServiceLocatorInterface $serviceLocator
      * @return \BjyAuthorize\Provider\Role\DoctrineEntity
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        /* @var $objectManager \Doctrine\ORM\EntityManager */
-        $objectManager = $serviceLocator->get('doctrine.entitymanager.orm_default');
+        $config = $this->getDoctrineEntityRoleProviderConfig($serviceLocator);
 
-        /* @var $appConfig array */
-        $appConfig = $serviceLocator->get('Configuration');
+        $roleEntityClass = self::DEFAULT_ROLE_ENTITY_CLASS;
 
-        $config = array();
-        if (isset($appConfig['bjy_authorize']['role_providers']['BjyAuthorize\Provider\Role\DoctrineEntity'])) {
-            $config = $appConfig['bjy_authorize']['role_providers']['BjyAuthorize\Provider\Role\DoctrineEntity'];
+        if (isset($config['role_entity_class'])) {
+            $roleEntityClass = $config['role_entity_class'];
         }
 
-        return new DoctrineEntity($config, $objectManager);
+        /* @var $objectManager \Doctrine\ORM\EntityManager */
+        $objectManager = $serviceLocator->get('doctrine.entitymanager.orm_default');
+        /* @var Doctrine\Common\Persistence\ObjectRepository $objectRository */
+        $objectRepository = $objectManager->getRepository($roleEntityClass);
+
+        return new DoctrineEntity($objectRepository);
     }
 }

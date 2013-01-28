@@ -9,37 +9,26 @@
 namespace BjyAuthorize\Provider\Role;
 
 use BjyAuthorize\Acl\Role;
-use Doctrine\ORM\EntityManager;
+use Doctrine\Common\Persistence\ObjectRepository;
 
 /**
  * Role provider based on a {@see \Doctrine\ORM\EntityManager}
  *
- * @author Ben Youngblood <bx.youngblood@gmail.com>
  * @authro Tom Oram <tom@scl.co.uk>
  */
 class DoctrineEntity implements ProviderInterface
 {
     /**
-     * @var EntityManager
+     * @var ObjectRepository
      */
-    protected $entityManager;
+    protected $objectRepository;
 
     /**
-     * @var string
+     * @param ObjectRepositoy $objectRepository
      */
-    protected $roleEntityClass = 'BjyAuthorize\Entity\Role';
-
-    /**
-     * @param array         $options
-     * @param EntityManager $entityManager
-     */
-    public function __construct(array $options, EntityManager $entityManager)
+    public function __construct(ObjectRepository $objectRepository)
     {
-        if (isset($options['role_entity_class'])) {
-            $this->roleEntityClass = $options['role_entity_class'];
-        }
-
-        $this->entityManager = $entityManager;
+        $this->objectRepository = $objectRepository;
     }
 
     /**
@@ -47,7 +36,8 @@ class DoctrineEntity implements ProviderInterface
      */
     public function getRoles()
     {
-        $result = $this->entityManager->getRepository($this->roleEntityClass)->findAll();
+        $result = $this->objectRepository->findAll();
+
         // get roles associated with the logged in user
         $roles  = array();
 
