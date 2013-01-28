@@ -18,11 +18,6 @@ class Role implements RoleInterface, RoleEntityInterface
     protected $id;
 
     /**
-     * @var boolean
-     */
-    protected $default = false;
-
-    /**
      * @var Role
      */
     protected $parent;
@@ -53,31 +48,9 @@ class Role implements RoleInterface, RoleEntityInterface
      * @param string $id
      * @return RoleInteface
      */
-    public function setId($string)
+    public function setId($id)
     {
         $this->id = $id;
-        return $this;
-    }
-
-    /**
-     * Check if the role is the default role.
-     *
-     * @return boolean
-     */
-    public function getDefault()
-    {
-        return $this->default;
-    }
-
-    /**
-     * Set whether this role is the default one.
-     *
-     * @param boolean $default
-     * @return RoleEntityInterface
-     */
-    public function setDefault($default)
-    {
-        $this->default = $default;
         return $this;
     }
 
