@@ -21,6 +21,9 @@ return array(
         'aliases' => array(
             'bjyauthorize_zend_db_adapter' => 'Zend\Db\Adapter\Adapter',
         ),
+        'factories' => array(
+            'BjyAuthorize\Provider\Identity\AuthenticationIdentityProvider' => 'BjyAuthorize\Service\AuthenticationIdentityProviderServiceFactory'
+        ),
     ),
     'view_manager' => array(
         'template_map' => array(
