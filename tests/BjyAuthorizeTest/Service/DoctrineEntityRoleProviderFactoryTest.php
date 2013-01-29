@@ -35,39 +35,12 @@ class DoctrineEntityRoleProviderFactoryTest extends PHPUnit_Framework_TestCase
     /**
      * @covers \BjyAuthorize\Service\DoctrineEntityRoleProviderFactory::createService
      */
-    public function testCreateService()
-    {
-        $this->entityManager->expects($this->once())
-            ->method('getRepository')
-            ->with($this->equalTo(DoctrineEntityRoleProviderFactory::DEFAULT_ROLE_ENTITY_CLASS))
-            ->will($this->returnValue($this->repository));
-
-        $this->locator->expects($this->at(0))
-            ->method('get')
-            ->with($this->equalTo('Config'))
-            ->will($this->returnValue(array()));
-
-        $this->locator->expects($this->at(1))
-            ->method('get')
-            ->with($this->equalTo('doctrine.entitymanager.orm_default'))
-            ->will($this->returnValue($this->entityManager));
-
-
-        $this->assertInstanceOf(
-            'BjyAuthorize\Provider\Role\DoctrineEntity',
-            $this->factory->createService($this->locator)
-        );
-    }
-
-    /**
-     * @covers \BjyAuthorize\Service\DoctrineEntityRoleProviderFactory::createService
-     */
     public function testCreateServiceWithConfig()
     {
         $testClassName = 'TheTestClass';
 
         $config = array(
-            'bjy_authorize' => array(
+            'bjyauthorize' => array(
                 'role_providers' => array(
                     'BjyAuthorize\Provider\Role\DoctrineEntity' => array(
                         'role_entity_class' => $testClassName,

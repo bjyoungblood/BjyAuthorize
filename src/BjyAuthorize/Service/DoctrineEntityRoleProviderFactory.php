@@ -20,8 +20,6 @@ use BjyAuthorize\Provider\Role\DoctrineEntity;
  */
 class DoctrineEntityRoleProviderFactory implements FactoryInterface
 {
-    const DEFAULT_ROLE_ENTITY_CLASS = 'BjyAuthorize\Entity\Role';
-
     /**
      * {@inheritDoc}
      *
@@ -33,11 +31,11 @@ class DoctrineEntityRoleProviderFactory implements FactoryInterface
     {
         $config = $serviceLocator->get('Config');
 
-        $roleEntityClass = self::DEFAULT_ROLE_ENTITY_CLASS;
-
-        if (isset($config['bjy_authorize']['role_providers']['BjyAuthorize\Provider\Role\DoctrineEntity']['role_entity_class'])) {
-            $roleEntityClass = $config['bjy_authorize']['role_providers']['BjyAuthorize\Provider\Role\DoctrineEntity']['role_entity_class'];
+        if (!isset($config['bjyauthorize']['role_providers']['BjyAuthorize\Provider\Role\DoctrineEntity']['role_entity_class'])) {
+            return null; // What's the appropriate response
         }
+
+        $roleEntityClass = $config['bjyauthorize']['role_providers']['BjyAuthorize\Provider\Role\DoctrineEntity']['role_entity_class'];
 
         /* @var $objectManager \Doctrine\ORM\EntityManager */
         $objectManager = $serviceLocator->get('doctrine.entitymanager.orm_default');

@@ -1,7 +1,14 @@
 <?php
+/**
+ * BjyAuthorize Module (https://github.com/bjyoungblood/BjyAuthorize)
+ *
+ * @link https://github.com/bjyoungblood/BjyAuthorize for the canonical source repository
+ * @license http://framework.zend.com/license/new-bsd New BSD License
+ */
+ 
 namespace MyNamespace;
 
-use BjyAuthorize\Entity\UserRoleInterface;
+BjyAuthorize\Provider\Role\ProviderInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use ZfcUser\Entity\UserInterface;
@@ -14,7 +21,7 @@ use ZfcUser\Entity\UserInterface;
  *
  * @author Tom Oram <tom@scl.co.uk>
  */
-class User implements UserInterface, UserRoleInterface
+class User implements UserInterface, ProviderInterface
 {
     /**
      * @var int
@@ -55,7 +62,7 @@ class User implements UserInterface, UserRoleInterface
 
     /**
      * @var ArrayCollection
-     * @ORM\ManyToMany(targetEntity="BjyAuthorize\Entity\Role")
+     * @ORM\ManyToMany(targetEntity="MyNamespace\Role")
      * @ORM\JoinTable(name="users_roles",
      *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}

@@ -6,27 +6,38 @@
  * @license http://framework.zend.com/license/new-bsd New BSD License
  */
 
-namespace BjyAuthorize\Entity;
+namespace MyNamespace;
+
+use BjyAuthorize\Entity\RoleWithParentInterface;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * An entity that represents a role. 
+ * An example entity that represents a role.
+ * 
+ * @ORM\Entity
+ * @ORM\Table(name="role")
  *
  * @author Tom Oram <tom@scl.co.uk>
  */
-class Role implements RoleEntityInterface
+class Role implements RoleWithParentInterface
 {
     /**
      * @var int
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
     /**
      * @var string
+     * @ORM\Column(type="string", length=255, unique=true, nullable=true)
      */
     protected $roleId;
 
     /**
      * @var Role
+     * @ORM\ManyToOne(targetEntity="MyNamespace\Role")
      */
     protected $parent;
 

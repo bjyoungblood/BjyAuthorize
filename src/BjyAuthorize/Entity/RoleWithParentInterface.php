@@ -8,17 +8,19 @@
 
 namespace BjyAuthorize\Entity;
 
+use Zend\Permissions\Acl\Role\RoleInterface;
+
 /**
- * Interface for a use that is aware of Role entities.
+ * Interface for a role entity
  *
  * @author Tom Oram <tom@scl.co.uk>
  */
-interface UserRoleInterface
+interface RoleWithParentInterface extends RoleInterface
 {
     /**
-     * Get role.
+     * Get the parent role
      *
-     * @return \Zend\Permissions\Acl\Role\RoleInterface\RoleInterface[]
+     * @return Role
      */
-    public function getRoles();
+    public function getParent();
 }

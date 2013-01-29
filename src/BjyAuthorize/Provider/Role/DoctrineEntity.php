@@ -8,9 +8,8 @@
 
 namespace BjyAuthorize\Provider\Role;
 
-use BjyAuthorize\Entity\RoleEntityInterface;
-
 use BjyAuthorize\Acl\Role;
+use BjyAuthorize\Entity\RoleWithParentInterface;
 use Doctrine\Common\Persistence\ObjectRepository;
 
 /**
@@ -45,7 +44,7 @@ class DoctrineEntity implements ProviderInterface
 
         // Pass One: Build each object
         foreach ($result as $role) {
-            if (!$role instanceof RoleEntityInterface) {
+            if (!$role instanceof RoleWithParentInterface) {
                 continue;
             }
 

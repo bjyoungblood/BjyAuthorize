@@ -8,7 +8,7 @@
 
 namespace BjyAuthorize\Provider\Identity;
 
-use BjyAuthorize\Entity\UserRoleInterface;
+use BjyAuthorize\Provider\Role\ProviderInterface as RoleProviderInterface;
 use Zend\Authentication\AuthenticationService;
 
 /**
@@ -51,7 +51,7 @@ class ZfcUserDoctrineEntity implements ProviderInterface
 
         $user = $this->authService->getIdentity();
 
-        if (!$user instanceof UserRoleInterface) {
+        if (!$user instanceof RoleProviderInterface) {
             return $this->getDefaultRole();
         }
 
