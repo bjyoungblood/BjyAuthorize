@@ -1,5 +1,5 @@
 <?php
-namespace SclBusiness\Entity;
+namespace MyNamespace;
 
 use BjyAuthorize\Entity\UserRoleInterface;
 use Doctrine\Common\Collections\ArrayCollection;
