@@ -4,6 +4,7 @@ namespace MyNamespace;
 use BjyAuthorize\Entity\UserRoleInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use ZfcUser\Entity\UserInterface;
 
 /**
  * An example of how to implement a role aware user entity.
@@ -13,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @author Tom Oram <tom@scl.co.uk>
  */
-class User implements UserRoleInterface
+class User implements UserInterface, UserRoleInterface
 {
     /**
      * @var int
@@ -84,12 +85,12 @@ class User implements UserRoleInterface
      * Set id.
      *
      * @param int $id
-     * @return UserInterface
+     *
+     * @return void
      */
     public function setId($id)
     {
         $this->id = (int) $id;
-        return $this;
     }
 
     /**
@@ -106,12 +107,12 @@ class User implements UserRoleInterface
      * Set username.
      *
      * @param string $username
-     * @return UserInterface
+     *
+     * @return void
      */
     public function setUsername($username)
     {
         $this->username = $username;
-        return $this;
     }
 
     /**
@@ -128,12 +129,12 @@ class User implements UserRoleInterface
      * Set email.
      *
      * @param string $email
-     * @return UserInterface
+     *
+     * @return void
      */
     public function setEmail($email)
     {
         $this->email = $email;
-        return $this;
     }
 
     /**
@@ -150,12 +151,12 @@ class User implements UserRoleInterface
      * Set displayName.
      *
      * @param string $displayName
-     * @return UserInterface
+     *
+     * @return void
      */
     public function setDisplayName($displayName)
     {
         $this->displayName = $displayName;
-        return $this;
     }
 
     /**
@@ -172,12 +173,12 @@ class User implements UserRoleInterface
      * Set password.
      *
      * @param string $password
-     * @return UserInterface
+     *
+     * @return void
      */
     public function setPassword($password)
     {
         $this->password = $password;
-        return $this;
     }
 
     /**
@@ -194,12 +195,12 @@ class User implements UserRoleInterface
      * Set state.
      *
      * @param int $state
-     * @return UserInterface
+     *
+     * @return void
      */
     public function setState($state)
     {
         $this->state = $state;
-        return $this;
     }
 
     /**
