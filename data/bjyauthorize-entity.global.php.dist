@@ -11,6 +11,7 @@ return array(
         'driver' => array(
             'bjyauthorize_entity' => array(
                 'class' => 'Doctrine\ORM\Mapping\Driver\XmlDriver',
+                // Update path to match BjyAuthorize entities XML directory
                 'paths' => __DIR__ . '/../../vendor/bjyoungblood/BjyAuthorize/config/xml/doctrine-entities',
             ),
             'orm_default' => array(

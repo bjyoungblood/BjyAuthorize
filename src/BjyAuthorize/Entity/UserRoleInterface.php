@@ -8,12 +8,14 @@
 
 namespace BjyAuthorize\Entity;
 
+use ZfcUser\Entity\UserInterface;
+
 /**
  * Interface for a use that is aware of Role entities.
  *
  * @author Tom Oram <tom@scl.co.uk>
  */
-interface UserRoleInterface
+interface UserRoleInterface extends UserInterface 
 {
     /**
      * Get role.
