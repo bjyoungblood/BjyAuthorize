@@ -31,6 +31,8 @@ class DoctrineEntityRoleProviderFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+	$config = $servoceLocator->get('Config');
+
         $roleEntityClass = self::DEFAULT_ROLE_ENTITY_CLASS;
 
         if (isset($config['bjy_authorize']['role_providers']['BjyAuthorize\Provider\Role\DoctrineEntity']['role_entity_class'])) {
