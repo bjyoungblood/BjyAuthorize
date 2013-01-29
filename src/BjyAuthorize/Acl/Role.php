@@ -77,8 +77,7 @@ class Role implements RoleInterface
     {
         if (is_string($parent)) {
             $parent = new Role($parent);
-        }
-        elseif (!($parent instanceof RoleInterface)) {
+        } elseif (!($parent instanceof RoleInterface)) {
             throw new Exception\InvalidArgumentException(sprintf(
                 '%s expects either a string or Zend\Permissions\Acl\Role\RoleInterface '
                 . 'instance; received "%s"',
