@@ -6,21 +6,21 @@
  * @license http://framework.zend.com/license/new-bsd New BSD License
  */
 
-namespace BjyAuthorize\Entity;
+namespace BjyAuthorize\Acl;
 
 use Zend\Permissions\Acl\Role\RoleInterface;
 
 /**
- * Interface for a role entity
+ * Interface for a role with a possible parent role.
  *
  * @author Tom Oram <tom@scl.co.uk>
  */
-interface RoleWithParentInterface extends RoleInterface
+interface HierarchicalRoleInterface extends RoleInterface
 {
     /**
      * Get the parent role
      *
-     * @return Role
+     * @return RoleInterface|null
      */
     public function getParent();
 }

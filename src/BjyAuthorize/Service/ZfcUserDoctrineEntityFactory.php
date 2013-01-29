@@ -23,13 +23,12 @@ class ZfcUserDoctrineEntityFactory implements FactoryInterface
     /**
      * {@inheritDoc}
      *
-     * @return \BjyAuthorize\Provider\Role\DoctrineEntity
+     * @return \BjyAuthorize\Provider\Identity\ZfcUserDoctrineEntity
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         /* @var $authService \Zend\Authentication\AuthenticationService */
-        $authService   = $serviceLocator->get('zfcuser_user_service')->getAuthService();
-
+        $authService = $serviceLocator->get('zfcuser_auth_service');
         $identityProvider = new ZfcUserDoctrineEntity($authService);
 
         $config = $serviceLocator->get('Config');
