@@ -67,4 +67,14 @@ class RoleTest extends PHPUnit_Framework_TestCase
         $this->assertNotSame($parent, $role->getParent());
         $this->assertSame('parent2', $role->getParent()->getRoleId());
     }
+
+    /**
+     * @covers \BjyAuthorize\Acl\Role::setParent
+     * @expectedException BjyAuthorize\Exception\InvalidArgumentException
+     */
+    public function testSetInvalidParent()
+    {
+        $role = new Role('test1');
+        $role->setParent(new \stdClass());
+    }
 }
