@@ -31,7 +31,7 @@ class DoctrineEntityRoleProviderFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-	$config = $serviceLocator->get('Config');
+        $config = $serviceLocator->get('Config');
 
         $roleEntityClass = self::DEFAULT_ROLE_ENTITY_CLASS;
 
