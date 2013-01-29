@@ -42,8 +42,6 @@ return array(
             return new Provider\Identity\ZfcUserDoctrine($objectManager, $userService);
         },
 
-        'BjyAuthorize\Provider\Identity\ZfcUserDoctrineEntity' => 'BjyAuthorize\Service\ZfcUserDoctrineEntityFactory',
-
         'BjyAuthorize\View\UnauthorizedStrategy' => function (ServiceLocatorInterface $serviceLocator) {
             $config = $serviceLocator->get('Config');
 
@@ -59,7 +57,5 @@ return array(
         },
 
         'BjyAuthorize\Provider\Role\Doctrine' => 'BjyAuthorize\Service\DoctrineRoleProviderFactory',
-
-        'BjyAuthorize\Provider\Role\DoctrineEntity' => 'BjyAuthorize\Service\DoctrineEntityRoleProviderFactory',
     ),
 );
