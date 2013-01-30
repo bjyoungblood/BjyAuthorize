@@ -26,7 +26,7 @@ class Role implements RoleInterface
     /**
      * @var RoleInterface
      */
-    protected $parent = null;
+    protected $parent;
 
     /**
      * @param string|null               $roleId
@@ -34,7 +34,9 @@ class Role implements RoleInterface
      */
     public function __construct($roleId = null, $parent = null)
     {
-        $this->setRoleId($roleId);
+        if (null !== $roleId) {
+            $this->setRoleId($roleId);
+        }
         if (null !== $parent) {
             $this->setParent($parent);
         }
@@ -75,7 +77,9 @@ class Role implements RoleInterface
      */
     public function setParent($parent)
     {
-        if (is_string($parent)) {
+        if (null === $parent) {
+            $parent = null;
+        } elseif (is_string($parent)) {
             $parent = new Role($parent);
         } elseif (!($parent instanceof RoleInterface)) {
             throw new Exception\InvalidArgumentException(sprintf(

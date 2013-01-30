@@ -8,6 +8,8 @@
 
 namespace BjyAuthorize\Exception;
 
-class InvalidArgumentException extends \InvalidArgumentException
+use InvalidArgumentException as BaseInvalidArgumentException;
+
+class InvalidArgumentException extends BaseInvalidArgumentException
 {
 }

@@ -10,6 +10,7 @@ namespace BjyAuthorizeTest\Acl;
 
 use PHPUnit_Framework_TestCase;
 use BjyAuthorize\Acl\Role;
+use stdClass;
 
 /**
  * Base role object tests
@@ -70,11 +71,31 @@ class RoleTest extends PHPUnit_Framework_TestCase
 
     /**
      * @covers \BjyAuthorize\Acl\Role::setParent
-     * @expectedException BjyAuthorize\Exception\InvalidArgumentException
+     * @covers \BjyAuthorize\Acl\Role::getParent
+     */
+    public function testSetParentWithNull()
+    {
+        $parent = new Role('parent');
+        $role   = new Role('test1', $parent);
+
+        $this->assertSame($parent, $role->getParent());
+
+        $role->setParent(null);
+        $this->assertNull($role->getParent());
+    }
+
+    /**
+     * @covers \BjyAuthorize\Acl\Role::setParent
      */
     public function testSetInvalidParent()
     {
+        $this->setExpectedException(
+            'BjyAuthorize\Exception\InvalidArgumentException',
+            'BjyAuthorize\Acl\Role::setParent expects either a string or Zend\Permissions\Acl\Role\RoleInterface '
+            . 'instance; received "stdClass"'
+        );
+
         $role = new Role('test1');
-        $role->setParent(new \stdClass());
+        $role->setParent(new stdClass());
     }
 }
