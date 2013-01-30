@@ -8,6 +8,7 @@
 
 namespace BjyAuthorize\Acl;
 
+use BjyAuthorize\Exception;
 use Zend\Permissions\Acl\Role\RoleInterface;
 
 /**
@@ -33,12 +34,12 @@ class Role implements RoleInterface
      */
     public function __construct($roleId = null, $parent = null)
     {
-        if (isset($parent) && !($parent instanceof RoleInterface)) {
-            $parent = new Role($parent);
+        if (null !== $roleId) {
+            $this->setRoleId($roleId);
         }
-
-        $this->roleId   = $roleId;
-        $this->parent   = $parent;
+        if (null !== $parent) {
+            $this->setParent($parent);
+        }
     }
 
     /**
@@ -56,7 +57,7 @@ class Role implements RoleInterface
      */
     public function setRoleId($roleId)
     {
-        $this->roleId = $roleId;
+        $this->roleId = (string) $roleId;
 
         return $this;
     }
@@ -76,12 +77,26 @@ class Role implements RoleInterface
      */
     public function setParent($parent)
     {
-        if (isset($parent) && !($parent instanceof RoleInterface)) {
-            $parent = new Role($parent);
+        if (null === $parent) {
+            $this->parent = null;
+            return $this;
         }
 
-        $this->parent = $parent;
+        if (is_string($parent)) {
+            $this->parent = new Role($parent);
+            return $this;
+        }
 
-        return $this;
+        if ($parent instanceof RoleInterface) {
+            $this->parent = $parent;
+            return $this;
+        }
+
+        throw new Exception\InvalidArgumentException(sprintf(
+            '%s expects either a string or Zend\Permissions\Acl\Role\RoleInterface '
+            . 'instance; received "%s"',
+            __METHOD__,
+            (is_object($parent) ? get_class($parent) : gettype($parent))
+        ));
     }
 }
