@@ -1,7 +1,7 @@
-<?xml version="1.0"?>
-<phpunit
-        bootstrap="./tests/Bootstrap.php"
-        colors="true"
+<?xml version="1.0" encoding="UTF-8"?>
+
+<phpunit bootstrap="./Bootstrap.php" 
+		colors="true"
         convertErrorsToExceptions="true"
         convertNoticesToExceptions="true"
         convertWarningsToExceptions="true"
@@ -11,9 +11,11 @@
         backupGlobals="false"
         syntaxCheck="true"
         >
-    <testsuite name="BjyAuthorize tests">
-        <directory>./tests/BjyAuthorizeTest</directory>
-    </testsuite>
+    <testsuites>
+        <testsuite name="BjyAuthorize Module Tests">
+            <directory>./BjyAuthorizeTest</directory>
+        </testsuite>
+    </testsuites>
     <filter>
         <whitelist addUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">./src</directory>
