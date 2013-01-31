@@ -45,7 +45,7 @@ class DoctrineEntity implements ProviderInterface
 
         // Pass One: Build each object
         foreach ($result as $role) {
-            if ($role instanceof RoleInterface) {
+            if (!($role instanceof RoleInterface)) {
                 continue;
             }
 
