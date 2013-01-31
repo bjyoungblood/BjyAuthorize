@@ -37,9 +37,7 @@ class DoctrineEntityRoleProviderFactory implements FactoryInterface
 
         $roleEntityClass = $config['bjyauthorize']['role_providers']['BjyAuthorize\Provider\Role\DoctrineEntity']['role_entity_class'];
 
-        /* @var $objectManager \Doctrine\ORM\EntityManager */
         $objectManager = $serviceLocator->get('doctrine.entitymanager.orm_default');
-        /* @var Doctrine\Common\Persistence\ObjectRepository $objectRository */
         $objectRepository = $objectManager->getRepository($roleEntityClass);
 
         return new DoctrineEntity($objectRepository);

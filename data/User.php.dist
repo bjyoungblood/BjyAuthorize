@@ -61,7 +61,7 @@ class User implements UserInterface, ProviderInterface
     protected $state;
 
     /**
-     * @var ArrayCollection
+     * @var \Doctrine\Common\Collections\Collection
      * @ORM\ManyToMany(targetEntity="MyNamespace\Role")
      * @ORM\JoinTable(name="users_roles",
      *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
@@ -213,7 +213,7 @@ class User implements UserInterface, ProviderInterface
     /**
      * Get role.
      *
-     * @return ArrayCollection
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getRoles()
     {

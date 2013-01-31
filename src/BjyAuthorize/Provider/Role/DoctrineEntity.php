@@ -9,6 +9,7 @@
 namespace BjyAuthorize\Provider\Role;
 
 use BjyAuthorize\Acl\Role;
+use BjyAuthorize\Acl\RoleInterface;
 use BjyAuthorize\Acl\HierarchicalRoleInterface;
 use Doctrine\Common\Persistence\ObjectRepository;
 
@@ -44,12 +45,20 @@ class DoctrineEntity implements ProviderInterface
 
         // Pass One: Build each object
         foreach ($result as $role) {
-            if (!$role instanceof HierarchicalRoleInterface) {
+            if ($role instanceof RoleInterface) {
                 continue;
             }
 
             $roleId = $role->getRoleId();
-            $parent = $role->getParent() ? $role->getParent()->getRoleId() : null;
+
+            $parent = null;
+
+            if ($role instanceof HierarchicalRoleInterface) {
+                if ($role->getParent()) {
+                    $parent = $role->getParent()->getRoleId();
+                }
+            }
+
             $roles[$roleId] = new Role($roleId, $parent);
         }
 
