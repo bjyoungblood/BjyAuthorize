@@ -15,6 +15,8 @@ use ZfcUser\Service\User;
  * Identity provider based on {@see \Doctrine\ORM\EntityManager}
  *
  * @author Ben Youngblood <bx.youngblood@gmail.com>
+ *
+ * @deprecated you should use {@see \BjyAuthorize\Provider\Identity\AuthenticationDoctrineEntity} instead
  */
 class ZfcUserDoctrine implements ProviderInterface
 {

@@ -15,6 +15,8 @@ use Doctrine\ORM\EntityManager;
  * Role provider based on a {@see \Doctrine\ORM\EntityManager}
  *
  * @author Ben Youngblood <bx.youngblood@gmail.com>
+ *
+ * @deprecated you should use {@see \BjyAuthorize\Provider\Role\DoctrineEntity} instead
  */
 class Doctrine implements ProviderInterface
 {

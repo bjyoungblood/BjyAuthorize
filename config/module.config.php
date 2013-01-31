@@ -22,7 +22,9 @@ return array(
             'bjyauthorize_zend_db_adapter' => 'Zend\Db\Adapter\Adapter',
         ),
         'factories' => array(
-            'BjyAuthorize\Provider\Identity\AuthenticationIdentityProvider' => 'BjyAuthorize\Service\AuthenticationIdentityProviderServiceFactory'
+            'BjyAuthorize\Provider\Identity\AuthenticationIdentityProvider' => 'BjyAuthorize\Service\AuthenticationIdentityProviderServiceFactory',
+            'BjyAuthorize\Provider\Identity\AuthenticationDoctrineEntity' => 'BjyAuthorize\Service\AuthenticationDoctrineEntityFactory',
+            'BjyAuthorize\Provider\Role\DoctrineEntity' => 'BjyAuthorize\Service\DoctrineEntityRoleProviderFactory',
         ),
     ),
     'view_manager' => array(
