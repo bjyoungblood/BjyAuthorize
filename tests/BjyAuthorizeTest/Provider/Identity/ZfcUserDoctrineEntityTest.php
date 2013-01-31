@@ -74,11 +74,37 @@ class ZfcUserDoctrineEntityTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(self::DEFAULT_ROLE, $roles);
     }
 
+    /**
+     * @covers \BjyAuthorize\Provider\Identity\ZfcUserDoctrineEntity::getIdentityRoles
+     */
+    public function testGetDefaultRolesForRoleInterfaceUser()
+    {
+        // Create user and role mocks
+        $user = $this->getMock('Zend\Permissions\Acl\Role\RoleInterface');
+        $user->expects($this->once())
+            ->method('getRoleId')
+            ->will($this->returnValue('the_role'));
+
+        // Prepare the authService Mock
+        $this->authService->expects($this->once())
+            ->method('hasIdentity')
+            ->will($this->returnValue(true));
+
+        $this->authService->expects($this->once())
+            ->method('getIdentity')
+            ->will($this->returnValue($user));
+
+        // Test
+        $roles = $this->provider->getIdentityRoles();
+
+        $this->assertEquals(array('the_role'), $roles);
+        
+    }
     
     /**
      * @covers \BjyAuthorize\Provider\Identity\ZfcUserDoctrineEntity::getIdentityRoles
      */
-    public function testGetDefaultRoles()
+    public function testGetDefaultRolesForRoleProviderUser()
     {
         // Create user and role mocks
         $role1 = $this->getMock('Zend\Permissions\Acl\Role\RoleInterface');
