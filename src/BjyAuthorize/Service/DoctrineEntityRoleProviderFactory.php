@@ -8,9 +8,10 @@
 
 namespace BjyAuthorize\Service;
 
+use BjyAuthorize\Exception\InvalidArgumentException;
+use BjyAuthorize\Provider\Role\DoctrineEntity;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use BjyAuthorize\Provider\Role\DoctrineEntity;
 
 /**
  * Factory responsible of instantiating new instances
@@ -32,7 +33,7 @@ class DoctrineEntityRoleProviderFactory implements FactoryInterface
         $config = $serviceLocator->get('Config');
 
         if (!isset($config['bjyauthorize']['role_providers']['BjyAuthorize\Provider\Role\DoctrineEntity']['role_entity_class'])) {
-            return null; // What's the appropriate response
+            throw new InvalidArgumentException('role_entity_class not set in the bjyauthorize role_providers config.');
         }
 
         $roleEntityClass = $config['bjyauthorize']['role_providers']['BjyAuthorize\Provider\Role\DoctrineEntity']['role_entity_class'];
