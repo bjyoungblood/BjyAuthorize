@@ -9,30 +9,40 @@
 namespace BjyAuthorizeTest\View;
 
 use PHPUnit_Framework_TestCase;
-use BjyAuthorize\Provider\Identity\ZfcUserDoctrineEntity;
+use BjyAuthorize\Provider\Identity\AuthenticationDoctrineEntity;
 
 /**
- * {@see \BjyAuthorize\Provider\Identity\ZfcUserDoctrineEntity} test
+ * {@see \BjyAuthorize\Provider\Identity\AuthenticationDoctrineEntity} test
  *
  * @author Tom Oram <tom@scl.co.uk>
  */
-class ZfcUserDoctrineEntityTest extends PHPUnit_Framework_TestCase
+class AuthenticationDoctrineEntityTest extends PHPUnit_Framework_TestCase
 {
     const DEFAULT_ROLE = 'the_default_role';
 
+    /**
+     * @var \BjyAuthorize\Provider\Identity\AuthenticationDoctrineEntity
+     */
     private $provider;
+
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject
+     */
     private $authService;
 
+    /**
+     * @covers \BjyAuthorize\Provider\Identity\AuthenticationDoctrineEntity::__construct
+     */
     protected function setUp()
     {
         $this->authService = $this->getMock('Zend\Authentication\AuthenticationService');
+        $this->provider    = new AuthenticationDoctrineEntity($this->authService);
 
-        $this->provider = new ZfcUserDoctrineEntity($this->authService);
         $this->provider->setDefaultRole(self::DEFAULT_ROLE);
     }
 
     /**
-     * @covers \BjyAuthorize\Provider\Identity\ZfcUserDoctrineEntity::getDefaultRole
+     * @covers \BjyAuthorize\Provider\Identity\AuthenticationDoctrineEntity::getDefaultRole
      */
     public function testGetDefaultRole()
     {
@@ -40,7 +50,7 @@ class ZfcUserDoctrineEntityTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \BjyAuthorize\Provider\Identity\ZfcUserDoctrineEntity::getIdentityRoles
+     * @covers \BjyAuthorize\Provider\Identity\AuthenticationDoctrineEntity::getIdentityRoles
      */
     public function testGetDefaultRolesWithNoIdentity()
     {
@@ -53,11 +63,11 @@ class ZfcUserDoctrineEntityTest extends PHPUnit_Framework_TestCase
 
         $roles = $this->provider->getIdentityRoles();
 
-        $this->assertEquals(self::DEFAULT_ROLE, $roles);
+        $this->assertEquals(array(self::DEFAULT_ROLE), $roles);
     }
 
     /**
-     * @covers \BjyAuthorize\Provider\Identity\ZfcUserDoctrineEntity::getIdentityRoles
+     * @covers \BjyAuthorize\Provider\Identity\AuthenticationDoctrineEntity::getIdentityRoles
      */
     public function testGetDefaultRolesWithBadIdentityType()
     {
@@ -71,11 +81,11 @@ class ZfcUserDoctrineEntityTest extends PHPUnit_Framework_TestCase
 
         $roles = $this->provider->getIdentityRoles();
 
-        $this->assertEquals(self::DEFAULT_ROLE, $roles);
+        $this->assertEquals(array(self::DEFAULT_ROLE), $roles);
     }
 
     /**
-     * @covers \BjyAuthorize\Provider\Identity\ZfcUserDoctrineEntity::getIdentityRoles
+     * @covers \BjyAuthorize\Provider\Identity\AuthenticationDoctrineEntity::getIdentityRoles
      */
     public function testGetDefaultRolesForRoleInterfaceUser()
     {
@@ -102,7 +112,7 @@ class ZfcUserDoctrineEntityTest extends PHPUnit_Framework_TestCase
     }
     
     /**
-     * @covers \BjyAuthorize\Provider\Identity\ZfcUserDoctrineEntity::getIdentityRoles
+     * @covers \BjyAuthorize\Provider\Identity\AuthenticationDoctrineEntity::getIdentityRoles
      */
     public function testGetDefaultRolesForRoleProviderUser()
     {

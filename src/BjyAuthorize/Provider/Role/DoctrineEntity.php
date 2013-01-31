@@ -9,24 +9,24 @@
 namespace BjyAuthorize\Provider\Role;
 
 use BjyAuthorize\Acl\Role;
-use BjyAuthorize\Acl\RoleInterface;
 use BjyAuthorize\Acl\HierarchicalRoleInterface;
 use Doctrine\Common\Persistence\ObjectRepository;
+use Zend\Permissions\Acl\Role\RoleInterface;
 
 /**
- * Role provider based on a {@see \Doctrine\ORM\EntityManager}
+ * Role provider based on a {@see \Doctrine\Common\Persistence\ObjectRepository}
  *
- * @authro Tom Oram <tom@scl.co.uk>
+ * @author Tom Oram <tom@scl.co.uk>
  */
 class DoctrineEntity implements ProviderInterface
 {
     /**
-     * @var ObjectRepository
+     * @var \Doctrine\Common\Persistence\ObjectRepository
      */
     protected $objectRepository;
 
     /**
-     * @param ObjectRepositoy $objectRepository
+     * @param \Doctrine\Common\Persistence\ObjectRepository $objectRepository
      */
     public function __construct(ObjectRepository $objectRepository)
     {
@@ -39,31 +39,26 @@ class DoctrineEntity implements ProviderInterface
     public function getRoles()
     {
         $result = $this->objectRepository->findAll();
-
-        // get roles associated with the logged in user
         $roles  = array();
 
         // Pass One: Build each object
         foreach ($result as $role) {
-            if (!($role instanceof RoleInterface)) {
+            if (!$role instanceof RoleInterface) {
                 continue;
             }
 
             $roleId = $role->getRoleId();
-
             $parent = null;
 
-            if ($role instanceof HierarchicalRoleInterface) {
-                if ($role->getParent()) {
-                    $parent = $role->getParent()->getRoleId();
-                }
+            if ($role instanceof HierarchicalRoleInterface && $parent = $role->getParent()) {
+                $parent = $parent->getRoleId();
             }
 
             $roles[$roleId] = new Role($roleId, $parent);
         }
 
         // Pass Two: Re-inject parent objects to preserve hierarchy
-        /* @var $roleObj Role */
+        /* @var $roleObj \BjyAuthorize\Acl\Role */
         foreach ($roles as $roleObj) {
             $parentRoleObj = $roleObj->getParent();
 

@@ -73,29 +73,32 @@ class Role implements RoleInterface
     /**
      * @param RoleInterface|string|null $parent
      *
+     * @throws \BjyAuthorize\Exception\InvalidArgumentException
+     *
      * @return self
      */
     public function setParent($parent)
     {
         if (null === $parent) {
             $this->parent = null;
+
             return $this;
         }
 
         if (is_string($parent)) {
             $this->parent = new Role($parent);
+
             return $this;
         }
 
         if ($parent instanceof RoleInterface) {
             $this->parent = $parent;
+
             return $this;
         }
 
         throw new Exception\InvalidArgumentException(sprintf(
-            '%s expects either a string or Zend\Permissions\Acl\Role\RoleInterface '
-            . 'instance; received "%s"',
-            __METHOD__,
+            'Expected string or Zend\Permissions\Acl\Role\RoleInterface instance; received "%s"',
             (is_object($parent) ? get_class($parent) : gettype($parent))
         ));
     }

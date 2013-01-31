@@ -15,13 +15,12 @@ use Zend\Permissions\Acl\Role\RoleInterface;
 /**
  * Identity provider which uses doctrine User and Role entities.
  *
- * @author Ben Youngblood <bx.youngblood@gmail.com>
  * @author Tom Oram <tom@scl.co.uk>
  */
-class ZfcUserDoctrineEntity implements ProviderInterface
+class AuthenticationDoctrineEntity implements ProviderInterface
 {
     /**
-     * @var AuthenticationService
+     * @var \Zend\Authentication\AuthenticationService
      */
     protected $authService;
 
@@ -31,7 +30,7 @@ class ZfcUserDoctrineEntity implements ProviderInterface
     protected $defaultRole;
 
     /**
-     * @param AuthenticationService $authService
+     * @param \Zend\Authentication\AuthenticationService $authService
      */
     public function __construct(AuthenticationService $authService)
     {
@@ -44,27 +43,25 @@ class ZfcUserDoctrineEntity implements ProviderInterface
     public function getIdentityRoles()
     {
         if (!$this->authService->hasIdentity()) {
-            return $this->getDefaultRole();
+            return array($this->getDefaultRole());
         }
 
         $user = $this->authService->getIdentity();
 
-        if (!($user instanceof RoleInterface)
-            && !($user instanceof RoleProviderInterface)
-        ) {
-            return $this->getDefaultRole();
+        if (!($user instanceof RoleInterface || $user instanceof RoleProviderInterface)) {
+            return array($this->getDefaultRole());
         }
+
+        if ($user instanceof RoleInterface) {
+            return array($user->getRoleId());
+        }
+
+        /* @var $user \BjyAuthorize\Provider\Role\ProviderInterface */
 
         $roles = array();
 
-        if ($user instanceof RoleInterface) {
-            $roles[] = $user->getRoleId();
-        }
-
-        if ($user instanceof RoleProviderInterface) {
-            foreach ($user->getRoles() as $role) {
-                $roles[] = $role->getRoleId();
-            }
+        foreach ($user->getRoles() as $role) {
+            $roles[] = $role->getRoleId();
         }
 
         return $roles;

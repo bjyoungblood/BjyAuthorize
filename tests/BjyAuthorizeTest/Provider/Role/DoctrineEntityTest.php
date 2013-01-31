@@ -18,7 +18,14 @@ use BjyAuthorize\Provider\Role\DoctrineEntity;
  */
 class DoctrineEntityTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @var \BjyAuthorize\Provider\Role\DoctrineEntity
+     */
     private $provider;
+
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject
+     */
     private $repository;
 
     protected function setUp()

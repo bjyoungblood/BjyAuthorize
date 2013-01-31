@@ -25,8 +25,9 @@ Next in your ZfcUser configuration specify your user entity class for the **user
 Then in you bjyauthorize settings include the following 2 options:
 
 ```php
-// Set to use the DoctrineEntity identity provider
-'identity_provider'     => 'BjyAuthorize\Provider\Identity\ZfcUserDoctrineEntity',
+// Set to use the DoctrineEntity identity provider, works when the auth identity
+// is an entity as explained above
+'identity_provider'     => 'BjyAuthorize\Provider\Identity\AuthenticationDoctrineEntity',
 
 // Set to use the DoctrineEntity role provider
 'role_providers'        => array(

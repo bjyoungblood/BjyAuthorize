@@ -20,7 +20,7 @@ interface HierarchicalRoleInterface extends RoleInterface
     /**
      * Get the parent role
      *
-     * @return RoleInterface|null
+     * @return \Zend\Permissions\Acl\Role\RoleInterface|null
      */
     public function getParent();
 }

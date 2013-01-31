@@ -9,17 +9,28 @@
 namespace BjyAuthorizeTest\View;
 
 use PHPUnit_Framework_TestCase;
-use BjyAuthorize\Service\ZfcUserDoctrineEntityFactory;
+use BjyAuthorize\Service\AuthenticationDoctrineEntityFactory;
 
 /**
- * {@see \BjyAuthorize\Service\ZfcUserDoctrineEntityFactory} test
+ * {@see \BjyAuthorize\Service\AuthenticationDoctrineEntityFactory} test
  *
  * @author Tom Oram <tom@scl.co.uk>
  */
-class ZfcUserDoctrineEntityFactoryTest extends PHPUnit_Framework_TestCase
+class AuthenticationDoctrineEntityFactoryTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject
+     */
     private $locator;
+
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject
+     */
     private $authService;
+
+    /**
+     * @var \BjyAuthorize\Service\AuthenticationDoctrineEntityFactory
+     */
     private $factory;
 
     protected function setUp()
@@ -36,16 +47,16 @@ class ZfcUserDoctrineEntityFactoryTest extends PHPUnit_Framework_TestCase
             ->method('get')
             ->with($this->equalTo('Config'));
 
-        $this->factory = new ZfcUserDoctrineEntityFactory();
+        $this->factory = new AuthenticationDoctrineEntityFactory();
     }
 
     /**
-     * @covers \BjyAuthorize\Service\ZfcUserDoctrineEntityFactory::createService
+     * @covers \BjyAuthorize\Service\AuthenticationDoctrineEntityFactory::createService
      */
     public function testCreateServiceWithConfig()
     {
         $this->assertInstanceOf(
-            '\BjyAuthorize\Provider\Identity\ZfcUserDoctrineEntity',
+            '\BjyAuthorize\Provider\Identity\AuthenticationDoctrineEntity',
             $this->factory->createService($this->locator)
         );
     }

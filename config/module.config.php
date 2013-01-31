@@ -23,7 +23,7 @@ return array(
         ),
         'factories' => array(
             'BjyAuthorize\Provider\Identity\AuthenticationIdentityProvider' => 'BjyAuthorize\Service\AuthenticationIdentityProviderServiceFactory',
-            'BjyAuthorize\Provider\Identity\ZfcUserDoctrineEntity' => 'BjyAuthorize\Service\ZfcUserDoctrineEntityFactory',
+            'BjyAuthorize\Provider\Identity\AuthenticationDoctrineEntity' => 'BjyAuthorize\Service\AuthenticationDoctrineEntityFactory',
             'BjyAuthorize\Provider\Role\DoctrineEntity' => 'BjyAuthorize\Service\DoctrineEntityRoleProviderFactory',
         ),
     ),

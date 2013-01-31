@@ -8,28 +8,28 @@
 
 namespace BjyAuthorize\Service;
 
-use BjyAuthorize\Provider\Identity\ZfcUserDoctrineEntity;
+use BjyAuthorize\Provider\Identity\AuthenticationDoctrineEntity;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Factory responsible of instantiating new instances
- * of {@see \BjyAuthorize\Provider\Identity\ZfcUserDoctrineEntity}
+ * of {@see \BjyAuthorize\Provider\Identity\AuthenticationDoctrineEntity}
  *
  * @author Tom Oram <tom@scl.co.uk>
  */
-class ZfcUserDoctrineEntityFactory implements FactoryInterface
+class AuthenticationDoctrineEntityFactory implements FactoryInterface
 {
     /**
      * {@inheritDoc}
      *
-     * @return \BjyAuthorize\Provider\Identity\ZfcUserDoctrineEntity
+     * @return \BjyAuthorize\Provider\Identity\AuthenticationDoctrineEntity
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         /* @var $authService \Zend\Authentication\AuthenticationService */
         $authService = $serviceLocator->get('zfcuser_auth_service');
-        $identityProvider = new ZfcUserDoctrineEntity($authService);
+        $identityProvider = new AuthenticationDoctrineEntity($authService);
 
         $config = $serviceLocator->get('Config');
         $identityProvider->setDefaultRole($config['bjyauthorize']['default_role']);
