@@ -10,6 +10,7 @@ namespace BjyAuthorize\Provider\Identity;
 
 use BjyAuthorize\Provider\Role\ProviderInterface as RoleProviderInterface;
 use Zend\Authentication\AuthenticationService;
+use Zend\Permissions\Acl\Role\RoleInterface;
 
 /**
  * Identity provider which uses doctrine User and Role entities.
@@ -43,20 +44,27 @@ class ZfcUserDoctrineEntity implements ProviderInterface
     public function getIdentityRoles()
     {
         if (!$this->authService->hasIdentity()) {
-            // get default/guest role
+            return $this->getDefaultRole();
+        }
+
+        $user = $this->authService->getIdentity();
+
+        if (!($user instanceof RoleInterface)
+            && !($user instanceof RoleProviderInterface)
+        ) {
             return $this->getDefaultRole();
         }
 
         $roles = array();
 
-        $user = $this->authService->getIdentity();
-
-        if (!$user instanceof RoleProviderInterface) {
-            return $this->getDefaultRole();
+        if ($user instanceof RoleInterface) {
+            $roles[] = $user->getRoleId();
         }
 
-        foreach ($user->getRoles() as $role) {
-            $roles[] = $role->getRoleId();
+        if ($user instanceof RoleProviderInterface) {
+            foreach ($user->getRoles() as $role) {
+                $roles[] = $role->getRoleId();
+            }
         }
 
         return $roles;
