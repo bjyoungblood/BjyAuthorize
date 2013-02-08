@@ -19,15 +19,16 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=5.3.3",
-        "zendframework/zendframework": "2.*",
-        "zf-commons/zfc-base": "dev-master",
-        "zf-commons/zfc-user": "dev-master"
+        "zendframework/zend-permissions-acl": "2.*",
+        "zendframework/zend-mvc": "2.*",
+        "zendframework/zend-eventmanager": "2.*",
+        "zendframework/zend-servicemanager": "2.*",
+        "zendframework/zend-view": "2.*",
+        "zf-commons/zfc-base": "~0.1",
+        "zf-commons/zfc-user": "~0.1"
     },
     "require-dev": {
         "doctrine/doctrine-orm-module": "0.*"
-    },
-    "suggest": {
-        "zf-commons/zfc-user-doctrine-orm": "dev-master"
     },
     "autoload": {
         "psr-0": {
