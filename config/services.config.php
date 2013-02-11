@@ -57,5 +57,16 @@ return array(
         },
 
         'BjyAuthorize\Provider\Role\Doctrine' => 'BjyAuthorize\Service\DoctrineRoleProviderFactory',
+        
+        'BjyAuthorize\Guard\Controller' => function (\Zend\ServiceManager\ServiceLocatorInterface $sl) {
+            $config = $sl->get('config');
+            return new \BjyAuthorize\Guard\Controller($config['bjyauthorize']['guards']['BjyAuthorize\Guard\Controller'], $sl);
+        },
+        
+        'BjyAuthorize\Guard\Route'      => function (\Zend\ServiceManager\ServiceLocatorInterface $sl) {
+            $config = $sl->get('config');
+            return new \BjyAuthorize\Guard\Controller($config['bjyauthorize']['guards']['BjyAuthorize\Guard\Controller'], $sl);
+        },
+        
     ),
 );
