@@ -175,7 +175,7 @@ using the currently authenticated (or default) user's roles.
 
 Whenever you need to stop processing your action you can throw an UnAuthorizedException and users will see you message on a 403 page.
 
-```
+```php
 function cafeAction() {
     if (!$this->isAllowed('alcohol', 'consume')) {
         throw new \BjyAuthorize\Exception\UnAuthorizedException('Grow a beard first!');
