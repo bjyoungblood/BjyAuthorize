@@ -46,7 +46,5 @@ return array(
                 return new $class($options, $serviceLocator);
             }
         },
-
-        'BjyAuthorize\Provider\Role\Doctrine' => 'BjyAuthorize\Service\DoctrineRoleProviderFactory',
     ),
 );
