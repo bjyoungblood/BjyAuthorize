@@ -17,7 +17,7 @@ use Zend\Permissions\Acl\Role\RoleInterface;
  *
  * @author Tom Oram <tom@scl.co.uk>
  */
-class AuthenticationDoctrineEntity implements ProviderInterface
+class AuthenticationDoctrine implements ProviderInterface
 {
     /**
      * @var \Zend\Authentication\AuthenticationService
