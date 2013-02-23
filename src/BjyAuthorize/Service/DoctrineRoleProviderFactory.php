@@ -33,20 +33,17 @@ class DoctrineRoleProviderFactory implements FactoryInterface
     {
         $config = $serviceLocator->get('Config');
 
-        // For backward compatibility
-        if (isset($config['bjyauthorize']['role_providers']['BjyAuthorize\Provider\Role\DoctrineEntity']['role_entity_class'])) {
-            $roleClass = $config['bjyauthorize']['role_providers']['BjyAuthorize\Provider\Role\DoctrineEntity']['role_entity_class'];
-        } else if (isset($config['bjyauthorize']['role_providers']['BjyAuthorize\Provider\Role\Doctrine']['role_class'])) {
-            $roleClass = $config['bjyauthorize']['role_providers']['BjyAuthorize\Provider\Role\Doctrine']['role_class'];
-        } else {
-            throw new InvalidArgumentException('role_class not set in the bjyauthorize role_providers config.');
+        if (! isset($config['bjyauthorize']['role_providers']['BjyAuthorize\Provider\Role\DoctrineEntity']['role_entity_class'])) {
+            throw new InvalidArgumentException('role_entity_class not set in the bjyauthorize role_providers config.');
         }
+        $roleClass = $config['bjyauthorize']['role_providers']['BjyAuthorize\Provider\Role\DoctrineEntity']['role_entity_class'];
 
         if (! isset($config['bjyauthorize']['role_providers']['BjyAuthorize\Provider\Role\Doctrine']['object_manager'])) {
             throw new InvalidArgumentException('object_manager not set in the bjyauthorize role_providers config.');
         }
+        $objectManagerLocatorKey = $config['bjyauthorize']['role_providers']['BjyAuthorize\Provider\Role\Doctrine']['object_manager'];
 
-        $objectManager = $serviceLocator->get($config['bjyauthorize']['role_providers']['BjyAuthorize\Provider\Role\Doctrine']['object_manager']);
+        $objectManager = $serviceLocator->get($objectManagerLocatorKey);
         $objectRepository = $objectManager->getRepository($roleClass);
 
         return new Doctrine($objectRepository);
