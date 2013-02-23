@@ -33,15 +33,6 @@ return array(
             return new Provider\Identity\ZfcUserZendDb($adapter, $userService);
         },
 
-        'BjyAuthorize\Provider\Identity\ZfcUserDoctrine' => function (ServiceLocatorInterface $serviceLocator) {
-            /* @var $objectManager \Doctrine\ORM\EntityManager */
-            $objectManager = $serviceLocator->get('doctrine.entitymanager.orm_default');
-            /* @var $userService \ZfcUser\Service\User */
-            $userService   = $serviceLocator->get('zfcuser_user_service');
-
-            return new Provider\Identity\ZfcUserDoctrine($objectManager, $userService);
-        },
-
         'BjyAuthorize\View\UnauthorizedStrategy' => function (ServiceLocatorInterface $serviceLocator) {
             $config = $serviceLocator->get('Config');
 
