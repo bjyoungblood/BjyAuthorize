@@ -28,7 +28,11 @@
         "zf-commons/zfc-user": "~0.1"
     },
     "require-dev": {
-        "doctrine/doctrine-orm-module": "0.*"
+        "doctrine/doctrine-orm-module": "0.*",
+        "zendframework/zend-developer-tools": "*"
+    },
+    "suggests": {
+        "zendframework/zend-developer-tools": "if you need to see current authorization details while developing"
     },
     "autoload": {
         "psr-0": {
