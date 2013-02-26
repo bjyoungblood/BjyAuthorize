@@ -16,6 +16,8 @@ use Zend\Mvc\MvcEvent;
 use Zend\Stdlib\ResponseInterface as Response;
 use Zend\View\Model\ViewModel;
 use BjyAuthorize\Exception\UnAuthorizedException;
+use BjyAuthorize\Guard\Controller;
+use BjyAuthorize\Guard\Route;
 
 /**
  * Dispatch error handler, catches exceptions related with authorization and
@@ -91,9 +93,10 @@ class UnauthorizedStrategy implements ListenerAggregateInterface
     public function onDispatchError(MvcEvent $event)
     {
         // Do nothing if the result is a response object
-        $result = $event->getResult();
+        $result   = $event->getResult();
+        $response = $event->getResponse();
 
-        if ($result instanceof Response) {
+        if ($result instanceof Response || ($response && ! $response instanceof HttpResponse)) {
             return;
         }
 
@@ -104,11 +107,11 @@ class UnauthorizedStrategy implements ListenerAggregateInterface
         );
 
         switch ($event->getError()) {
-            case 'error-unauthorized-controller':
+            case Controller::ERROR:
                 $viewVariables['controller'] = $event->getParam('controller');
                 $viewVariables['action']     = $event->getParam('action');
                 break;
-            case 'error-unauthorized-route':
+            case Route::ERROR:
                 $viewVariables['route'] = $event->getParam('route');
                 break;
             case Application::ERROR_EXCEPTION:
@@ -129,13 +132,11 @@ class UnauthorizedStrategy implements ListenerAggregateInterface
                 return;
         }
 
-        $model = new ViewModel($viewVariables);
-        $model->setTemplate($this->getTemplate());
-        $event->getViewModel()->addChild($model);
-
-        $response = $event->getResponse();
+        $model    = new ViewModel($viewVariables);
         $response = $response ?: new HttpResponse();
 
+        $model->setTemplate($this->getTemplate());
+        $event->getViewModel()->addChild($model);
         $response->setStatusCode(403);
         $event->setResponse($response);
     }

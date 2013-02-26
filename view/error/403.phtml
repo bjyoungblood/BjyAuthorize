@@ -1,12 +1,12 @@
 <h1>403 Forbidden</h1>
 <p>
-    <?php if ($error == 'error-unauthorized-controller') : ?>
+    <?php if (\BjyAuthorize\Guard\Controller::ERROR === $error) : ?>
         You are not authorized to access <?php echo($controller);?>
         <?php if ($action) : ?>
         ::<?php echo($action);?>Action()
         <?php endif;?>
         .
-    <?php elseif ($error == 'error-unauthorized-route') : ?>
+    <?php elseif (\BjyAuthorize\Guard\Route::ERROR === $error)  : ?>
         You are not authorized to access <?php echo $route;?>.
     <?php elseif ($error == 'error-unauthorized') : ?>
         You are not authorized <?php echo $reason; ?>.
