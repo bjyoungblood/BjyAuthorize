@@ -231,7 +231,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
             ->expects($this->any())
             ->method('isAllowed')
             ->will($this->returnValue(false));
-        $event->expects($this->once())->method('setError')->with('error-unauthorized-controller');
+        $event->expects($this->once())->method('setError')->with(Controller::ERROR);
         $event->expects($this->exactly(3))->method('setParam')->with(
             $this->callback(function ($key) {
                 return in_array($key, array('identity', 'controller', 'action'));

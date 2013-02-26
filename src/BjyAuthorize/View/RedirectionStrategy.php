@@ -6,43 +6,43 @@
 
 namespace BjyAuthorize\View;
 
-use BjyAuthorize\Service\Authorize;
+use BjyAuthorize\Exception\UnAuthorizedException;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;
-use Zend\Http\Response as HttpResponse;
+use Zend\Http\Response;
+use Zend\Mvc\Application;
 use Zend\Mvc\MvcEvent;
-use Zend\Stdlib\ResponseInterface as Response;
+use BjyAuthorize\Guard\Route;
+use BjyAuthorize\Guard\Controller;
 
 class RedirectionStrategy implements ListenerAggregateInterface
 {
+    /**
+     * @var string route to be used to handle redirects
+     */
     protected $redirectRoute = 'zfcuser/login';
 
-    protected $redirectType = 'route';
-
-    const REDIRECT_URL = 'url';
-    const REDIRECT_ROUTE = 'route';
+    /**
+     * @var string URI to be used to handle redirects
+     */
+    protected $redirectUri;
 
     /**
      * @var \Zend\Stdlib\CallbackHandler[]
      */
     protected $listeners = array();
 
-    public function __construct($routeOrUrl = null, $redirectType = null)
-    {
-        if ($routeOrUrl) {
-            $this->redirectRoute = $routeOrUrl;
-        }
-
-        if ($redirectType) {
-            $this->redirectType = $redirectType;
-        }
-    }
-
+    /**
+     * {@inheritDoc}
+     */
     public function attach(EventManagerInterface $events)
     {
         $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH_ERROR, array($this, 'onDispatchError'), -5000);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function detach(EventManagerInterface $events)
     {
         foreach ($this->listeners as $index => $listener) {
@@ -52,44 +52,62 @@ class RedirectionStrategy implements ListenerAggregateInterface
         }
     }
 
-    public function onDispatchError(MvcEvent $e)
+    /**
+     * Handles redirects in case of dispatch errors caused by unauthorized access
+     *
+     * @param \Zend\Mvc\MvcEvent $event
+     */
+    public function onDispatchError(MvcEvent $event)
     {
         // Do nothing if the result is a response object
-        $result = $e->getResult();
-        if ($result instanceof Response) {
+        $result     = $event->getResult();
+        $routeMatch = $event->getRouteMatch();
+        $response   = $event->getResponse();
+        $router     = $event->getRouter();
+        $error      = $event->getError();
+        $url        = $this->redirectUri;
+
+        if (
+            $result instanceof Response
+            || ! $routeMatch
+            || ($response && ! $response instanceof Response)
+            || ! (
+                Route::ERROR === $error
+                || Controller::ERROR === $error
+                || (
+                    Application::ERROR_EXCEPTION === $error
+                    && ($event->getParam('exception') instanceof UnAuthorizedException)
+                )
+            )
+        ) {
             return;
         }
 
-        $router = $e->getRouter();
-        $match  = $e->getRouteMatch();
-        var_dump($e);
-
-        if ($this->redirectType == RedirectionStrategy::REDIRECT_ROUTE) {
-            // get url to the route
-            $options['name'] = $this->redirectRoute;
-            $url = $router->assemble(array(), $options);
-        } else {
-            $url = $this->redirectRoute;
+        if (null === $url) {
+            $url = $router->assemble(array(), array('name' => $this->redirectRoute));
         }
 
-        // set up response to redirect to login page
-        $response = $e->getResponse();
-        if (!$response) {
-            $response = new HttpResponse();
-            $e->setResponse($response);
-        }
-        $response->getHeaders()->addHeaderLine('Location', $url . '?redirect=' . $redirect);
+        $response = $response ?: new Response();
+
+        $response->getHeaders()->addHeaderLine('Location', $url);
         $response->setStatusCode(302);
+
+        $event->setResponse($response);
     }
 
-    public function setRedirectRoute($route)
+    /**
+     * @param string $redirectRoute
+     */
+    public function setRedirectRoute($redirectRoute)
     {
-        $this->redirectRoute = $route;
-        return $this;
+        $this->redirectRoute = (string) $redirectRoute;
     }
 
-    public function getRedirectRoute()
+    /**
+     * @param string|null $redirectUri
+     */
+    public function setRedirectUri($redirectUri)
     {
-        return $this->redirectRoute;
+        $this->redirectUri = $redirectUri ? (string) $redirectUri : null;
     }
 }

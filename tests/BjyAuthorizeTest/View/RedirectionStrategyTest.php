@@ -8,14 +8,11 @@
 
 namespace BjyAuthorizeTest\View;
 
+use BjyAuthorize\Guard\Route;
 use PHPUnit_Framework_TestCase;
 use BjyAuthorize\View\RedirectionStrategy;
 use Zend\Http\Response;
 use Zend\Mvc\Application;
-use Zend\View\Model\ModelInterface;
-use Zend\ServiceManager\ServiceManager;
-use Zend\ServiceManager\Config as ServiceManagerConfig;
-use Zend\Mvc\Router\SimpleRouteStack;
 
 /**
  * UnauthorizedStrategyTest view strategy test
@@ -25,14 +22,12 @@ use Zend\Mvc\Router\SimpleRouteStack;
 class RedirectionStrategyTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var UnauthorizedStrategy
+     * @var \BjyAuthorize\View\RedirectionStrategy
      */
     protected $strategy;
 
     /**
      * {@inheritDoc}
-     *
-     * @covers \BjyAuthorize\View\UnauthorizedStrategy::__construct
      */
     public function setUp()
     {
@@ -42,8 +37,8 @@ class RedirectionStrategyTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \BjyAuthorize\View\UnauthorizedStrategy::attach
-     * @covers \BjyAuthorize\View\UnauthorizedStrategy::detach
+     * @covers \BjyAuthorize\View\RedirectionStrategy::attach
+     * @covers \BjyAuthorize\View\RedirectionStrategy::detach
      */
     public function testAttachDetach()
     {
@@ -64,113 +59,169 @@ class RedirectionStrategyTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \BjyAuthorize\View\UnauthorizedStrategy::setTemplate
-     * @covers \BjyAuthorize\View\UnauthorizedStrategy::getTemplate
+     * @covers \BjyAuthorize\View\RedirectionStrategy::onDispatchError
      */
-    public function testGetSetRedirectType()
+    public function testWillIgnoreUnrecognizedResponse()
     {
-        $this->assertSame('zfcuser/login', $this->strategy->getRedirectRoute());
-        $this->strategy->setRedirectRoute('other/route');
-        $this->assertSame('other/route', $this->strategy->getRedirectRoute());
-    }
+        $mvcEvent     = $this->getMock('Zend\\Mvc\\MvcEvent');
+        $response     = $this->getMock('Zend\\Stdlib\\ResponseInterface');
+        $routeMatch   = $this->getMock('Zend\\Mvc\\Router\\RouteMatch', array(), array(), '', false);
 
-    /**
-     * @covers \BjyAuthorize\View\UnauthorizedStrategy::onDispatchError
-     */
-    public function testOnDispatchErrorWithGenericUnAuthorizedException()
-    {
-        $exception = $this->getMock('BjyAuthorize\\Exception\\UnAuthorizedException');
-        $viewModel = $this->getMock('Zend\\View\\Model\\ModelInterface');
-        $mvcEvent  = $this->getMock('Zend\\Mvc\\MvcEvent');
-
-        $mvcEvent->expects($this->any())->method('getError')->will($this->returnValue(Application::ERROR_EXCEPTION));
-        $mvcEvent->expects($this->any())->method('getViewModel')->will($this->returnValue($viewModel));
-        $mvcEvent
-            ->expects($this->any())
-            ->method('getParam')
-            ->will($this->returnCallback(function ($name) use ($exception) {
-                        return $name === 'exception' ? $exception : null;
-                    }));
-
-        $test = $this;
-
-        $viewModel
-            ->expects($this->once())
-            ->method('addChild')
-            ->with($this->callback(function (ModelInterface $model) use ($test) {
-                return 'zfcuser/login' === $model->getRedirectRoute();
-            }));
-        $mvcEvent
-            ->expects($this->once())
-            ->method('setResponse')
-            ->with($this->callback(function (Response $response) use ($test) {
-                return 302 === $response->getStatusCode();
-            }));
-
-        $mvcEvent = new \Zend\Mvc\MvcEvent;
-        $mvcEvent->setRouter($this->getMock('Zend\\Mvc\\Router\\SimpleRouteStack'));
-        var_dump($mvcEvent);
-
-        $this->assertNull($this->strategy->onDispatchError($mvcEvent));
-    }
-
-    /**
-     * @covers \BjyAuthorize\View\UnauthorizedStrategy::onDispatchError
-     */
-    public function testIgnoresUnknownExceptions()
-    {
-        $exception = $this->getMock('Exception');
-        $viewModel = $this->getMock('Zend\\View\\Model\\ModelInterface');
-        $mvcEvent  = $this->getMock('Zend\\Mvc\\MvcEvent');
-
-        $mvcEvent->expects($this->any())->method('getError')->will($this->returnValue(Application::ERROR_EXCEPTION));
-        $mvcEvent->expects($this->any())->method('getViewModel')->will($this->returnValue($viewModel));
-        $mvcEvent
-            ->expects($this->any())
-            ->method('getParam')
-            ->will($this->returnCallback(function ($name) use ($exception) {
-                return $name === 'exception' ? $exception : null;
-            }));
-
-        $viewModel->expects($this->never())->method('addChild');
+        $mvcEvent->expects($this->any())->method('getResponse')->will($this->returnValue($response));
+        $mvcEvent->expects($this->any())->method('getRouteMatch')->will($this->returnValue($routeMatch));
+        $mvcEvent->expects($this->any())->method('getError')->will($this->returnValue(Route::ERROR));
         $mvcEvent->expects($this->never())->method('setResponse');
 
-        $this->assertNull($this->strategy->onDispatchError($mvcEvent));
+        $this->strategy->onDispatchError($mvcEvent);
     }
 
     /**
-     * @covers \BjyAuthorize\View\UnauthorizedStrategy::onDispatchError
+     * @covers \BjyAuthorize\View\RedirectionStrategy::onDispatchError
      */
-    public function testIgnoresUnknownErrors()
+    public function testWillIgnoreUnrecognizedErrorType()
     {
-        $viewModel = $this->getMock('Zend\\View\\Model\\ModelInterface');
-        $mvcEvent  = $this->getMock('Zend\\Mvc\\MvcEvent');
+        $mvcEvent     = $this->getMock('Zend\\Mvc\\MvcEvent');
+        $response     = $this->getMock('Zend\\Http\\Response');
+        $routeMatch   = $this->getMock('Zend\\Mvc\\Router\\RouteMatch', array(), array(), '', false);
+        $route        = $this->getMock('Zend\\Mvc\\Router\\RouteInterface');
 
+        $mvcEvent->expects($this->any())->method('getResponse')->will($this->returnValue($response));
+        $mvcEvent->expects($this->any())->method('getRouteMatch')->will($this->returnValue($routeMatch));
+        $mvcEvent->expects($this->any())->method('getRouter')->will($this->returnValue($route));
         $mvcEvent->expects($this->any())->method('getError')->will($this->returnValue('unknown'));
-        $mvcEvent->expects($this->any())->method('getViewModel')->will($this->returnValue($viewModel));
-
-        $viewModel->expects($this->never())->method('addChild');
         $mvcEvent->expects($this->never())->method('setResponse');
 
-        $this->assertNull($this->strategy->onDispatchError($mvcEvent));
+        $this->strategy->onDispatchError($mvcEvent);
     }
 
     /**
-     * @covers \BjyAuthorize\View\UnauthorizedStrategy::onDispatchError
+     * @covers \BjyAuthorize\View\RedirectionStrategy::onDispatchError
      */
-    public function testIgnoresOnExistingResponse()
+    public function testWillIgnoreOnExistingResult()
     {
-        $response = $this->getMock('Zend\\Stdlib\\ResponseInterface');
-        $viewModel = $this->getMock('Zend\\View\\Model\\ModelInterface');
-        $mvcEvent  = $this->getMock('Zend\\Mvc\\MvcEvent');
+        $mvcEvent     = $this->getMock('Zend\\Mvc\\MvcEvent');
+        $response     = $this->getMock('Zend\\Http\\Response');
+        $routeMatch   = $this->getMock('Zend\\Mvc\\Router\\RouteMatch', array(), array(), '', false);
 
         $mvcEvent->expects($this->any())->method('getResult')->will($this->returnValue($response));
-        $mvcEvent->expects($this->any())->method('getViewModel')->will($this->returnValue($viewModel));
-
-        $viewModel->expects($this->never())->method('addChild');
+        $mvcEvent->expects($this->any())->method('getResponse')->will($this->returnValue($response));
+        $mvcEvent->expects($this->any())->method('getRouteMatch')->will($this->returnValue($routeMatch));
+        $mvcEvent->expects($this->any())->method('getError')->will($this->returnValue(Route::ERROR));
         $mvcEvent->expects($this->never())->method('setResponse');
 
-        $this->assertNull($this->strategy->onDispatchError($mvcEvent));
+        $this->strategy->onDispatchError($mvcEvent);
+    }
+
+    /**
+     * @covers \BjyAuthorize\View\RedirectionStrategy::onDispatchError
+     */
+    public function testWillIgnoreOnMissingRouteMatch()
+    {
+        $mvcEvent     = $this->getMock('Zend\\Mvc\\MvcEvent');
+        $response     = $this->getMock('Zend\\Http\\Response');
+
+        $mvcEvent->expects($this->any())->method('getResponse')->will($this->returnValue($response));
+        $mvcEvent->expects($this->any())->method('getError')->will($this->returnValue(Route::ERROR));
+        $mvcEvent->expects($this->never())->method('setResponse');
+
+        $this->strategy->onDispatchError($mvcEvent);
+    }
+
+    /**
+     * @covers \BjyAuthorize\View\RedirectionStrategy::onDispatchError
+     * @covers \BjyAuthorize\View\RedirectionStrategy::setRedirectRoute
+     * @covers \BjyAuthorize\View\RedirectionStrategy::setRedirectUri
+     */
+    public function testWillRedirectToRouteOnSetRoute()
+    {
+        $this->strategy->setRedirectRoute('redirect/route');
+        $this->strategy->setRedirectUri(null);
+
+        $mvcEvent     = $this->getMock('Zend\\Mvc\\MvcEvent');
+        $response     = $this->getMock('Zend\\Http\\Response');
+        $routeMatch   = $this->getMock('Zend\\Mvc\\Router\\RouteMatch', array(), array(), '', false);
+        $route        = $this->getMock('Zend\\Mvc\\Router\\RouteInterface');
+        $headers      = $this->getMock('Zend\\Http\\Headers');
+
+        $mvcEvent->expects($this->any())->method('getResponse')->will($this->returnValue($response));
+        $mvcEvent->expects($this->any())->method('getRouteMatch')->will($this->returnValue($routeMatch));
+        $mvcEvent->expects($this->any())->method('getRouter')->will($this->returnValue($route));
+        $mvcEvent->expects($this->any())->method('getError')->will($this->returnValue(Route::ERROR));
+
+        $response->expects($this->any())->method('getHeaders')->will($this->returnValue($headers));
+        $response->expects($this->once())->method('setStatusCode')->with(302);
+
+        $headers->expects($this->once())->method('addHeaderLine')->with('Location', 'http://www.example.org/');
+
+        $route
+            ->expects($this->any())
+            ->method('assemble')
+            ->with(array(), array('name' => 'redirect/route'))
+            ->will($this->returnValue('http://www.example.org/'));
+
+        $mvcEvent->expects($this->once())->method('setResponse')->with($response);
+
+        $this->strategy->onDispatchError($mvcEvent);
+    }
+
+    /**
+     * @covers \BjyAuthorize\View\RedirectionStrategy::onDispatchError
+     * @covers \BjyAuthorize\View\RedirectionStrategy::setRedirectUri
+     */
+    public function testWillRedirectToRouteOnSetUri()
+    {
+        $this->strategy->setRedirectUri('http://www.example.org/');
+
+        $mvcEvent     = $this->getMock('Zend\\Mvc\\MvcEvent');
+        $response     = $this->getMock('Zend\\Http\\Response');
+        $routeMatch   = $this->getMock('Zend\\Mvc\\Router\\RouteMatch', array(), array(), '', false);
+        $route        = $this->getMock('Zend\\Mvc\\Router\\RouteInterface');
+        $headers      = $this->getMock('Zend\\Http\\Headers');
+
+        $mvcEvent->expects($this->any())->method('getResponse')->will($this->returnValue($response));
+        $mvcEvent->expects($this->any())->method('getRouteMatch')->will($this->returnValue($routeMatch));
+        $mvcEvent->expects($this->any())->method('getRouter')->will($this->returnValue($route));
+        $mvcEvent->expects($this->any())->method('getError')->will($this->returnValue(Route::ERROR));
+
+        $response->expects($this->any())->method('getHeaders')->will($this->returnValue($headers));
+        $response->expects($this->once())->method('setStatusCode')->with(302);
+
+        $headers->expects($this->once())->method('addHeaderLine')->with('Location', 'http://www.example.org/');
+
+        $mvcEvent->expects($this->once())->method('setResponse')->with($response);
+
+        $this->strategy->onDispatchError($mvcEvent);
+    }
+
+    /**
+     * @covers \BjyAuthorize\View\RedirectionStrategy::onDispatchError
+     * @covers \BjyAuthorize\View\RedirectionStrategy::setRedirectUri
+     */
+    public function testWillRedirectToRouteOnSetUriWithApplicationError()
+    {
+        $this->strategy->setRedirectUri('http://www.example.org/');
+
+        $mvcEvent     = $this->getMock('Zend\\Mvc\\MvcEvent');
+        $response     = $this->getMock('Zend\\Http\\Response');
+        $routeMatch   = $this->getMock('Zend\\Mvc\\Router\\RouteMatch', array(), array(), '', false);
+        $route        = $this->getMock('Zend\\Mvc\\Router\\RouteInterface');
+        $headers      = $this->getMock('Zend\\Http\\Headers');
+        $exception    = $this->getMock('BjyAuthorize\\Exception\\UnAuthorizedException');
+
+        $mvcEvent->expects($this->any())->method('getResponse')->will($this->returnValue($response));
+        $mvcEvent->expects($this->any())->method('getRouteMatch')->will($this->returnValue($routeMatch));
+        $mvcEvent->expects($this->any())->method('getRouter')->will($this->returnValue($route));
+        $mvcEvent->expects($this->any())->method('getError')->will($this->returnValue(Application::ERROR_EXCEPTION));
+        $mvcEvent->expects($this->any())->method('getParam')->with('exception')->will($this->returnValue($exception));
+
+        $response->expects($this->any())->method('getHeaders')->will($this->returnValue($headers));
+        $response->expects($this->once())->method('setStatusCode')->with(302);
+
+        $headers->expects($this->once())->method('addHeaderLine')->with('Location', 'http://www.example.org/');
+
+        $mvcEvent->expects($this->once())->method('setResponse')->with($response);
+
+        $this->strategy->onDispatchError($mvcEvent);
     }
 }
 
