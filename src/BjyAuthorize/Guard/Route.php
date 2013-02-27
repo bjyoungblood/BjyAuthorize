@@ -24,6 +24,11 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 class Route implements GuardInterface, RuleProviderInterface, ResourceProviderInterface
 {
     /**
+     * Marker for invalid route errors
+     */
+    const ERROR = 'error-unauthorized-route';
+
+    /**
      * @var ServiceLocatorInterface
      */
     protected $serviceLocator;
@@ -121,7 +126,7 @@ class Route implements GuardInterface, RuleProviderInterface, ResourceProviderIn
             return;
         }
 
-        $event->setError('error-unauthorized-route');
+        $event->setError(static::ERROR);
         $event->setParam('route', $routeName);
         $event->setParam('identity', $service->getIdentity());
 

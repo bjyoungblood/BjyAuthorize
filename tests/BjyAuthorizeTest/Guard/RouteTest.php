@@ -167,7 +167,7 @@ class RouteTest extends PHPUnit_Framework_TestCase
             ->expects($this->any())
             ->method('isAllowed')
             ->will($this->returnValue(false));
-        $event->expects($this->once())->method('setError')->with('error-unauthorized-route');
+        $event->expects($this->once())->method('setError')->with(Route::ERROR);
         $event->expects($this->exactly(2))->method('setParam')->with(
             $this->callback(function ($key) {
                 return in_array($key, array('identity', 'route'));

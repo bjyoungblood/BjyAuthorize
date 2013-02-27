@@ -27,6 +27,11 @@ use Zend\Http\Request as HttpRequest;
 class Controller implements GuardInterface, RuleProviderInterface, ResourceProviderInterface
 {
     /**
+     * Marker for invalid route errors
+     */
+    const ERROR = 'error-unauthorized-controller';
+
+    /**
      * @var ServiceLocatorInterface
      */
     protected $serviceLocator;
@@ -150,7 +155,7 @@ class Controller implements GuardInterface, RuleProviderInterface, ResourceProvi
             return;
         }
 
-        $event->setError('error-unauthorized-controller');
+        $event->setError(static::ERROR);
         $event->setParam('identity', $service->getIdentity());
         $event->setParam('controller', $controller);
         $event->setParam('action', $action);
