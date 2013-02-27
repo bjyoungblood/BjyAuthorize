@@ -68,6 +68,12 @@ return array(
             $config = $sl->get('config');
             
             return new \BjyAuthorize\Guard\Route($config['bjyauthorize']['guards']['BjyAuthorize\Guard\Route'], $sl);
+        },
+
+        'BjyAuthorize\Collector\RoleCollector' => function (ServiceLocatorInterface $serviceLocator) {
+            $config = $serviceLocator->get('Config');
+
+            return new \BjyAuthorize\Collector\RoleCollector($serviceLocator->get($config['bjyauthorize']['identity_provider']));
         }
     ),
 );
