@@ -1,0 +1,44 @@
+<?php
+/* @var $collector \BjyAuthorize\Collector\RoleCollector */
+$roles      = $collector->getCollectedRoles();
+$rolesCount = count($roles);
+?>
+<div class="zdt-toolbar-entry">
+    <div class="zdt-toolbar-preview">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3QIaFysBPw45wAAAAtNJREFUOMuNlEtoXVUUhr//5MBVEExV1Jlkb+mJocY6cuJjoBNRcaDgyDgIVRo78tVCB8kkCrY4NEgUtTNFRXzgQPABHWgCYkCCF3o2VGqxAxtQuDcmN/fvoPu0N7dJcI3O2Xvtb/9r7bWWAOq6roAp4CmgAtja2qIsS3ayXq/HyMhI89sGPgVOxRjbquv6OkmfAI8BF4F/gN+AwjaStsHymoER4ABwAzAKfG376VKSbW9IWgZO2L4dKCRdAwOQhO1S0um8dCMwD2xIcpmdSuAz4GZJR2zvt71juAMXzYQQFgBSSg8A9wAMJqkFXADuAKyd5IEBAfO238+watChGM73brCsWMCC7bkY43pK6RfbB/I5hhXuZc0l34cQZrKyd4F7gY29FLJHmH8AxzLsGDANrA87l/8T9hfwcAjhTIbN73agUdgHti6nysOwb4C7M+ww8IbtIu83fltXFNougYOSbrW9nosW2wIWgCMxxn5K6Vng7YF8Kn+PA08Af5ILeBP4zvZtkrqNakkfSHoxww4Dp3IkGoqga/sW4F/ARe6SLyUF23fZ/gk4CkyHEJxSOtooG0iRAdk+b3u/pAB8bntDAO12e19Zlh8DjxRF8eTY2NgXdV1fD5yU9HxutYGStCSdk/Ryv9//CPi21+s9U1XVWgFQVdXa5ubmK5LOdbvdhdnZ2dGiKBaBGaBs8joAO7+ysvJgt9t9S9LfwOtVVa1deeV2u834+PhKp9M53mq1Rqempi4sLy+flHS2aeGrrayzS0tLj05OTv7earX2dTqdl2KMP6SUtjmyurrKxMQEKaXjwBxw0faipIds359pp23/KOkQcBMwF0KYb85uA+ZBS4yRlNI0cAi4D3gzDw6A/4DXbP8saTGE8F5KiRDC1Wk0XOkNtK7rOyWdAB63/WtWeBD4yvarMcYzje+28bZbC6WUmun8HPBOfpEXgA+Ba0CNXQJIOlq0WInvCQAAAABJRU5ErkJggg==" alt="BjyAuthorize Current Identity Roles">
+        <span class="zdt-toolbar-info">
+               <span class="zdt-toolbar-extra-info">
+                <?php
+                    if (1 === $rolesCount) {
+                        echo $this->escapeHtml(reset($roles));
+                    } elseif ($rolesCount > 1) {
+                        echo $rolesCount . ' roles';
+                    }
+                ?>
+            </span>
+        </span>
+    </div>
+    <div class="zdt-toolbar-detail">
+        <span class="zdt-toolbar-info">
+            <a href="https://github.com/bjyoungblood/BjyAuthorize/" target="_blank">BjyAuthorize</a>
+            <br/>
+            <span class="zdt-detail-label">Identity Roles - <?php
+                if (0 === $rolesCount) {
+                    echo 'No role';
+                } elseif (1 === $rolesCount) {
+                    echo '1 role';
+                } else {
+                    echo $rolesCount . ' roles';
+                }
+            ?></span>
+        </span>
+        <?php foreach ($roles as $role) { ?>
+            <br/>
+            <span class="zdt-toolbar-info">
+                <span class="zdt-detail-value">
+                    <?php echo $this->escapeHtml($role) ?>
+                </span>
+            </span>
+        <?php } ?>
+    </div>
+</div>
