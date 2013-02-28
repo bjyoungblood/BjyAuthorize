@@ -8,28 +8,44 @@
 
 namespace BjyAuthorize\Service;
 
+use BjyAuthorize\Exception\InvalidArgumentException;
+use BjyAuthorize\Provider\Role\Doctrine;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use BjyAuthorize\Provider\Role\Doctrine;
 
 /**
  * Factory responsible of instantiating new instances
- * of {@see \BjyAuthorize\Provider\Role\Doctrine}
+ * of {@see \BjyAuthorize\Provider\Role\DoctrineEntity}
  *
- * @author Marco Pivetta <ocramius@gmail.com>
+ * @author Tom Oram <tom@scl.co.uk>
+ * @author Jérémy Huet <jeremy.huet@gmail.com>
  */
 class DoctrineRoleProviderFactory implements FactoryInterface
 {
     /**
      * {@inheritDoc}
      *
+     * @param ServiceLocatorInterface $serviceLocator
+     *
      * @return \BjyAuthorize\Provider\Role\Doctrine
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        /* @var $objectManager \Doctrine\ORM\EntityManager */
-        $objectManager = $serviceLocator->get('doctrine.entitymanager.orm_default');
+        $config = $serviceLocator->get('Config');
 
-        return new Doctrine(array(), $objectManager);
+        if (! isset($config['bjyauthorize']['role_providers']['BjyAuthorize\Provider\Role\Doctrine']['role_entity_class'])) {
+            throw new InvalidArgumentException('role_entity_class not set in the bjyauthorize role_providers config.');
+        }
+        $roleClass = $config['bjyauthorize']['role_providers']['BjyAuthorize\Provider\Role\Doctrine']['role_entity_class'];
+
+        if (! isset($config['bjyauthorize']['role_providers']['BjyAuthorize\Provider\Role\Doctrine']['object_manager'])) {
+            throw new InvalidArgumentException('object_manager not set in the bjyauthorize role_providers config.');
+        }
+        $objectManagerLocatorKey = $config['bjyauthorize']['role_providers']['BjyAuthorize\Provider\Role\Doctrine']['object_manager'];
+
+        $objectManager = $serviceLocator->get($objectManagerLocatorKey);
+        $objectRepository = $objectManager->getRepository($roleClass);
+
+        return new Doctrine($objectRepository);
     }
 }

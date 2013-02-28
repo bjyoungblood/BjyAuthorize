@@ -9,56 +9,28 @@
 namespace BjyAuthorize\Provider\Role;
 
 use BjyAuthorize\Acl\Role;
-use Doctrine\ORM\EntityManager;
+use BjyAuthorize\Acl\HierarchicalRoleInterface;
+use Doctrine\Common\Persistence\ObjectRepository;
+use Zend\Permissions\Acl\Role\RoleInterface;
 
 /**
- * Role provider based on a {@see \Doctrine\ORM\EntityManager}
+ * Role provider based on a {@see \Doctrine\Common\Persistence\ObjectRepository}
  *
- * @author Ben Youngblood <bx.youngblood@gmail.com>
- *
- * @deprecated you should use {@see \BjyAuthorize\Provider\Role\DoctrineEntity} instead
+ * @author Tom Oram <tom@scl.co.uk>
  */
 class Doctrine implements ProviderInterface
 {
     /**
-     * @var EntityManager
+     * @var \Doctrine\Common\Persistence\ObjectRepository
      */
-    protected $entityManager;
+    protected $objectRepository;
 
     /**
-     * @var string
+     * @param \Doctrine\Common\Persistence\ObjectRepository $objectRepository
      */
-    protected $tableName           = 'user_role';
-
-    /**
-     * @var string
-     */
-    protected $roleIdFieldName     = 'role_id';
-
-    /**
-     * @var string
-     */
-    protected $parentRoleFieldName = 'parent';
-
-    /**
-     * @param array         $options
-     * @param EntityManager $entityManager
-     */
-    public function __construct(array $options, EntityManager $entityManager)
+    public function __construct(ObjectRepository $objectRepository)
     {
-        if (isset($options['table'])) {
-            $this->tableName = $options['table'];
-        }
-
-        if (isset($options['role_id_field'])) {
-            $this->roleIdFieldName = $options['role_id_field'];
-        }
-
-        if (isset($options['parent_role_field'])) {
-            $this->parentRoleFieldName = $options['parent_role_field'];
-        }
-
-        $this->entityManager = $entityManager;
+        $this->objectRepository = $objectRepository;
     }
 
     /**
@@ -66,24 +38,27 @@ class Doctrine implements ProviderInterface
      */
     public function getRoles()
     {
-        // get roles associated with the logged in user
+        $result = $this->objectRepository->findAll();
         $roles  = array();
-        $rowset = $this
-            ->entityManager
-            ->getConnection()
-            ->createQueryBuilder()
-            ->select($this->roleIdFieldName, $this->parentRoleFieldName)
-            ->from($this->tableName, $this->tableName)
-            ->execute();
 
         // Pass One: Build each object
-        foreach ($rowset as $row) {
-            $roleId         = $row[$this->roleIdFieldName];
-            $roles[$roleId] = new Role($roleId, $row[$this->parentRoleFieldName]);
+        foreach ($result as $role) {
+            if (!$role instanceof RoleInterface) {
+                continue;
+            }
+
+            $roleId = $role->getRoleId();
+            $parent = null;
+
+            if ($role instanceof HierarchicalRoleInterface && $parent = $role->getParent()) {
+                $parent = $parent->getRoleId();
+            }
+
+            $roles[$roleId] = new Role($roleId, $parent);
         }
 
         // Pass Two: Re-inject parent objects to preserve hierarchy
-        /* @var $roleObj Role */
+        /* @var $roleObj \BjyAuthorize\Acl\Role */
         foreach ($roles as $roleObj) {
             $parentRoleObj = $roleObj->getParent();
 
