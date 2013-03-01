@@ -52,7 +52,6 @@ class RoleCollectorTest extends PHPUnit_Framework_TestCase
 
         $role1->expects($this->any())->method('getRoleId')->will($this->returnValue('role1'));
 
-
         $this
             ->identityProvider
             ->expects($this->any())

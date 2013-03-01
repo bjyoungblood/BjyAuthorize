@@ -8,6 +8,7 @@
 
 namespace BjyAuthorize;
 
+use BjyAuthorize\Provider\Role\ZendDb;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 return array(
@@ -22,15 +23,18 @@ return array(
         }
     ),
     'factories' => array(
-        'BjyAuthorize\Service\Authorize' => 'BjyAuthorize\Service\AuthorizeFactory',
-
         'BjyAuthorize\Provider\Identity\ZfcUserZendDb' => function (ServiceLocatorInterface $serviceLocator) {
             /* @var $adapter \Zend\Db\Adapter\Adapter */
             $adapter     = $serviceLocator->get('zfcuser_zend_db_adapter');
             /* @var $userService \ZfcUser\Service\User */
             $userService = $serviceLocator->get('zfcuser_user_service');
+            $config      = $serviceLocator->get('Config');
 
-            return new Provider\Identity\ZfcUserZendDb($adapter, $userService);
+            $provider = new Provider\Identity\ZfcUserZendDb($adapter, $userService);
+
+            $provider->setDefaultRole($config['bjyauthorize']['default_role']);
+
+            return $provider;
         },
 
         'BjyAuthorize\View\UnauthorizedStrategy' => function (ServiceLocatorInterface $serviceLocator) {
@@ -42,27 +46,31 @@ return array(
         'BjyAuthorize\Provider\Role\ZendDb' => function (ServiceLocatorInterface $serviceLocator) {
             $config = $serviceLocator->get('Config');
 
-            foreach ($config['bjyauthorize']['role_providers'] as $class => $options) {
-                return new $class($options, $serviceLocator);
-            }
+            return new ZendDb(
+                $config['bjyauthorize']['role_providers']['BjyAuthorize\Provider\Role\ZendDb'],
+                $serviceLocator
+            );
         },
 
-        'BjyAuthorize\Guard\Controller' => function (\Zend\ServiceManager\ServiceLocatorInterface $sl) {
+        'BjyAuthorize\Guard\Controller' => function (ServiceLocatorInterface $sl) {
             $config = $sl->get('config');
-            
-            return new \BjyAuthorize\Guard\Controller($config['bjyauthorize']['guards']['BjyAuthorize\Guard\Controller'], $sl);
+
+            return new Guard\Controller($config['bjyauthorize']['guards']['BjyAuthorize\Guard\Controller'], $sl);
         },
-        
-        'BjyAuthorize\Guard\Route'      => function (\Zend\ServiceManager\ServiceLocatorInterface $sl) {
+
+        'BjyAuthorize\Guard\Route'      => function (ServiceLocatorInterface $sl) {
             $config = $sl->get('config');
-            
-            return new \BjyAuthorize\Guard\Route($config['bjyauthorize']['guards']['BjyAuthorize\Guard\Route'], $sl);
+
+            return new Guard\Route($config['bjyauthorize']['guards']['BjyAuthorize\Guard\Route'], $sl);
         },
 
         'BjyAuthorize\Collector\RoleCollector' => function (ServiceLocatorInterface $serviceLocator) {
             $config = $serviceLocator->get('Config');
 
-            return new \BjyAuthorize\Collector\RoleCollector($serviceLocator->get($config['bjyauthorize']['identity_provider']));
+            /* @var $identityProvider \BjyAuthorize\Provider\Identity\ProviderInterface */
+            $identityProvider = $serviceLocator->get($config['bjyauthorize']['identity_provider']);
+
+            return new Collector\RoleCollector($identityProvider);
         }
     ),
 );

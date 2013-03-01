@@ -18,7 +18,7 @@ use Zend\Permissions\Acl\Role\RoleInterface;
  *
  * @author Tom Oram <tom@scl.co.uk>
  */
-class Doctrine implements ProviderInterface
+class ObjectRepositoryProvider implements ProviderInterface
 {
     /**
      * @var \Doctrine\Common\Persistence\ObjectRepository

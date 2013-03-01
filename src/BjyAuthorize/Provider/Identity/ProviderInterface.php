@@ -10,7 +10,7 @@ namespace BjyAuthorize\Provider\Identity;
 
 /**
  * Interface for identity providers, which are objects capable of
- * retrieving an active identity
+ * retrieving an active identity's role
  *
  * @author Ben Youngblood <bx.youngblood@gmail.com>
  */
@@ -22,16 +22,4 @@ interface ProviderInterface
      * @return string[]|\Zend\Permissions\Acl\Role\RoleInterface[]
      */
     public function getIdentityRoles();
-
-    /**
-     * @return string|\Zend\Permissions\Acl\Role\RoleInterface
-     */
-    public function getDefaultRole();
-
-    /**
-     * @param string|\Zend\Permissions\Acl\Role\RoleInterface $role
-     *
-     * @return void
-     */
-    public function setDefaultRole($role);
 }

@@ -187,6 +187,8 @@ class RouteTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param string|null $route
+     *
      * @return \PHPUnit_Framework_MockObject_MockObject|\Zend\Mvc\MvcEvent
      */
     private function createMvcEvent($route = null)
