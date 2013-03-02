@@ -1,56 +1,55 @@
-BjyAuthorize
-============
+# BjyAuthorize - Acl security for ZF2
 
-![Travis-CI Build Status](https://api.travis-ci.org/bjyoungblood/BjyAuthorize.png?branch=master)
+[![Travis-CI Build Status](https://api.travis-ci.org/bjyoungblood/BjyAuthorize.png?branch=master)](https://travis-ci.org/bjyoungblood/BjyAuthorize)
 
 This module is designed provide a facade for `Zend\Permissions\Acl` that will
 ease its usage with modules and applications. By default, it provides simple
-setup via config files or by using Zend\Db or Doctrine ORM. This module also
-comes with out-of-the-box support for and integration with ZfcUser.
+setup via config files or by using `Zend\Db` or Doctrine ORM/ODM (via ZfcUserDoctrineORM).
 
-Requirements
-------------
+## Requirements
 
  * [Zend Framework 2](https://github.com/zendframework/zf2)
- * [ZfcBase](https://github.com/ZF-Commons/ZfcBase)
- * [ZfcUser](https://github.com/ZF-Commons/ZfcUser)
+ * [ZfcUser](https://github.com/ZF-Commons/ZfcUser) (optional)
+ * [ZfcUserDoctrineORM](https://github.com/ZF-Commons/ZfcUserDoctrineORM) (optional)
 
-Optionally, you can also use
-[ZfcUserDoctrineORM](https://github.com/ZF-Commons/ZfcUserDoctrineORM) and
-use doctrine to fetch roles for your users.
-
-Installation
+## Installation
 ------------
 
-#### Composer
+### Composer
+
+The suggested installation method is via [composer](http://getcomposer.org/):
 
 ```sh
-php composer.phar require bjyoungblood/bjy-authorize
+php composer.phar require bjyoungblood/bjy-authorize:1.2.*
+php composer.phar require zf-commons/zfc-user:0.1.*
 ```
 
-And type `dev-master` when asked for a version to pick.
+### Git Submodule
 
-#### Git Submodule
-
- 1. Install [ZfcUser](https://github.com/ZF-Commons/ZfcUser) (follow it's installation docs)
+ 1. Install [ZfcUser](https://github.com/ZF-Commons/ZfcUser) (follow its installation docs)
  2. Clone this project into your `./vendor/` directory
-```
-cd vendor;
-git clone git://github.com/bjyoungblood/BjyAuthorize.git;
-```
 
-### Configuration
+    ```sh
+    cd vendor
+    git clone git://github.com/bjyoungblood/BjyAuthorize.git
+    ```
 
- 1. Ensure that this module and it's dependencies are enabled in your `application.config.php` file in the following order:
-     * ZfcBase
-     * ZfcUser
-     * BjyAuthorize
+## Configuration
+
+Following steps apply if you want to use `ZfcUser` with `Zend\Db`. If you want to use Doctrine ORM/ODM, you should
+also check the [doctrine documentation](https://github.com/bjyoungblood/BjyAuthorize/blob/master/docs/doctrine.md).
+
+ 1. Ensure that following modules are enabled in your `application.config.php` file in the this order:
+     * `ZfcBase`
+     * `ZfcUser`
+     * `BjyAuthorize`
  3. Import the SQL schema located in `./vendor/BjyAuthorize/data/schema.sql`.
  4. Copy `./vendor/BjyAuthorize/config/module.config.php` to
     `./config/autoload/module.bjyauthorize.global.php`.
  5. Fill in the required configuration variable values in  `./config/autoload/module.bjyauthorize.global.php`
 
 Here is an annotated sample configuration file:
+
 ```php
 <?php
 
@@ -67,6 +66,7 @@ return array(
          * for ZfcUser, this will be your default identity provider
          */
         'identity_provider' => 'BjyAuthorize\Provider\Identity\ZfcUserZendDb',
+
         /* If you only have a default role and an authenticated role, you can
          * use the 'AuthenticationIdentityProvider' to allow/restrict access
          * with the guards based on the state 'logged in' and 'not logged in'.
@@ -167,8 +167,7 @@ return array(
 );
 ```
 
-Helpers and Plugins
--------------------
+## Helpers and Plugins
 
 There are view helpers and controller plugins registered for this module.
 In either a controller or a view script, you can call
@@ -187,7 +186,6 @@ function cafeAction() {
 }
 ```
 
-License
--------
-Released under the MIT License. See file LICENSE included with the source
-code for this project for a copy of the licensing terms.
+## License
+Released under the MIT License. See file [LICENSE]()(https://github.com/bjyoungblood/BjyAuthorize/blob/master/LICENSE)
+included with the source code for this project for a copy of the licensing terms.

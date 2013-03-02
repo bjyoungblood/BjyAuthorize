@@ -15,6 +15,13 @@ use Zend\Mvc\MvcEvent;
 use BjyAuthorize\Guard\Route;
 use BjyAuthorize\Guard\Controller;
 
+/**
+ * Dispatch error handler, catches exceptions related with authorization and
+ * redirects the user agent to a configured location
+ *
+ * @author Ben Youngblood <bx.youngblood@gmail.com>
+ * @author Marco Pivetta  <ocramius@gmail.com>
+ */
 class RedirectionStrategy implements ListenerAggregateInterface
 {
     /**

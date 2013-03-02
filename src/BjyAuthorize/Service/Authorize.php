@@ -100,7 +100,6 @@ class Authorize
 
         if (isset($config['identity_provider'])) {
             $this->setIdentityProvider($serviceLocator->get($config['identity_provider']));
-            $this->identityProvider->setDefaultRole($config['default_role']);
         }
 
         if (isset($config['guards'])) {
@@ -283,7 +282,7 @@ class Authorize
             }
 
             if ($role->getParent() !== null) {
-                $this->addRoles($role->getParent());
+                $this->addRoles(array($role->getParent()));
                 $this->acl->addRole($role, $role->getParent());
             } else {
                 $this->acl->addRole($role);

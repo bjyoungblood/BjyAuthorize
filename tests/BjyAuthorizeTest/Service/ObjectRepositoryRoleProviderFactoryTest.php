@@ -6,17 +6,17 @@
  * @license http://framework.zend.com/license/new-bsd New BSD License
  */
 
-namespace BjyAuthorizeTest\View;
+namespace BjyAuthorizeTest\Service;
 
 use PHPUnit_Framework_TestCase;
-use BjyAuthorize\Service\DoctrineEntityRoleProviderFactory;
+use BjyAuthorize\Service\ObjectRepositoryRoleProviderFactory;
 
 /**
- * {@see \BjyAuthorize\Service\DoctrineEntityRoleProviderFactory} test
+ * {@see \BjyAuthorize\Service\ObjectRepositoryRoleProviderFactory} test
  *
  * @author Tom Oram <tom@scl.co.uk>
  */
-class DoctrineEntityRoleProviderFactoryTest extends PHPUnit_Framework_TestCase
+class ObjectRepositoryRoleProviderFactoryTest extends PHPUnit_Framework_TestCase
 {
     private $locator;
     private $entityManager;
@@ -26,14 +26,14 @@ class DoctrineEntityRoleProviderFactoryTest extends PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->locator       = $this->getMock('Zend\ServiceManager\ServiceLocatorInterface');
-        $this->entityManager = $this->getMock('Doctrine\ORM\EntityManager', array(), array(), '', false);
+        $this->entityManager = $this->getMock('Doctrine\Common\Persistence\ObjectManager');
         $this->repository    = $this->getMock('Doctrine\Common\Persistence\ObjectRepository');
 
-        $this->factory = new DoctrineEntityRoleProviderFactory();
+        $this->factory = new ObjectRepositoryRoleProviderFactory();
     }
 
     /**
-     * @covers \BjyAuthorize\Service\DoctrineEntityRoleProviderFactory::createService
+     * @covers \BjyAuthorize\Service\ObjectRepositoryRoleProviderFactory::createService
      */
     public function testCreateServiceWithConfig()
     {
@@ -42,8 +42,9 @@ class DoctrineEntityRoleProviderFactoryTest extends PHPUnit_Framework_TestCase
         $config = array(
             'bjyauthorize' => array(
                 'role_providers' => array(
-                    'BjyAuthorize\Provider\Role\DoctrineEntity' => array(
+                    'BjyAuthorize\Provider\Role\Doctrine' => array(
                         'role_entity_class' => $testClassName,
+                        'object_manager'    => 'doctrine.entitymanager.orm_default',
                     ),
                 ),
             ),
@@ -51,22 +52,21 @@ class DoctrineEntityRoleProviderFactoryTest extends PHPUnit_Framework_TestCase
 
         $this->entityManager->expects($this->once())
             ->method('getRepository')
-            ->with($this->equalTo($testClassName))
+            ->with($testClassName)
             ->will($this->returnValue($this->repository));
 
         $this->locator->expects($this->at(0))
             ->method('get')
-            ->with($this->equalTo('Config'))
+            ->with('Config')
             ->will($this->returnValue($config));
 
         $this->locator->expects($this->at(1))
             ->method('get')
-            ->with($this->equalTo('doctrine.entitymanager.orm_default'))
+            ->with('doctrine.entitymanager.orm_default')
             ->will($this->returnValue($this->entityManager));
 
-
         $this->assertInstanceOf(
-            'BjyAuthorize\Provider\Role\DoctrineEntity',
+            'BjyAuthorize\Provider\Role\ObjectRepositoryProvider',
             $this->factory->createService($this->locator)
         );
     }

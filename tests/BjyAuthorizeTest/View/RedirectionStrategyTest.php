@@ -224,4 +224,3 @@ class RedirectionStrategyTest extends PHPUnit_Framework_TestCase
         $this->strategy->onDispatchError($mvcEvent);
     }
 }
-

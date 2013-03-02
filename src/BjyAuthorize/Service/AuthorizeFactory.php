@@ -21,7 +21,7 @@ class AuthorizeFactory implements FactoryInterface
     /**
      * {@inheritDoc}
      *
-     * @return Authorize
+     * @return \BjyAuthorize\Service\Authorize
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
