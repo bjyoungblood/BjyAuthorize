@@ -1,6 +1,8 @@
 BjyAuthorize
 ============
 
+![Travis-CI Build Status](https://api.travis-ci.org/bjyoungblood/BjyAuthorize.png?branch=master)
+
 This module is designed provide a facade for `Zend\Permissions\Acl` that will
 ease its usage with modules and applications. By default, it provides simple
 setup via config files or by using Zend\Db or Doctrine ORM. This module also
