@@ -89,12 +89,9 @@ class RoleTest extends PHPUnit_Framework_TestCase
      */
     public function testSetInvalidParent()
     {
-        $this->setExpectedException(
-            'BjyAuthorize\Exception\InvalidArgumentException',
-            'Expected string or Zend\Permissions\Acl\Role\RoleInterface instance; received "stdClass"'
-        );
-
         $role = new Role('test1');
+
+        $this->setExpectedException('BjyAuthorize\Exception\InvalidRoleException');
         $role->setParent(new stdClass());
     }
 }

@@ -43,7 +43,6 @@ class RoleCollector implements CollectorInterface, Serializable
         $this->identityProvider = $identityProvider;
     }
 
-
     /**
      * {@inheritDoc}
      */
@@ -65,7 +64,7 @@ class RoleCollector implements CollectorInterface, Serializable
      */
     public function collect(MvcEvent $mvcEvent)
     {
-        if ( ! $this->identityProvider) {
+        if (! $this->identityProvider) {
             return;
         }
 

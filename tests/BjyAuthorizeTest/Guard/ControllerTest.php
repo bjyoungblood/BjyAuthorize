@@ -251,6 +251,10 @@ class ControllerTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param string|null $controller
+     * @param string|null $action
+     * @param string|null $method
+     *
      * @return \PHPUnit_Framework_MockObject_MockObject|\Zend\Mvc\MvcEvent
      */
     private function createMvcEvent($controller = null, $action = null, $method = null)

@@ -16,7 +16,7 @@ use Zend\Permissions\Acl\Role\RoleInterface;
  *
  * @author Ben Youngblood <bx.youngblood@gmail.com>
  */
-class Role implements RoleInterface
+class Role implements RoleInterface, HierarchicalRoleInterface
 {
     /**
      * @var string
@@ -63,7 +63,7 @@ class Role implements RoleInterface
     }
 
     /**
-     * @return RoleInterface|null
+     * {@inheritDoc}
      */
     public function getParent()
     {
@@ -73,7 +73,7 @@ class Role implements RoleInterface
     /**
      * @param RoleInterface|string|null $parent
      *
-     * @throws \BjyAuthorize\Exception\InvalidArgumentException
+     * @throws \BjyAuthorize\Exception\InvalidRoleException
      *
      * @return self
      */
@@ -97,9 +97,6 @@ class Role implements RoleInterface
             return $this;
         }
 
-        throw new Exception\InvalidArgumentException(sprintf(
-            'Expected string or Zend\Permissions\Acl\Role\RoleInterface instance; received "%s"',
-            (is_object($parent) ? get_class($parent) : gettype($parent))
-        ));
+        throw Exception\InvalidRoleException::invalidRoleInstance($parent);
     }
 }

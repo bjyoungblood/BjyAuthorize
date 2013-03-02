@@ -126,7 +126,7 @@ class UnauthorizedStrategy implements ListenerAggregateInterface
                 /*
                  * do nothing if there is no error in the event or the error
                  * does not match one of our predefined errors (we don't want
-                 * our 403.phtml to handle other types of errors)
+                 * our 403 template to handle other types of errors)
                  */
 
                 return;

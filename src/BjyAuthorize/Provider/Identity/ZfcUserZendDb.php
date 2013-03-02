@@ -8,9 +8,11 @@
 
 namespace BjyAuthorize\Provider\Identity;
 
+use BjyAuthorize\Exception\InvalidRoleException;
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\Sql\Where;
 use Zend\Db\Sql\Sql;
+use Zend\Permissions\Acl\Role\RoleInterface;
 use ZfcUser\Service\User;
 
 /**
@@ -36,8 +38,8 @@ class ZfcUserZendDb implements ProviderInterface
     protected $tableName = 'user_role_linker';
 
     /**
-     * @param Adapter $adapter
-     * @param User    $userService
+     * @param \Zend\Db\Adapter\Adapter $adapter
+     * @param \ZfcUser\Service\User    $userService
      */
     public function __construct(Adapter $adapter, User $userService)
     {
@@ -52,48 +54,29 @@ class ZfcUserZendDb implements ProviderInterface
     {
         $authService = $this->userService->getAuthService();
 
-        if (!$authService->hasIdentity()) {
-            // get default/guest role
-            return $this->getDefaultRole();
-        } else {
-            // get roles associated with the logged in user
-            $sql  = new Sql($this->adapter);
-            $select = $sql->select()->from($this->tableName);
-            $where  = new Where();
-
-            $where->equalTo('user_id', $authService->getIdentity()->getId());
-
-            $results = $sql->prepareStatementForSqlObject($select->where($where))->execute();
-            $roles     = array();
-
-            foreach ($results as $i) {
-                $roles[] = $i['role_id'];
-            }
-
-            return $roles;
+        if ( ! $authService->hasIdentity()) {
+            return array($this->getDefaultRole());
         }
+
+        // get roles associated with the logged in user
+        $sql    = new Sql($this->adapter);
+        $select = $sql->select()->from($this->tableName);
+        $where  = new Where();
+
+        $where->equalTo('user_id', $authService->getIdentity()->getId());
+
+        $results = $sql->prepareStatementForSqlObject($select->where($where))->execute();
+        $roles     = array();
+
+        foreach ($results as $i) {
+            $roles[] = $i['role_id'];
+        }
+
+        return $roles;
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public function getUserService()
-    {
-        return $this->userService;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setUserService($userService)
-    {
-        $this->userService = $userService;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritDoc}
+     * @return string|\Zend\Permissions\Acl\Role\RoleInterface
      */
     public function getDefaultRole()
     {
@@ -101,12 +84,16 @@ class ZfcUserZendDb implements ProviderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @param string|\Zend\Permissions\Acl\Role\RoleInterface $defaultRole
+     *
+     * @throws \BjyAuthorize\Exception\InvalidRoleException
      */
     public function setDefaultRole($defaultRole)
     {
-        $this->defaultRole = $defaultRole;
+        if ( ! ($defaultRole instanceof RoleInterface || is_string($defaultRole))) {
+            throw InvalidRoleException::invalidRoleInstance($defaultRole);
+        }
 
-        return $this;
+        $this->defaultRole = $defaultRole;
     }
 }
