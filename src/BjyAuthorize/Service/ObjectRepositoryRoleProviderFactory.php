@@ -15,7 +15,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Factory responsible of instantiating new instances
- * of {@see \BjyAuthorize\Provider\Role\DoctrineEntity}
+ * of {@see \BjyAuthorize\Provider\Role\ObjectRepositoryProvider}
  *
  * @author Tom Oram <tom@scl.co.uk>
  * @author Jérémy Huet <jeremy.huet@gmail.com>
@@ -29,13 +29,16 @@ class ObjectRepositoryRoleProviderFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('Config');
+        $config              = $serviceLocator->get('Config');
+        $roleProvidersConfig = $config['bjyauthorize']['role_providers'];
 
-        if (! isset($config['bjyauthorize']['role_providers']['BjyAuthorize\Provider\Role\Doctrine'])) {
-            throw new InvalidArgumentException('Config for "BjyAuthorize\Provider\Role\Doctrine" not set');
+        if (! isset($roleProvidersConfig['BjyAuthorize\Provider\Role\ObjectRepositoryProvider'])) {
+            throw new InvalidArgumentException(
+                'Config for "BjyAuthorize\Provider\Role\ObjectRepositoryProvider" not set'
+            );
         }
 
-        $providerConfig = $config['bjyauthorize']['role_providers']['BjyAuthorize\Provider\Role\Doctrine'];
+        $providerConfig = $roleProvidersConfig['BjyAuthorize\Provider\Role\ObjectRepositoryProvider'];
 
         if (! isset($providerConfig['role_entity_class'])) {
             throw new InvalidArgumentException('role_entity_class not set in the bjyauthorize role_providers config.');
@@ -46,7 +49,7 @@ class ObjectRepositoryRoleProviderFactory implements FactoryInterface
         }
 
         /* @var $objectManager \Doctrine\Common\Persistence\ObjectManager */
-        $objectManager    = $serviceLocator->get($providerConfig['object_manager']);
+        $objectManager = $serviceLocator->get($providerConfig['object_manager']);
 
         return new ObjectRepositoryProvider($objectManager->getRepository($providerConfig['role_entity_class']));
     }
