@@ -42,7 +42,7 @@ class ObjectRepositoryRoleProviderFactoryTest extends PHPUnit_Framework_TestCase
         $config = array(
             'bjyauthorize' => array(
                 'role_providers' => array(
-                    'BjyAuthorize\Provider\Role\Doctrine' => array(
+                    'BjyAuthorize\Provider\Role\ObjectRepositoryProvider' => array(
                         'role_entity_class' => $testClassName,
                         'object_manager'    => 'doctrine.entitymanager.orm_default',
                     ),
