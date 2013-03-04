@@ -68,7 +68,7 @@ class User implements UserInterface, ProviderInterface
      *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
      * )
      */
-    protected $roles;
+    protected $roleList;
 
     /**
      * Initialies the roles variable.
@@ -213,11 +213,11 @@ class User implements UserInterface, ProviderInterface
     /**
      * Get role.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return array
      */
     public function getRoles()
     {
-        return $this->roles;
+        return $this->roleList->getValues();
     }
 
     /**
@@ -229,6 +229,16 @@ class User implements UserInterface, ProviderInterface
      */
     public function addRole($role)
     {
-        $this->roles[] = $role;
+        $this->roleList[] = $role;
+    }
+
+    /**
+     * Get role list array collection
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getRoleList()
+    {
+        return $this->roleList->getValues();
     }
 }
