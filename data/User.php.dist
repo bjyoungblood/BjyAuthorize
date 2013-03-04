@@ -239,6 +239,6 @@ class User implements UserInterface, ProviderInterface
      */
     public function getRoleList()
     {
-        return $this->roleList->getValues();
+        return $this->roleList;
     }
 }
