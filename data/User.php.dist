@@ -75,7 +75,7 @@ class User implements UserInterface, ProviderInterface
      */
     public function __construct()
     {
-        $this->roles = new ArrayCollection();
+        $this->roleList = new ArrayCollection();
     }
 
     /**
