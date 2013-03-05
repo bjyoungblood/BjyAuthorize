@@ -13,7 +13,6 @@ setup via config files or by using `Zend\Db` or Doctrine ORM/ODM (via ZfcUserDoc
  * [ZfcUserDoctrineORM](https://github.com/ZF-Commons/ZfcUserDoctrineORM) (optional)
 
 ## Installation
-------------
 
 ### Composer
 
@@ -187,5 +186,5 @@ function cafeAction() {
 ```
 
 ## License
-Released under the MIT License. See file [LICENSE]()(https://github.com/bjyoungblood/BjyAuthorize/blob/master/LICENSE)
+Released under the MIT License. See file [LICENSE](https://github.com/bjyoungblood/BjyAuthorize/blob/master/LICENSE)
 included with the source code for this project for a copy of the licensing terms.
