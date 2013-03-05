@@ -24,8 +24,16 @@ return array(
     ),
     'factories' => array(
         'BjyAuthorize\Provider\Identity\ZfcUserZendDb' => function (ServiceLocatorInterface $serviceLocator) {
-            /* @var $adapter \Zend\Db\Adapter\Adapter */
-            $adapter     = $serviceLocator->get('zfcuser_zend_db_adapter');
+            $config = $serviceLocator->get('Config');
+
+            if (isset($config['bjyauthorize']['db_adapter'])) {
+                /* @var $adapter \Zend\Db\Adapter\Adapter */
+                $adapter = $serviceLocator->get($config['bjyauthorize']['db_adapter']);
+            } else {
+                /* @var $adapter \Zend\Db\Adapter\Adapter */
+                $adapter = $serviceLocator->get('bjyauthorize_zend_db_adapter');
+            }
+
             /* @var $userService \ZfcUser\Service\User */
             $userService = $serviceLocator->get('zfcuser_user_service');
             $config      = $serviceLocator->get('Config');
@@ -33,6 +41,9 @@ return array(
             $provider = new Provider\Identity\ZfcUserZendDb($adapter, $userService);
 
             $provider->setDefaultRole($config['bjyauthorize']['default_role']);
+            if (isset($config['bjyauthorize']['identity_table'])) {
+                $provider->setTableName($config['bjyauthorize']['identity_table']);
+            }
 
             return $provider;
         },

@@ -14,6 +14,7 @@ use Zend\Db\Sql\Where;
 use Zend\Db\Sql\Sql;
 use Zend\Permissions\Acl\Role\RoleInterface;
 use ZfcUser\Service\User;
+use ZfcUser\Entity\UserInterface;
 
 /**
  * Identity provider based on {@see \Zend\Db\Adapter\Adapter}
@@ -22,6 +23,9 @@ use ZfcUser\Service\User;
  */
 class ZfcUserZendDb implements ProviderInterface
 {
+
+    const DEFAULT_TABLE_NAME = 'user_role_linker';
+
     /**
      * @var User
      */
@@ -35,7 +39,7 @@ class ZfcUserZendDb implements ProviderInterface
     /**
      * @var string
      */
-    protected $tableName = 'user_role_linker';
+    protected $tableName;
 
     /**
      * @param \Zend\Db\Adapter\Adapter $adapter
@@ -48,25 +52,33 @@ class ZfcUserZendDb implements ProviderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * Retrieve roles for the current identity
+     *
+     * @return string[]|\Zend\Permissions\Acl\Role\RoleInterface[]
      */
-    public function getIdentityRoles()
+    public function getIdentityRoles($userId = null)
     {
         $authService = $this->userService->getAuthService();
 
-        if ( ! $authService->hasIdentity()) {
-            return array($this->getDefaultRole());
+        if ($userId === null) {
+            if ( ! $authService->hasIdentity()) {
+                return array($this->getDefaultRole());
+            }
+
+            $userId = $authService->getIdentity()->getId();
+        } elseif ($userId instanceof UserInterface) {
+            $userId = $userId->getId();
         }
 
         // get roles associated with the logged in user
         $sql    = new Sql($this->adapter);
-        $select = $sql->select()->from($this->tableName);
+        $select = $sql->select()->from($this->getTableName());
         $where  = new Where();
 
-        $where->equalTo('user_id', $authService->getIdentity()->getId());
+        $where->equalTo('user_id', $userId);
 
         $results = $sql->prepareStatementForSqlObject($select->where($where))->execute();
-        $roles     = array();
+        $roles   = array();
 
         foreach ($results as $i) {
             $roles[] = $i['role_id'];
@@ -95,5 +107,29 @@ class ZfcUserZendDb implements ProviderInterface
         }
 
         $this->defaultRole = $defaultRole;
+    }
+
+    /**
+     * Set table name
+     *
+     * @param string $name of the table to use
+     * @return \BjyAuthorize\Provider\Identity\ZfcUserZendDb
+     */
+    public function setTableName($name)
+    {
+        $this->tableName = (string) $name;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTableName()
+    {
+        if (!$this->tableName) {
+            $this->setTableName(static::DEFAULT_TABLE_NAME);
+        }
+
+        return $this->tableName;
     }
 }
