@@ -213,11 +213,11 @@ class User implements UserInterface, ProviderInterface
     /**
      * Get role.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return array
      */
     public function getRoles()
     {
-        return $this->roles;
+        return $this->roles->getValues();
     }
 
     /**
