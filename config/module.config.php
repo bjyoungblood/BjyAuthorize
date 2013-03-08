@@ -48,7 +48,10 @@ return array(
             'BjyAuthorize\Provider\Role\ObjectRepositoryProvider'
                 => 'BjyAuthorize\Service\ObjectRepositoryRoleProviderFactory',
         ),
-        'aliases' => array(
+        'invokables'  => array(
+            'BjyAuthorize\View\RedirectionStrategy' => 'BjyAuthorize\View\RedirectionStrategy',
+        ),
+        'aliases'     => array(
             'bjyauthorize_zend_db_adapter' => 'Zend\Db\Adapter\Adapter',
         ),
     ),
