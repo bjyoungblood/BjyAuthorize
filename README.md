@@ -6,6 +6,19 @@ This module is designed provide a facade for `Zend\Permissions\Acl` that will
 ease its usage with modules and applications. By default, it provides simple
 setup via config files or by using `Zend\Db` or Doctrine ORM/ODM (via ZfcUserDoctrineORM).
 
+## What does BjyAuthorize do?
+
+BjyAuthorize adds event listeners to your application so that you have a "security" or "firewall" that disallows
+unauthorized access to your controllers or routes.
+
+This is what a normal `Zend\Mvc` application workflow would look like:
+
+![Zend Mvc Application workflow](http://yuml.me/diagram/plain;/activity/%28start%29-%3E%28route%29%2C%20%28route%29-%3E%28get%20controller%29%2C%20%28get%20controller%29-%3E%28dispatch%29%2C%20%28dispatch%29-%3E%28end%29)
+
+And here's how it would look like with BjyAuthorize enabled:
+
+![Zend Mvc Application workflow with BjyAuthorize](http://yuml.me/diagram/plain;/activity/%28start%29-%3E%28route%29%2C%20%28route%29-%3E%3Ca%3E-no%20route%20guard%3E%28get%20controller%29%2C%20%3Ca%3E-%3E%28route%20guard%29%2C%20%28route%20guard%29-%3E%3Cb%3E-authorized%3E%28get%20controller%29%2C%20%3Cb%3Eunauthorized-%3E%28error%29%2C%20%28get%20controller%29-%3E%3Cc%3E-no%20controller%20guard%3E%28dispatch%29%2C%20%3Cc%3E-%3E%28controller%20guard%29%2C%20%28controller%20guard%29-%3E%3Cd%3E-authorized%3E%28dispatch%29%2C%20%3Cd%3Eunauthorized-%3E%28error%29%2C%20%28error%29-%3E%28end%29%2C%20%28dispatch%29-%3E%28end%29)
+
 ## Requirements
 
  * [Zend Framework 2](https://github.com/zendframework/zf2)
