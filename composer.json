@@ -46,5 +46,10 @@
         "psr-0": {
             "BjyAuthorize\\": "src/"
         }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.3-dev"
+        }
     }
 }
