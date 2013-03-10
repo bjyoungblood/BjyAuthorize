@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS `user_role` (
   `role_id` VARCHAR(255) NOT NULL,
-  `default` TINYINT(1) NOT NULL,
+  `is_default` TINYINT(1) NOT NULL,
   `parent` VARCHAR(255) DEFAULT NULL,
   PRIMARY KEY (`role_id`)
 );

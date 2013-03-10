@@ -1,3 +1,8 @@
+## Upgrade to 1.3.0
+
+ * The column `default` in table `user_role` was renamed to `is_default` to avoid problems with the colliding
+   SQL keyword `DEFAULT`
+   
 ## Upgrade to 1.2.0
 
 Version [1.2.0](https://github.com/bjyoungblood/BjyAuthorize/issues?milestone=1&page=1&state=closed) brings in
