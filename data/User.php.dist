@@ -8,7 +8,7 @@
  
 namespace MyNamespace;
 
-BjyAuthorize\Provider\Role\ProviderInterface;
+use BjyAuthorize\Provider\Role\ProviderInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use ZfcUser\Entity\UserInterface;
