@@ -89,6 +89,41 @@ class RoleCollectorTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers \BjyAuthorize\Collector\RoleCollector::collect
+     * @covers \BjyAuthorize\Collector\RoleCollector::getCollectedRoles
+     */
+    public function testTraversableCollect()
+    {
+        $role1    = $this->getMock('Zend\\Permissions\\Acl\\Role\\RoleInterface');
+        $mvcEvent = $this->getMock('Zend\\Mvc\\MvcEvent');
+
+        $role1->expects($this->any())->method('getRoleId')->will($this->returnValue('role1'));
+
+        $this
+            ->identityProvider
+            ->expects($this->any())
+            ->method('getIdentityRoles')
+            ->will(
+                $this->returnValue(
+                    new \ArrayIterator(array(
+                        $role1,
+                        'role2',
+                        'key' => 'role3',
+                    ))
+                )
+            );
+
+        $this->collector->collect($mvcEvent);
+
+        $roles = $this->collector->getCollectedRoles();
+
+        $this->assertCount(3, $roles);
+        $this->assertContains('role1', $roles);
+        $this->assertContains('role2', $roles);
+        $this->assertContains('role3', $roles);
+    }
+
+    /**
      * @covers \BjyAuthorize\Collector\RoleCollector::getName
      */
     public function testGetName()
