@@ -68,7 +68,10 @@ class RoleCollector implements CollectorInterface, Serializable
             return;
         }
 
-        $roles = (array) $this->identityProvider->getIdentityRoles();
+        $roles = $this->identityProvider->getIdentityRoles();
+        if (!is_array($roles) && !$roles instanceof \Traversable) {
+            $roles = (array) $roles;
+        }
 
         foreach ($roles as $role) {
             if ($role instanceof RoleInterface) {
