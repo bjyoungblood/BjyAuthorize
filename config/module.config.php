@@ -42,7 +42,9 @@ return array(
 
     'service_manager' => array(
         'factories' => array(
-            'BjyAuthorize\Service\Authorize' => 'BjyAuthorize\Service\AuthorizeFactory',
+            'BjyAuthorize\Config'               => 'BjyAuthorize\Service\ConfigServiceFactory',
+            'BjyAuthorize\Guards'               => 'BjyAuthorize\Service\GuardsServiceFactory',
+            'BjyAuthorize\Service\Authorize'    => 'BjyAuthorize\Service\AuthorizeFactory',
             'BjyAuthorize\Provider\Identity\AuthenticationIdentityProvider'
                 => 'BjyAuthorize\Service\AuthenticationIdentityProviderServiceFactory',
             'BjyAuthorize\Provider\Role\ObjectRepositoryProvider'
