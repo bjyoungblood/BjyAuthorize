@@ -25,9 +25,6 @@ class AuthorizeFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('Config');
-        $config = $config['bjyauthorize'];
-
-        return new Authorize($config, $serviceLocator);
+        return new Authorize($serviceLocator->get('BjyAuthorize\Config'), $serviceLocator);
     }
 }

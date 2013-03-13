@@ -40,12 +40,10 @@ class ObjectRepositoryRoleProviderFactoryTest extends PHPUnit_Framework_TestCase
         $testClassName = 'TheTestClass';
 
         $config = array(
-            'bjyauthorize' => array(
-                'role_providers' => array(
-                    'BjyAuthorize\Provider\Role\ObjectRepositoryProvider' => array(
-                        'role_entity_class' => $testClassName,
-                        'object_manager'    => 'doctrine.entitymanager.orm_default',
-                    ),
+            'role_providers' => array(
+                'BjyAuthorize\Provider\Role\ObjectRepositoryProvider' => array(
+                    'role_entity_class' => $testClassName,
+                    'object_manager'    => 'doctrine.entitymanager.orm_default',
                 ),
             ),
         );
@@ -57,7 +55,7 @@ class ObjectRepositoryRoleProviderFactoryTest extends PHPUnit_Framework_TestCase
 
         $this->locator->expects($this->at(0))
             ->method('get')
-            ->with('Config')
+            ->with('BjyAuthorize\Config')
             ->will($this->returnValue($config));
 
         $this->locator->expects($this->at(1))

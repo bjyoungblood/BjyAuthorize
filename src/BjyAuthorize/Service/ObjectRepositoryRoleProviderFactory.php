@@ -29,8 +29,8 @@ class ObjectRepositoryRoleProviderFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config              = $serviceLocator->get('Config');
-        $roleProvidersConfig = $config['bjyauthorize']['role_providers'];
+        $config              = $serviceLocator->get('BjyAuthorize\Config');
+        $roleProvidersConfig = $config['role_providers'];
 
         if (! isset($roleProvidersConfig['BjyAuthorize\Provider\Role\ObjectRepositoryProvider'])) {
             throw new InvalidArgumentException(
