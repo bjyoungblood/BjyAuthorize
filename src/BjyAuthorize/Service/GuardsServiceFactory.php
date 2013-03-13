@@ -12,7 +12,7 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Factory responsible of building {@see \BjyAuthorize\Guard\GuardInterface[]}
+ * Factory responsible of building a set of {@see \BjyAuthorize\Guard\GuardInterface}
  *
  * @author Marco Pivetta <ocramius@gmail.com>
  */
@@ -29,13 +29,12 @@ class GuardsServiceFactory implements FactoryInterface
         $guards = array();
 
         foreach ($config['guards'] as $guardName => $guardConfig) {
-            if ( ! $serviceLocator->has($guardName)) {
+            if ($serviceLocator->has($guardName)) {
+                $guards[] = $serviceLocator->get($guardName);
+            } else {
                 $guards[] = new $guardName($guardConfig, $serviceLocator);
-
-                continue;
             }
 
-            $guards[] = $serviceLocator->get($guardName);
         }
 
         return $guards;

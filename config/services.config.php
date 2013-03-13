@@ -28,40 +28,37 @@ return array(
             $adapter     = $serviceLocator->get('zfcuser_zend_db_adapter');
             /* @var $userService \ZfcUser\Service\User */
             $userService = $serviceLocator->get('zfcuser_user_service');
-            $config      = $serviceLocator->get('Config');
+            $config      = $serviceLocator->get('BjyAuthorize\Config');
 
             $provider = new Provider\Identity\ZfcUserZendDb($adapter, $userService);
 
-            $provider->setDefaultRole($config['bjyauthorize']['default_role']);
+            $provider->setDefaultRole($config['default_role']);
 
             return $provider;
         },
 
         'BjyAuthorize\View\UnauthorizedStrategy' => function (ServiceLocatorInterface $serviceLocator) {
-            $config = $serviceLocator->get('Config');
+            $config = $serviceLocator->get('BjyAuthorize\Config');
 
-            return new View\UnauthorizedStrategy($config['bjyauthorize']['template']);
+            return new View\UnauthorizedStrategy($config['template']);
         },
 
         'BjyAuthorize\Provider\Role\ZendDb' => function (ServiceLocatorInterface $serviceLocator) {
-            $config = $serviceLocator->get('Config');
+            $config = $serviceLocator->get('BjyAuthorize\Config');
 
-            return new ZendDb(
-                $config['bjyauthorize']['role_providers']['BjyAuthorize\Provider\Role\ZendDb'],
-                $serviceLocator
-            );
+            return new ZendDb($config['role_providers']['BjyAuthorize\Provider\Role\ZendDb'], $serviceLocator);
         },
 
         'BjyAuthorize\Guard\Controller' => function (ServiceLocatorInterface $sl) {
-            $config = $sl->get('config');
+            $config = $sl->get('BjyAuthorize\Config');
 
-            return new Guard\Controller($config['bjyauthorize']['guards']['BjyAuthorize\Guard\Controller'], $sl);
+            return new Guard\Controller($config['guards']['BjyAuthorize\Guard\Controller'], $sl);
         },
 
         'BjyAuthorize\Guard\Route'      => function (ServiceLocatorInterface $sl) {
-            $config = $sl->get('config');
+            $config = $sl->get('BjyAuthorize\Config');
 
-            return new Guard\Route($config['bjyauthorize']['guards']['BjyAuthorize\Guard\Route'], $sl);
+            return new Guard\Route($config['guards']['BjyAuthorize\Guard\Route'], $sl);
         },
 
         'BjyAuthorize\Collector\RoleCollector' => function (ServiceLocatorInterface $serviceLocator) {

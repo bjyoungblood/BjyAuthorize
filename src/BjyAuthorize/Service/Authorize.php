@@ -80,22 +80,16 @@ class Authorize
         $this->acl            = new Acl();
         $this->serviceLocator = $serviceLocator;
 
-        if (isset($config['role_providers'])) {
-            foreach ($config['role_providers'] as $class => $options) {
-                $this->addRoleProvider($this->getOrCreateService($class, $options));
-            }
+        foreach ($serviceLocator->get('BjyAuthorize\RoleProviders') as $provider) {
+            $this->addRoleProvider($provider);
         }
 
-        if (isset($config['resource_providers'])) {
-            foreach ($config['resource_providers'] as $class => $options) {
-                $this->addResourceProvider($this->getOrCreateService($class, $options));
-            }
+        foreach ($serviceLocator->get('BjyAuthorize\ResourceProviders') as $provider) {
+            $this->addResourceProvider($provider);
         }
 
-        if (isset($config['rule_providers'])) {
-            foreach ($config['rule_providers'] as $class => $options) {
-                $this->addRuleProvider($this->getOrCreateService($class, $options));
-            }
+        foreach ($serviceLocator->get('BjyAuthorize\RuleProviders') as $provider) {
+            $this->addRuleProvider($provider);
         }
 
         $this->setIdentityProvider($serviceLocator->get('BjyAuthorize\Provider\Identity\ProviderInterface'));

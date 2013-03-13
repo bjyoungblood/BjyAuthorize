@@ -28,16 +28,15 @@ class ObjectRepositoryRoleProviderFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config              = $serviceLocator->get('BjyAuthorize\Config');
-        $roleProvidersConfig = $config['role_providers'];
+        $config = $serviceLocator->get('BjyAuthorize\Config');
 
-        if ( ! isset($roleProvidersConfig['BjyAuthorize\Provider\Role\ObjectRepositoryProvider'])) {
+        if ( ! isset($config['role_providers']['BjyAuthorize\Provider\Role\ObjectRepositoryProvider'])) {
             throw new InvalidArgumentException(
                 'Config for "BjyAuthorize\Provider\Role\ObjectRepositoryProvider" not set'
             );
         }
 
-        $providerConfig = $roleProvidersConfig['BjyAuthorize\Provider\Role\ObjectRepositoryProvider'];
+        $providerConfig = $config['role_providers']['BjyAuthorize\Provider\Role\ObjectRepositoryProvider'];
 
         if ( ! isset($providerConfig['role_entity_class'])) {
             throw new InvalidArgumentException('role_entity_class not set in the bjyauthorize role_providers config.');
