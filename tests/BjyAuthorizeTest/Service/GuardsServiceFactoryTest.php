@@ -16,7 +16,7 @@ use BjyAuthorize\Service\GuardsServiceFactory;
 /**
  * Test for {@see \BjyAuthorize\Service\GuardsServiceFactory}
  *
- * @author Marco Pivetta <ocramius@gmail.com>s
+ * @author Marco Pivetta <ocramius@gmail.com>
  */
 class GuardsServiceFactoryTest extends PHPUnit_Framework_TestCase
 {

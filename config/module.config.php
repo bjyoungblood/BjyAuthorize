@@ -44,6 +44,8 @@ return array(
         'factories' => array(
             'BjyAuthorize\Config'               => 'BjyAuthorize\Service\ConfigServiceFactory',
             'BjyAuthorize\Guards'               => 'BjyAuthorize\Service\GuardsServiceFactory',
+            'BjyAuthorize\Provider\Identity\ProviderInterface'
+                => 'BjyAuthorize\Service\IdentityProviderServiceFactory',
             'BjyAuthorize\Service\Authorize'    => 'BjyAuthorize\Service\AuthorizeFactory',
             'BjyAuthorize\Provider\Identity\AuthenticationIdentityProvider'
                 => 'BjyAuthorize\Service\AuthenticationIdentityProviderServiceFactory',

@@ -98,9 +98,7 @@ class Authorize
             }
         }
 
-        if (isset($config['identity_provider'])) {
-            $this->setIdentityProvider($serviceLocator->get($config['identity_provider']));
-        }
+        $this->setIdentityProvider($serviceLocator->get('BjyAuthorize\Provider\Identity\ProviderInterface'));
 
         foreach ($serviceLocator->get('BjyAuthorize\Guards') as $guard) {
             $this->addGuard($guard);

@@ -65,10 +65,8 @@ return array(
         },
 
         'BjyAuthorize\Collector\RoleCollector' => function (ServiceLocatorInterface $serviceLocator) {
-            $config = $serviceLocator->get('Config');
-
             /* @var $identityProvider \BjyAuthorize\Provider\Identity\ProviderInterface */
-            $identityProvider = $serviceLocator->get($config['bjyauthorize']['identity_provider']);
+            $identityProvider = $serviceLocator->get('BjyAuthorize\Provider\Identity\ProviderInterface');
 
             return new Collector\RoleCollector($identityProvider);
         }

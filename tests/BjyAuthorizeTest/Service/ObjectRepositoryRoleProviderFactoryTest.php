@@ -28,8 +28,7 @@ class ObjectRepositoryRoleProviderFactoryTest extends PHPUnit_Framework_TestCase
         $this->locator       = $this->getMock('Zend\ServiceManager\ServiceLocatorInterface');
         $this->entityManager = $this->getMock('Doctrine\Common\Persistence\ObjectManager');
         $this->repository    = $this->getMock('Doctrine\Common\Persistence\ObjectRepository');
-
-        $this->factory = new ObjectRepositoryRoleProviderFactory();
+        $this->factory       = new ObjectRepositoryRoleProviderFactory();
     }
 
     /**
