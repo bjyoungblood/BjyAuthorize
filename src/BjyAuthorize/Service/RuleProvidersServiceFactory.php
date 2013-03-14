@@ -8,34 +8,12 @@
 
 namespace BjyAuthorize\Service;
 
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-
 /**
  * Factory responsible of a set of {@see \BjyAuthorize\Provider\Rule\ProviderInterface}
  *
  * @author Marco Pivetta <ocramius@gmail.com>
  */
-class RuleProvidersServiceFactory implements FactoryInterface
+class RuleProvidersServiceFactory extends BaseProvidersServiceFactory
 {
-    /**
-     * {@inheritDoc}
-     *
-     * @return \BjyAuthorize\Provider\Rule\ProviderInterface[]
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        $config    = $serviceLocator->get('BjyAuthorize\Config');
-        $providers = array();
-
-        foreach ($config['rule_providers'] as $providerName => $providerConfig) {
-            if ($serviceLocator->has($providerName)) {
-                $providers[] = $serviceLocator->get($providerName);
-            } else {
-                $providers[] = new $providerName($providerConfig, $serviceLocator);
-            }
-        }
-
-        return $providers;
-    }
+    const PROVIDER_SETTING = 'rule_providers';
 }

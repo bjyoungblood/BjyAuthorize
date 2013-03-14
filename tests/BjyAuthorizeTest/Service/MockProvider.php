@@ -10,14 +10,12 @@
 
 namespace BjyAuthorizeTest\Service;
 
-use BjyAuthorize\Guard\GuardInterface;
-use Zend\EventManager\EventManagerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * @author Marco Pivetta <ocramius@gmail.com>s
  */
-class MockGuard implements GuardInterface
+class MockProvider
 {
     /**
      * @var array
@@ -37,19 +35,5 @@ class MockGuard implements GuardInterface
     {
         $this->options        = $options;
         $this->serviceLocator = $serviceLocator;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function attach(EventManagerInterface $events)
-    {
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function detach(EventManagerInterface $events)
-    {
     }
 }

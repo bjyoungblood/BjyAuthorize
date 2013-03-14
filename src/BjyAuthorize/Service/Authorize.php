@@ -333,19 +333,4 @@ class Authorize
             $this->acl->deny($roles, $resources, $privileges, $assertion);
         }
     }
-
-    /**
-     * @param string $class
-     * @param array  $options
-     *
-     * @return object
-     */
-    private function getOrCreateService($class, $options)
-    {
-        if ($this->serviceLocator->has($class)) {
-            return $this->serviceLocator->get($class);
-        }
-
-        return new $class($options, $this->serviceLocator);
-    }
 }

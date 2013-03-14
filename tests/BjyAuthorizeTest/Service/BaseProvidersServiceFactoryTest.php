@@ -11,29 +11,29 @@
 namespace BjyAuthorizeTest\Service;
 
 use PHPUnit_Framework_TestCase;
-use BjyAuthorize\Service\RoleProvidersServiceFactory;
+use BjyAuthorize\Service\BaseProvidersServiceFactory;
 
 /**
- * Test for {@see \BjyAuthorize\Service\RoleProvidersServiceFactory}
+ * Test for {@see \BjyAuthorize\Service\ResourceProvidersServiceFactory}
  *
  * @author Marco Pivetta <ocramius@gmail.com>
  */
-class RoleProvidersServiceFactoryTest extends PHPUnit_Framework_TestCase
+class BaseProvidersServiceFactoryTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @covers \BjyAuthorize\Service\RoleProvidersServiceFactory::createService
+     * @covers \BjyAuthorize\Service\BaseProvidersServiceFactory::createService
      */
     public function testAuthenticationIdentityProviderServiceFactory()
     {
-        $factory        = new RoleProvidersServiceFactory();
+        $factory        = $this->getMockForAbstractClass('BjyAuthorize\\Service\\BaseProvidersServiceFactory');
         $serviceLocator = $this->getMock('Zend\\ServiceManager\\ServiceLocatorInterface');
-        $foo            = $this->getMock('BjyAuthorize\\Provider\\Role\\ProviderInterface');
-        $bar            = $this->getMock('BjyAuthorize\\Provider\\Role\\ProviderInterface');
+        $foo            = $this->getMock('BjyAuthorize\\Provider\\Resource\\ProviderInterface');
+        $bar            = $this->getMock('BjyAuthorize\\Provider\\Resource\\ProviderInterface');
         $config         = array(
-            'role_providers' => array(
+            'providers' => array(
                 'foo'                         => array(),
                 'bar'                         => array(),
-                __NAMESPACE__ . '\\MockRoleProvider' => array('option' => 'value'),
+                __NAMESPACE__ . '\\MockProvider' => array('option' => 'value'),
             ),
         );
 
@@ -68,16 +68,16 @@ class RoleProvidersServiceFactoryTest extends PHPUnit_Framework_TestCase
         $invokableProvider = array_filter(
             $providers,
             function ($item) {
-                return $item instanceof MockRoleProvider;
+                return $item instanceof MockProvider;
             }
         );
 
         $this->assertCount(1, $invokableProvider);
 
-        /* @var $invokableGuard \BjyAuthorizeTest\Service\MockRoleProvider */
+        /* @var $invokableGuard \BjyAuthorizeTest\Service\MockProvider */
         $invokableProvider = array_shift($invokableProvider);
 
-        $this->assertInstanceOf(__NAMESPACE__ . '\\MockRoleProvider', $invokableProvider);
+        $this->assertInstanceOf(__NAMESPACE__ . '\\MockProvider', $invokableProvider);
 
         $this->assertSame(array('option' => 'value'), $invokableProvider->options);
         $this->assertSame($serviceLocator, $invokableProvider->serviceLocator);
