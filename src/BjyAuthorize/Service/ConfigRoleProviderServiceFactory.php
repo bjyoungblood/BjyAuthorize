@@ -8,26 +8,26 @@
 
 namespace BjyAuthorize\Service;
 
-use BjyAuthorize\Provider\Role\ZendDb;
+use BjyAuthorize\Provider\Role\Config;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Factory responsible of instantiating {@see \BjyAuthorize\Provider\Role\ZendDb}
+ * Factory responsible of instantiating {@see \BjyAuthorize\Provider\Role\Config}
  *
  * @author Marco Pivetta <ocramius@gmail.com>
  */
-class ZendDbRoleProviderServiceFactory implements FactoryInterface
+class ConfigRoleProviderServiceFactory implements FactoryInterface
 {
     /**
      * {@inheritDoc}
      *
-     * @return \BjyAuthorize\Provider\Role\ZendDb
+     * @return \BjyAuthorize\Provider\Role\Config
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $config = $serviceLocator->get('BjyAuthorize\Config');
 
-        return new ZendDb($config['role_providers']['BjyAuthorize\Provider\Role\ZendDb'], $serviceLocator);
+        return new Config($config['role_providers']['BjyAuthorize\Provider\Role\Config']);
     }
 }
