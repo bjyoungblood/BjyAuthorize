@@ -85,6 +85,8 @@ class Authorize
     }
 
     /**
+     * @deprecated this method will be removed in BjyAuthorize 2.0.x
+     *
      * @param RoleProvider $provider
      *
      * @return self
@@ -99,6 +101,8 @@ class Authorize
     }
 
     /**
+     * @deprecated this method will be removed in BjyAuthorize 2.0.x
+     *
      * @param ResourceProvider $provider
      *
      * @return self
@@ -113,6 +117,8 @@ class Authorize
     }
 
     /**
+     * @deprecated this method will be removed in BjyAuthorize 2.0.x
+     *
      * @param RuleProvider $provider
      *
      * @return self
@@ -127,6 +133,8 @@ class Authorize
     }
 
     /**
+     * @deprecated this method will be removed in BjyAuthorize 2.0.x
+     *
      * @param IdentityProvider $provider
      *
      * @return self
@@ -141,6 +149,8 @@ class Authorize
     }
 
     /**
+     * @deprecated this method will be removed in BjyAuthorize 2.0.x
+     *
      * @return IdentityProvider
      */
     public function getIdentityProvider()
@@ -151,6 +161,8 @@ class Authorize
     }
 
     /**
+     * @deprecated this method will be removed in BjyAuthorize 2.0.x
+     *
      * @param GuardInterface $guard
      *
      * @return self
@@ -173,6 +185,9 @@ class Authorize
     }
 
     /**
+     * @deprecated this method will be removed in BjyAuthorize 1.4.x+,
+     *             please retrieve the guards from the `BjyAuthorize\Guards` service
+     *
      * @return GuardInterface[]
      */
     public function getGuards()
@@ -183,6 +198,10 @@ class Authorize
     }
 
     /**
+     * @deprecated this method will be removed in BjyAuthorize 1.4.x+,
+     *             please retrieve the identity from the
+     *             `BjyAuthorize\Provider\Identity\ProviderInterface` service
+     *
      * @return string
      */
     public function getIdentity()
@@ -221,6 +240,8 @@ class Authorize
 
     /**
      * Initializes the service
+     *
+     * @internal
      */
     public function load()
     {
@@ -229,8 +250,7 @@ class Authorize
         }
 
         $this->loaded = null;
-
-        $this->acl            = new Acl();
+        $this->acl    = new Acl();
 
         foreach ($this->serviceLocator->get('BjyAuthorize\RoleProviders') as $provider) {
             $this->addRoleProvider($provider);
@@ -279,6 +299,8 @@ class Authorize
     }
 
     /**
+     * @deprecated this method will be removed in BjyAuthorize 2.0.x
+     *
      * @param \Zend\Permissions\Acl\Role\RoleInterface[] $roles
      */
     protected function addRoles($roles)
@@ -303,6 +325,8 @@ class Authorize
     }
 
     /**
+     * @deprecated this method will be removed in BjyAuthorize 2.0.x
+     *
      * @param string[]|\Zend\Permissions\Acl\Resource\ResourceInterface[] $resources
      * @param mixed|null                                                  $parent
      */
@@ -325,6 +349,8 @@ class Authorize
     }
 
     /**
+     * @deprecated this method will be removed in BjyAuthorize 2.0.x
+     *
      * @param mixed $rule
      * @param mixed $type
      *

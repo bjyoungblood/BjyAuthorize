@@ -23,7 +23,7 @@ class BaseProvidersServiceFactoryTest extends PHPUnit_Framework_TestCase
     /**
      * @covers \BjyAuthorize\Service\BaseProvidersServiceFactory::createService
      */
-    public function testAuthenticationIdentityProviderServiceFactory()
+    public function testCreateService()
     {
         $factory        = $this->getMockForAbstractClass('BjyAuthorize\\Service\\BaseProvidersServiceFactory');
         $serviceLocator = $this->getMock('Zend\\ServiceManager\\ServiceLocatorInterface');

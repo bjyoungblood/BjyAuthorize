@@ -27,7 +27,6 @@ class Module implements
     AutoloaderProviderInterface,
     BootstrapListenerInterface,
     ConfigProviderInterface,
-    ServiceProviderInterface,
     ControllerPluginProviderInterface,
     ViewHelperProviderInterface
 {
@@ -49,14 +48,6 @@ class Module implements
         }
 
         $app->getEventManager()->attach($strategy);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getServiceConfig()
-    {
-        return include __DIR__ . '/../../config/services.config.php';
     }
 
     /**

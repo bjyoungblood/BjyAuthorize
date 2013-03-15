@@ -34,7 +34,7 @@ class ObjectRepositoryRoleProviderFactoryTest extends PHPUnit_Framework_TestCase
     /**
      * @covers \BjyAuthorize\Service\ObjectRepositoryRoleProviderFactory::createService
      */
-    public function testCreateServiceWithConfig()
+    public function testCreateService()
     {
         $testClassName = 'TheTestClass';
 

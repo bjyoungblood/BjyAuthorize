@@ -25,7 +25,7 @@ class AuthenticationIdentityProviderServiceFactoryTest extends PHPUnit_Framework
      * @covers BjyAuthorize\Provider\Identity\AuthenticationIdentityProvider::getDefaultRole
      * @covers BjyAuthorize\Provider\Identity\AuthenticationIdentityProvider::getAuthenticatedRole
      */
-    public function testAuthenticationIdentityProviderServiceFactory()
+    public function testCreateService()
     {
         $config = array(
             'default_role'       => 'test-guest',
