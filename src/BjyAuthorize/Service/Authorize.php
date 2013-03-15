@@ -62,9 +62,9 @@ class Authorize
     protected $guards = array();
 
     /**
-     * @var bool
+     * @var \Closure|null
      */
-    protected $loaded = false;
+    protected $loaded;
 
     /**
      * @var \Zend\ServiceManager\ServiceLocatorInterface
@@ -72,106 +72,105 @@ class Authorize
     protected $serviceLocator;
 
     /**
-     * @param array                   $config
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param array                                        $config
+     * @param \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
      */
     public function __construct(array $config, ServiceLocatorInterface $serviceLocator)
     {
-        $this->acl            = new Acl();
         $this->serviceLocator = $serviceLocator;
-
-        if (isset($config['role_providers'])) {
-            foreach ($config['role_providers'] as $class => $options) {
-                $this->addRoleProvider($this->getOrCreateService($class, $options));
-            }
-        }
-
-        if (isset($config['resource_providers'])) {
-            foreach ($config['resource_providers'] as $class => $options) {
-                $this->addResourceProvider($this->getOrCreateService($class, $options));
-            }
-        }
-
-        if (isset($config['rule_providers'])) {
-            foreach ($config['rule_providers'] as $class => $options) {
-                $this->addRuleProvider($this->getOrCreateService($class, $options));
-            }
-        }
-
-        if (isset($config['identity_provider'])) {
-            $this->setIdentityProvider($serviceLocator->get($config['identity_provider']));
-        }
-
-        if (isset($config['guards'])) {
-            foreach ($config['guards'] as $class => $options) {
-                $this->addGuard($this->getOrCreateService($class, $options));
-            }
-        }
+        $that                 = $this;
+        $this->loaded         = function () use ($that) {
+            $that->load();
+        };
     }
 
     /**
+     * @deprecated this method will be removed in BjyAuthorize 2.0.x
+     *
      * @param RoleProvider $provider
      *
      * @return self
      */
     public function addRoleProvider(RoleProvider $provider)
     {
+        $this->loaded && $this->loaded->__invoke();
+
         $this->roleProviders[] = $provider;
 
         return $this;
     }
 
     /**
+     * @deprecated this method will be removed in BjyAuthorize 2.0.x
+     *
      * @param ResourceProvider $provider
      *
      * @return self
      */
     public function addResourceProvider(ResourceProvider $provider)
     {
+        $this->loaded && $this->loaded->__invoke();
+
         $this->resourceProviders[] = $provider;
 
         return $this;
     }
 
     /**
+     * @deprecated this method will be removed in BjyAuthorize 2.0.x
+     *
      * @param RuleProvider $provider
      *
      * @return self
      */
     public function addRuleProvider(RuleProvider $provider)
     {
+        $this->loaded && $this->loaded->__invoke();
+
         $this->ruleProviders[] = $provider;
 
         return $this;
     }
 
     /**
+     * @deprecated this method will be removed in BjyAuthorize 2.0.x
+     *
      * @param IdentityProvider $provider
      *
      * @return self
      */
     public function setIdentityProvider(IdentityProvider $provider)
     {
+        $this->loaded && $this->loaded->__invoke();
+
         $this->identityProvider = $provider;
 
         return $this;
     }
 
     /**
+     * @deprecated this method will be removed in BjyAuthorize 2.0.x
+     *
      * @return IdentityProvider
      */
     public function getIdentityProvider()
     {
+        $this->loaded && $this->loaded->__invoke();
+
         return $this->identityProvider;
     }
 
     /**
+     * @deprecated this method will be removed in BjyAuthorize 2.0.x
+     *
      * @param GuardInterface $guard
      *
      * @return self
      */
     public function addGuard(GuardInterface $guard)
     {
+        $this->loaded && $this->loaded->__invoke();
+
         $this->guards[] = $guard;
 
         if ($guard instanceof ResourceProvider) {
@@ -186,18 +185,29 @@ class Authorize
     }
 
     /**
+     * @deprecated this method will be removed in BjyAuthorize 1.4.x+,
+     *             please retrieve the guards from the `BjyAuthorize\Guards` service
+     *
      * @return GuardInterface[]
      */
     public function getGuards()
     {
+        $this->loaded && $this->loaded->__invoke();
+
         return $this->guards;
     }
 
     /**
+     * @deprecated this method will be removed in BjyAuthorize 1.4.x+,
+     *             please retrieve the identity from the
+     *             `BjyAuthorize\Provider\Identity\ProviderInterface` service
+     *
      * @return string
      */
     public function getIdentity()
     {
+        $this->loaded && $this->loaded->__invoke();
+
         return 'bjyauthorize-identity';
     }
 
@@ -206,9 +216,7 @@ class Authorize
      */
     public function getAcl()
     {
-        if (!$this->loaded) {
-            $this->load();
-        }
+        $this->loaded && $this->loaded->__invoke();
 
         return $this->acl;
     }
@@ -221,9 +229,7 @@ class Authorize
      */
     public function isAllowed($resource, $privilege = null)
     {
-        if (!$this->loaded) {
-            $this->load();
-        }
+        $this->loaded && $this->loaded->__invoke();
 
         try {
             return $this->acl->isAllowed($this->getIdentity(), $resource, $privilege);
@@ -234,9 +240,36 @@ class Authorize
 
     /**
      * Initializes the service
+     *
+     * @internal
      */
-    protected function load()
+    public function load()
     {
+        if (null === $this->loaded) {
+            return;
+        }
+
+        $this->loaded = null;
+        $this->acl    = new Acl();
+
+        foreach ($this->serviceLocator->get('BjyAuthorize\RoleProviders') as $provider) {
+            $this->addRoleProvider($provider);
+        }
+
+        foreach ($this->serviceLocator->get('BjyAuthorize\ResourceProviders') as $provider) {
+            $this->addResourceProvider($provider);
+        }
+
+        foreach ($this->serviceLocator->get('BjyAuthorize\RuleProviders') as $provider) {
+            $this->addRuleProvider($provider);
+        }
+
+        $this->setIdentityProvider($this->serviceLocator->get('BjyAuthorize\Provider\Identity\ProviderInterface'));
+
+        foreach ($this->serviceLocator->get('BjyAuthorize\Guards') as $guard) {
+            $this->addGuard($guard);
+        }
+
         foreach ($this->roleProviders as $provider) {
             $this->addRoles($provider->getRoles());
         }
@@ -261,12 +294,13 @@ class Authorize
         }
 
         $parentRoles = $this->getIdentityProvider()->getIdentityRoles();
-        $this->acl->addRole($this->getIdentity(), $parentRoles);
 
-        $this->loaded = true;
+        $this->acl->addRole($this->getIdentity(), $parentRoles);
     }
 
     /**
+     * @deprecated this method will be removed in BjyAuthorize 2.0.x
+     *
      * @param \Zend\Permissions\Acl\Role\RoleInterface[] $roles
      */
     protected function addRoles($roles)
@@ -291,6 +325,8 @@ class Authorize
     }
 
     /**
+     * @deprecated this method will be removed in BjyAuthorize 2.0.x
+     *
      * @param string[]|\Zend\Permissions\Acl\Resource\ResourceInterface[] $resources
      * @param mixed|null                                                  $parent
      */
@@ -313,6 +349,8 @@ class Authorize
     }
 
     /**
+     * @deprecated this method will be removed in BjyAuthorize 2.0.x
+     *
      * @param mixed $rule
      * @param mixed $type
      *
@@ -321,13 +359,14 @@ class Authorize
     protected function loadRule(array $rule, $type)
     {
         $privileges = $assertion = null;
+        $ruleSize   = count($rule);
 
-        if (count($rule) === 4) {
+        if (4 === $ruleSize) {
             list($roles, $resources, $privileges, $assertion) = $rule;
             $assertion = $this->serviceLocator->get($assertion);
-        } elseif (count($rule) === 3) {
+        } elseif (3 === $ruleSize) {
             list($roles, $resources, $privileges) = $rule;
-        } elseif (count($rule) === 2) {
+        } elseif (2 === $ruleSize) {
             list($roles, $resources) = $rule;
         } else {
             throw new \InvalidArgumentException('Invalid rule definition: ' . print_r($rule, true));
@@ -337,25 +376,10 @@ class Authorize
             $assertion = $this->serviceLocator->get($assertion);
         }
 
-        if ($type === static::TYPE_ALLOW) {
+        if (static::TYPE_ALLOW === $type) {
             $this->acl->allow($roles, $resources, $privileges, $assertion);
         } else {
             $this->acl->deny($roles, $resources, $privileges, $assertion);
         }
-    }
-
-    /**
-     * @param string $class
-     * @param array  $options
-     *
-     * @return object
-     */
-    private function getOrCreateService($class, $options)
-    {
-        if ($this->serviceLocator->has($class)) {
-            return $this->serviceLocator->get($class);
-        }
-
-        return new $class($options, $this->serviceLocator);
     }
 }

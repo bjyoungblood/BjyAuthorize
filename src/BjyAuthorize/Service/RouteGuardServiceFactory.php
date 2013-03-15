@@ -8,23 +8,26 @@
 
 namespace BjyAuthorize\Service;
 
+use BjyAuthorize\Guard\Route;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Factory responsible of building the {@see \BjyAuthorize\Service\Authorize} service
+ * Factory responsible of instantiating {@see \BjyAuthorize\Guard\Route}
  *
- * @author Ben Youngblood <bx.youngblood@gmail.com>
+ * @author Marco Pivetta <ocramius@gmail.com>
  */
-class AuthorizeFactory implements FactoryInterface
+class RouteGuardServiceFactory implements FactoryInterface
 {
     /**
      * {@inheritDoc}
      *
-     * @return \BjyAuthorize\Service\Authorize
+     * @return \BjyAuthorize\Guard\Route
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        return new Authorize($serviceLocator->get('BjyAuthorize\Config'), $serviceLocator);
+        $config = $serviceLocator->get('BjyAuthorize\Config');
+
+        return new Route($config['guards']['BjyAuthorize\Guard\Route'], $serviceLocator);
     }
 }

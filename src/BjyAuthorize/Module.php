@@ -27,7 +27,6 @@ class Module implements
     AutoloaderProviderInterface,
     BootstrapListenerInterface,
     ConfigProviderInterface,
-    ServiceProviderInterface,
     ControllerPluginProviderInterface,
     ViewHelperProviderInterface
 {
@@ -40,24 +39,15 @@ class Module implements
         $app            = $event->getTarget();
         /* @var $sm \Zend\ServiceManager\ServiceLocatorInterface */
         $serviceManager = $app->getServiceManager();
-        /* @var $service \BjyAuthorize\Service\Authorize */
-        $service        = $serviceManager->get('BjyAuthorize\Service\Authorize');
-        $config         = $serviceManager->get('Config');
-        $strategy       = $serviceManager->get($config['bjyauthorize']['unauthorized_strategy']);
+        $config         = $serviceManager->get('BjyAuthorize\Config');
+        $strategy       = $serviceManager->get($config['unauthorized_strategy']);
+        $guards         = $serviceManager->get('BjyAuthorize\Guards');
 
-        foreach ($service->getGuards() as $guard) {
+        foreach ($guards as $guard) {
             $app->getEventManager()->attach($guard);
         }
 
         $app->getEventManager()->attach($strategy);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getServiceConfig()
-    {
-        return include __DIR__ . '/../../config/services.config.php';
     }
 
     /**

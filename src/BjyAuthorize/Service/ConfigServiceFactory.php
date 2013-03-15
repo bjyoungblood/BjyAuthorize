@@ -12,19 +12,21 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Factory responsible of building the {@see \BjyAuthorize\Service\Authorize} service
+ * Factory responsible of retrieving an array containing the BjyAuthorize configuration
  *
- * @author Ben Youngblood <bx.youngblood@gmail.com>
+ * @author Marco Pivetta <ocramius@gmail.com>
  */
-class AuthorizeFactory implements FactoryInterface
+class ConfigServiceFactory implements FactoryInterface
 {
     /**
      * {@inheritDoc}
      *
-     * @return \BjyAuthorize\Service\Authorize
+     * @return array
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        return new Authorize($serviceLocator->get('BjyAuthorize\Config'), $serviceLocator);
+        $config = $serviceLocator->get('Config');
+
+        return $config['bjyauthorize'];
     }
 }

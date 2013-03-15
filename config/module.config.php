@@ -42,17 +42,35 @@ return array(
 
     'service_manager' => array(
         'factories' => array(
-            'BjyAuthorize\Service\Authorize' => 'BjyAuthorize\Service\AuthorizeFactory',
+            'BjyAuthorize\Config'               => 'BjyAuthorize\Service\ConfigServiceFactory',
+            'BjyAuthorize\Guards'               => 'BjyAuthorize\Service\GuardsServiceFactory',
+            'BjyAuthorize\RoleProviders'        => 'BjyAuthorize\Service\RoleProvidersServiceFactory',
+            'BjyAuthorize\ResourceProviders'    => 'BjyAuthorize\Service\ResourceProvidersServiceFactory',
+            'BjyAuthorize\RuleProviders'        => 'BjyAuthorize\Service\RuleProvidersServiceFactory',
+            'BjyAuthorize\Guard\Controller'     => 'BjyAuthorize\Service\ControllerGuardServiceFactory',
+            'BjyAuthorize\Guard\Route'          => 'BjyAuthorize\Service\RouteGuardServiceFactory',
+            'BjyAuthorize\Provider\Role\ZendDb' => 'BjyAuthorize\Service\ZendDbRoleProviderServiceFactory',
+            'BjyAuthorize\Provider\Identity\ProviderInterface'
+                => 'BjyAuthorize\Service\IdentityProviderServiceFactory',
+            'BjyAuthorize\Service\Authorize'    => 'BjyAuthorize\Service\AuthorizeFactory',
             'BjyAuthorize\Provider\Identity\AuthenticationIdentityProvider'
                 => 'BjyAuthorize\Service\AuthenticationIdentityProviderServiceFactory',
             'BjyAuthorize\Provider\Role\ObjectRepositoryProvider'
                 => 'BjyAuthorize\Service\ObjectRepositoryRoleProviderFactory',
+            'BjyAuthorize\Collector\RoleCollector' => 'BjyAuthorize\Service\RoleCollectorServiceFactory',
+            'BjyAuthorize\Provider\Identity\ZfcUserZendDb'
+                => 'BjyAuthorize\Service\ZfcUserZendDbIdentityProviderServiceFactory',
+            'BjyAuthorize\View\UnauthorizedStrategy' => 'BjyAuthorize\Service\UnauthorizedStrategyServiceFactory',
         ),
         'invokables'  => array(
             'BjyAuthorize\View\RedirectionStrategy' => 'BjyAuthorize\View\RedirectionStrategy',
         ),
         'aliases'     => array(
             'bjyauthorize_zend_db_adapter' => 'Zend\Db\Adapter\Adapter',
+        ),
+        'initializers' => array(
+            'BjyAuthorize\Service\AuthorizeAwareServiceInitializer'
+                => 'BjyAuthorize\Service\AuthorizeAwareServiceInitializer'
         ),
     ),
 
