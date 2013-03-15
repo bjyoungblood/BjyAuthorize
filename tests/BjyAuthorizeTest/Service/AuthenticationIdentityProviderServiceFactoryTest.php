@@ -7,14 +7,14 @@
  * @license        http://framework.zend.com/license/new-bsd New BSD License
  * @package        Zend_Service
  */
+
 namespace BjyAuthorizeTest\Service;
 
 use PHPUnit_Framework_TestCase;
-use Zend\ServiceManager\ServiceManager;
 use BjyAuthorize\Service\AuthenticationIdentityProviderServiceFactory;
 
 /**
- * Factory test
+ * Factory test for {@see \BjyAuthorize\Service\AuthenticationIdentityProviderServiceFactory}
  *
  * @author Ingo Walz <ingo.walz@googlemail.com>
  */
@@ -25,25 +25,35 @@ class AuthenticationIdentityProviderServiceFactoryTest extends PHPUnit_Framework
      * @covers BjyAuthorize\Provider\Identity\AuthenticationIdentityProvider::getDefaultRole
      * @covers BjyAuthorize\Provider\Identity\AuthenticationIdentityProvider::getAuthenticatedRole
      */
-    public function testAuthenticationIdentityProviderServiceFactory()
+    public function testCreateService()
     {
         $config = array(
-            'bjyauthorize' => array(
-                'default_role'       => 'test-guest',
-                'authenticated_role' => 'test-user'
-            ),
+            'default_role'       => 'test-guest',
+            'authenticated_role' => 'test-user',
         );
 
-        $user = $this->getMock('ZfcUser\\Service\\User', array('getAuthService'));
-        $auth = $this->getMock('Zend\\Authentication\\AuthenticationService');
-        $user->expects($this->once())->method('getAuthService')->will($this->returnValue($auth));
+        $user           = $this->getMock('ZfcUser\\Service\\User', array('getAuthService'));
+        $auth           = $this->getMock('Zend\\Authentication\\AuthenticationService');
+        $serviceLocator = $this->getMock('Zend\\ServiceManager\\ServiceLocatorInterface');
 
-        $serviceManager = new ServiceManager();
-        $serviceManager->setService("zfcuser_user_service", $user);
-        $serviceManager->setService("Config", $config);
+        $user->expects($this->once())->method('getAuthService')->will($this->returnValue($auth));
+        $serviceLocator
+            ->expects($this->any())
+            ->method('get')
+            ->will($this->returnCallback(function ($service) use ($user, $config) {
+                if ('zfcuser_user_service' === $service) {
+                    return $user;
+                }
+
+                if ('BjyAuthorize\Config' === $service) {
+                    return $config;
+                }
+
+                throw new \InvalidArgumentException();
+            }));
 
         $authenticationFactory = new AuthenticationIdentityProviderServiceFactory();
-        $authentication = $authenticationFactory->createService($serviceManager);
+        $authentication        = $authenticationFactory->createService($serviceLocator);
 
         $this->assertEquals($authentication->getDefaultRole(), 'test-guest');
         $this->assertEquals($authentication->getAuthenticatedRole(), 'test-user');

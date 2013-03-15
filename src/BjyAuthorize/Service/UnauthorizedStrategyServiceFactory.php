@@ -8,23 +8,26 @@
 
 namespace BjyAuthorize\Service;
 
+use BjyAuthorize\View\UnauthorizedStrategy;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Factory responsible of building the {@see \BjyAuthorize\Service\Authorize} service
+ * Factory responsible of instantiating {@see \BjyAuthorize\View\UnauthorizedStrategy}
  *
- * @author Ben Youngblood <bx.youngblood@gmail.com>
+ * @author Marco Pivetta <ocramius@gmail.com>
  */
-class AuthorizeFactory implements FactoryInterface
+class UnauthorizedStrategyServiceFactory implements FactoryInterface
 {
     /**
      * {@inheritDoc}
      *
-     * @return \BjyAuthorize\Service\Authorize
+     * @return \BjyAuthorize\View\UnauthorizedStrategy
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        return new Authorize($serviceLocator->get('BjyAuthorize\Config'), $serviceLocator);
+        $config = $serviceLocator->get('BjyAuthorize\Config');
+
+        return new UnauthorizedStrategy($config['template']);
     }
 }

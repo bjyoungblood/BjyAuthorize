@@ -28,24 +28,21 @@ class ObjectRepositoryRoleProviderFactoryTest extends PHPUnit_Framework_TestCase
         $this->locator       = $this->getMock('Zend\ServiceManager\ServiceLocatorInterface');
         $this->entityManager = $this->getMock('Doctrine\Common\Persistence\ObjectManager');
         $this->repository    = $this->getMock('Doctrine\Common\Persistence\ObjectRepository');
-
-        $this->factory = new ObjectRepositoryRoleProviderFactory();
+        $this->factory       = new ObjectRepositoryRoleProviderFactory();
     }
 
     /**
      * @covers \BjyAuthorize\Service\ObjectRepositoryRoleProviderFactory::createService
      */
-    public function testCreateServiceWithConfig()
+    public function testCreateService()
     {
         $testClassName = 'TheTestClass';
 
         $config = array(
-            'bjyauthorize' => array(
-                'role_providers' => array(
-                    'BjyAuthorize\Provider\Role\ObjectRepositoryProvider' => array(
-                        'role_entity_class' => $testClassName,
-                        'object_manager'    => 'doctrine.entitymanager.orm_default',
-                    ),
+            'role_providers' => array(
+                'BjyAuthorize\Provider\Role\ObjectRepositoryProvider' => array(
+                    'role_entity_class' => $testClassName,
+                    'object_manager'    => 'doctrine.entitymanager.orm_default',
                 ),
             ),
         );
@@ -57,7 +54,7 @@ class ObjectRepositoryRoleProviderFactoryTest extends PHPUnit_Framework_TestCase
 
         $this->locator->expects($this->at(0))
             ->method('get')
-            ->with('Config')
+            ->with('BjyAuthorize\Config')
             ->will($this->returnValue($config));
 
         $this->locator->expects($this->at(1))
