@@ -42,17 +42,18 @@ return array(
 
     'service_manager' => array(
         'factories' => array(
-            'BjyAuthorize\Config'               => 'BjyAuthorize\Service\ConfigServiceFactory',
-            'BjyAuthorize\Guards'               => 'BjyAuthorize\Service\GuardsServiceFactory',
-            'BjyAuthorize\RoleProviders'        => 'BjyAuthorize\Service\RoleProvidersServiceFactory',
-            'BjyAuthorize\ResourceProviders'    => 'BjyAuthorize\Service\ResourceProvidersServiceFactory',
-            'BjyAuthorize\RuleProviders'        => 'BjyAuthorize\Service\RuleProvidersServiceFactory',
-            'BjyAuthorize\Guard\Controller'     => 'BjyAuthorize\Service\ControllerGuardServiceFactory',
-            'BjyAuthorize\Guard\Route'          => 'BjyAuthorize\Service\RouteGuardServiceFactory',
-            'BjyAuthorize\Provider\Role\ZendDb' => 'BjyAuthorize\Service\ZendDbRoleProviderServiceFactory',
+            'BjyAuthorize\Config'                   => 'BjyAuthorize\Service\ConfigServiceFactory',
+            'BjyAuthorize\Guards'                   => 'BjyAuthorize\Service\GuardsServiceFactory',
+            'BjyAuthorize\RoleProviders'            => 'BjyAuthorize\Service\RoleProvidersServiceFactory',
+            'BjyAuthorize\ResourceProviders'        => 'BjyAuthorize\Service\ResourceProvidersServiceFactory',
+            'BjyAuthorize\RuleProviders'            => 'BjyAuthorize\Service\RuleProvidersServiceFactory',
+            'BjyAuthorize\Guard\Controller'         => 'BjyAuthorize\Service\ControllerGuardServiceFactory',
+            'BjyAuthorize\Guard\Route'              => 'BjyAuthorize\Service\RouteGuardServiceFactory',
+            'BjyAuthorize\Provider\Role\ZendDb'     => 'BjyAuthorize\Service\ZendDbRoleProviderServiceFactory',
+            'BjyAuthorize\Provider\Resource\Config' => 'BjyAuthorize\Service\ConfigResourceProviderServiceFactory',
+            'BjyAuthorize\Service\Authorize'        => 'BjyAuthorize\Service\AuthorizeFactory',
             'BjyAuthorize\Provider\Identity\ProviderInterface'
                 => 'BjyAuthorize\Service\IdentityProviderServiceFactory',
-            'BjyAuthorize\Service\Authorize'    => 'BjyAuthorize\Service\AuthorizeFactory',
             'BjyAuthorize\Provider\Identity\AuthenticationIdentityProvider'
                 => 'BjyAuthorize\Service\AuthenticationIdentityProviderServiceFactory',
             'BjyAuthorize\Provider\Role\ObjectRepositoryProvider'
