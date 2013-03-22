@@ -49,8 +49,8 @@ return array(
             'BjyAuthorize\RuleProviders'            => 'BjyAuthorize\Service\RuleProvidersServiceFactory',
             'BjyAuthorize\Guard\Controller'         => 'BjyAuthorize\Service\ControllerGuardServiceFactory',
             'BjyAuthorize\Guard\Route'              => 'BjyAuthorize\Service\RouteGuardServiceFactory',
+            'BjyAuthorize\Provider\Role\Config'     => 'BjyAuthorize\Service\ConfigRoleProviderServiceFactory',
             'BjyAuthorize\Provider\Role\ZendDb'     => 'BjyAuthorize\Service\ZendDbRoleProviderServiceFactory',
-            'BjyAuthorize\Provider\Role\Config' => 'BjyAuthorize\Service\ConfigRoleProviderServiceFactory',
             'BjyAuthorize\Provider\Resource\Config' => 'BjyAuthorize\Service\ConfigResourceProviderServiceFactory',
             'BjyAuthorize\Service\Authorize'        => 'BjyAuthorize\Service\AuthorizeFactory',
             'BjyAuthorize\Provider\Identity\ProviderInterface'
@@ -59,10 +59,11 @@ return array(
                 => 'BjyAuthorize\Service\AuthenticationIdentityProviderServiceFactory',
             'BjyAuthorize\Provider\Role\ObjectRepositoryProvider'
                 => 'BjyAuthorize\Service\ObjectRepositoryRoleProviderFactory',
-            'BjyAuthorize\Collector\RoleCollector' => 'BjyAuthorize\Service\RoleCollectorServiceFactory',
+            'BjyAuthorize\Collector\RoleCollector'  => 'BjyAuthorize\Service\RoleCollectorServiceFactory',
             'BjyAuthorize\Provider\Identity\ZfcUserZendDb'
                 => 'BjyAuthorize\Service\ZfcUserZendDbIdentityProviderServiceFactory',
-            'BjyAuthorize\View\UnauthorizedStrategy' => 'BjyAuthorize\Service\UnauthorizedStrategyServiceFactory',
+            'BjyAuthorize\View\UnauthorizedStrategy'
+                => 'BjyAuthorize\Service\UnauthorizedStrategyServiceFactory',
         ),
         'invokables'  => array(
             'BjyAuthorize\View\RedirectionStrategy' => 'BjyAuthorize\View\RedirectionStrategy',
