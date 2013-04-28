@@ -1,6 +1,6 @@
 # BjyAuthorize - Acl security for ZF2
 
-[![Travis-CI Build Status](https://api.travis-ci.org/bjyoungblood/BjyAuthorize.png?branch=master)](https://travis-ci.org/bjyoungblood/BjyAuthorize)
+[![Travis-CI Build Status](https://api.travis-ci.org/bjyoungblood/BjyAuthorize.png?branch=master)](https://travis-ci.org/bjyoungblood/BjyAuthorize) [![Dependency Status](https://www.versioneye.com/package/php--bjyoungblood--bjy-authorize/badge.png)](https://www.versioneye.com/package/php--bjyoungblood--bjy-authorize)
 
 This module is designed provide a facade for `Zend\Permissions\Acl` that will
 ease its usage with modules and applications. By default, it provides simple
