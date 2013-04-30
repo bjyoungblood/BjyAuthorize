@@ -10,6 +10,9 @@ return array(
     'bjyauthorize' => array(
         // default role for unauthenticated users
         'default_role'          => 'guest',
+        
+        // default table name for the role linker table
+        'table_name' => 'user_role_linker',
 
         // default role for authenticated users (if using the
         // 'BjyAuthorize\Provider\Identity\AuthenticationIdentityProvider' identity provider)
