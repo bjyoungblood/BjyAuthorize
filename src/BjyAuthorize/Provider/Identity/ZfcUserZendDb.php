@@ -98,25 +98,16 @@ class ZfcUserZendDb implements ProviderInterface
     }
     
     /**
-     * @return string
-     */
-    public function getTableName()
-    {
-        return $this->tableName;
-    }
-    
-    /**
      * @param string
-     *
-     * throws, what to throw ? :o
      */
     public function setTableName($tableName)
     {
-        if(!isset($config['table_name'])){
+        if(!isset($tableName)){
             // config parameter NULL, set the default value
-            $tableName = 'user_role_linker' ;
+            $name = 'user_role_linker' ;
         }else{
-            $this->tableName = $config['table_name']; 
+            $name = (string) $tableName;
         }
+        $this->tableName = $name;
     }
 }
