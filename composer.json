@@ -26,16 +26,16 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=5.3.3",
-        "zendframework/zend-permissions-acl": "2.1.*",
-        "zendframework/zend-mvc":             "2.1.*",
-        "zendframework/zend-eventmanager":    "2.1.*",
-        "zendframework/zend-servicemanager":  "2.1.*",
-        "zendframework/zend-view":            "2.1.*"
+        "zendframework/zend-permissions-acl": "~2.1",
+        "zendframework/zend-mvc":             "~2.1",
+        "zendframework/zend-eventmanager":    "~2.1",
+        "zendframework/zend-servicemanager":  "~2.1",
+        "zendframework/zend-view":            "~2.1"
     },
     "require-dev": {
-        "doctrine/common":                    "*",
-        "zendframework/zend-developer-tools": "*",
-        "zf-commons/zfc-user":                "0.1.*"
+        "doctrine/common":                    ">=2.3,<2.5-dev",
+        "zendframework/zend-developer-tools": "0.*",
+        "zf-commons/zfc-user":                "0.*"
     },
     "suggests": {
         "zendframework/zend-developer-tools": "if you need to see current authorization details while developing",
