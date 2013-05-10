@@ -122,22 +122,28 @@ class ControllerTest extends PHPUnit_Framework_TestCase
                         'user3',
                     ),
                 ),
+                array(
+                    'controller' => 'test5-controller',
+                    'action'     => null,
+                    'roles'      => 'user4'
+                ),
             ),
             $this->serviceLocator
         );
 
         $resources = $controller->getResources();
 
-        $this->assertCount(5, $resources);
+        $this->assertCount(6, $resources);
         $this->assertContains('controller/test-controller:test-action', $resources);
         $this->assertContains('controller/test2-controller', $resources);
         $this->assertContains('controller/test3-controller:test3-action', $resources);
         $this->assertContains('controller/test4-controller:test4-action', $resources);
         $this->assertContains('controller/test4-controller:test5-action', $resources);
+        $this->assertContains('controller/test5-controller', $resources);
 
         $rules = $controller->getRules();
 
-        $this->assertCount(5, $rules['allow']);
+        $this->assertCount(6, $rules['allow']);
         $this->assertContains(
             array(array('admin', 'user'), 'controller/test-controller:test-action'),
             $rules['allow']
@@ -156,6 +162,10 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         );
         $this->assertContains(
             array(array('admin4', 'user3'), 'controller/test4-controller:test5-action'),
+            $rules['allow']
+        );
+        $this->assertContains(
+            array(array('user4'), 'controller/test5-controller'),
             $rules['allow']
         );
     }
