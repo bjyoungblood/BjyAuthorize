@@ -318,7 +318,7 @@ class Authorize
             if ($role->getParent() !== null) {
                 $this->addRoles(array($role->getParent()));
                 $this->acl->addRole($role, $role->getParent());
-            } else {
+            } elseif ($this->acl->hasRole($role)) {
                 $this->acl->addRole($role);
             }
         }
@@ -342,7 +342,7 @@ class Authorize
             if (is_array($value)) {
                 $this->acl->addResource($key, $parent);
                 $this->loadResource($value, $key);
-            } else {
+            } elseif (!$this->acl->hasResource($key)) {
                 $this->acl->addResource($key, $parent);
             }
         }
