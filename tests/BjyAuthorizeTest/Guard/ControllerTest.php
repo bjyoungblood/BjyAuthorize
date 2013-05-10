@@ -151,11 +151,11 @@ class ControllerTest extends PHPUnit_Framework_TestCase
             $rules['allow']
         );
         $this->assertContains(
-            array(array('admin4'), 'controller/test4-controller:test4-action'),
+            array(array('admin4', 'user3'), 'controller/test4-controller:test4-action'),
             $rules['allow']
         );
         $this->assertContains(
-            array(array('user3'), 'controller/test4-controller:test5-action'),
+            array(array('admin4', 'user3'), 'controller/test4-controller:test5-action'),
             $rules['allow']
         );
     }
