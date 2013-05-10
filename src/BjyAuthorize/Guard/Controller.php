@@ -62,11 +62,9 @@ class Controller implements GuardInterface, RuleProviderInterface, ResourceProvi
             if (!isset($rule['action'])) {
                 $resourceName               = $this->getResourceName($rule['controller'], null);
                 $this->rules[$resourceName] = $rule['roles'];
-            }
-            else {
-                if (!is_array($rule['action'])) {
-                    $rule['action'] = array($rule['action']);
-                }
+            } else {
+
+                $rule['action'] = is_array($rule['action']) ? $rule['action'] : array($rule['action']);
 
                 foreach ($rule['action'] as $action) {
                     $resourceName               = $this->getResourceName($rule['controller'], $action);
