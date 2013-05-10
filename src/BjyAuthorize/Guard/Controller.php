@@ -54,23 +54,20 @@ class Controller implements GuardInterface, RuleProviderInterface, ResourceProvi
     {
         $this->serviceLocator = $serviceLocator;
 
-	    foreach ($rules as $rule) {
-		    if (!is_array($rule['roles'])) {
-			    $rule['roles'] = array($rule['roles']);
-		    }
+        foreach ($rules as $rule) {
+            if (!is_array($rule['roles'])) {
+                $rule['roles'] = array($rule['roles']);
+            }
 
-		    if (!isset($rule['action'])) {
-			    $rule['action'] = array(null);
-		    }
-		    else if (!is_array($rule['action'])) {
-			    $rule['action'] = array($rule['action']);
-		    }
+            $rule['action'] = isset($rule['action']) ? (array)$rule['action'] : array(null);
 
-		    foreach ($rule['action'] as $action) {
-			    $resourceName               = $this->getResourceName($rule['controller'], $action);
-			    $this->rules[$resourceName] = $rule['roles'];
-		    }
-	    }
+            foreach ((array)$rule['controller'] as $controller) {
+                foreach ($rule['action'] as $action) {
+                    $resourceName               = $this->getResourceName($controller, $action);
+                    $this->rules[$resourceName] = $rule['roles'];
+                }
+            }
+        }
     }
 
     /**
