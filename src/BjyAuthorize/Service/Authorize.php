@@ -318,7 +318,7 @@ class Authorize
             if ($role->getParent() !== null) {
                 $this->addRoles(array($role->getParent()));
                 $this->acl->addRole($role, $role->getParent());
-            } elseif ($this->acl->hasRole($role)) {
+            } elseif (!$this->acl->hasRole($role)) {
                 $this->acl->addRole($role);
             }
         }
