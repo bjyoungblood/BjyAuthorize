@@ -30,7 +30,8 @@
         "zendframework/zend-mvc":             "~2.1",
         "zendframework/zend-eventmanager":    "~2.1",
         "zendframework/zend-servicemanager":  "~2.1",
-        "zendframework/zend-view":            "~2.1"
+        "zendframework/zend-view":            "~2.1",
+        "phpunit/phpunit": "~3.7"
     },
     "require-dev": {
         "doctrine/common":                    ">=2.3,<2.5-dev",
