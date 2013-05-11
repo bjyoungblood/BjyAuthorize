@@ -158,6 +158,14 @@ return array(
             'BjyAuthorize\Guard\Controller' => array(
                 array('controller' => 'index', 'action' => 'index', 'roles' => array('guest','user')),
                 array('controller' => 'index', 'action' => 'stuff', 'roles' => array('user')),
+                // You can also specify an array of actions or an array of controllers (or both)
+                // allow "guest" and "admin" to access actions "list" and "manage" on these "index", "static" and "console" controllers
+                array(
+                    'controller' => array('index', 'static', 'console'),
+                    'action' => array('list', 'manage'),
+                    'roles' => array('guest', 'admin')
+                ),
+                array('controller' => array('search', 'administration'), 'roles' => array('staffer', 'admin')),
                 array('controller' => 'zfcuser', 'roles' => array()),
                 // Below is the default index action used by the [ZendSkeletonApplication](https://github.com/zendframework/ZendSkeletonApplication)
                 // array('controller' => 'Application\Controller\Index', 'roles' => array('guest', 'user')),
