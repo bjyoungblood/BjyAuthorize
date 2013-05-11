@@ -61,11 +61,12 @@ class Controller implements GuardInterface, RuleProviderInterface, ResourceProvi
 
             $rule['action'] = isset($rule['action']) ? (array)$rule['action'] : array(null);
 
-            foreach ($rule['action'] as $action) {
-                $resourceName               = $this->getResourceName($rule['controller'], $action);
-                $this->rules[$resourceName] = $rule['roles'];
+            foreach ((array)$rule['controller'] as $controller) {
+                foreach ($rule['action'] as $action) {
+                    $resourceName               = $this->getResourceName($controller, $action);
+                    $this->rules[$resourceName] = $rule['roles'];
+                }
             }
-
         }
     }
 

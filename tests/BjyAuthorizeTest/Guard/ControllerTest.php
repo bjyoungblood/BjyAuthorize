@@ -113,7 +113,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
                 ),
                 array(
                     'controller' => 'test4-controller',
-                    'action'      => array(
+                    'action'     => array(
                         'test4-action',
                         'test5-action',
                     ),
@@ -127,23 +127,49 @@ class ControllerTest extends PHPUnit_Framework_TestCase
                     'action'     => null,
                     'roles'      => 'user4'
                 ),
+                array(
+                    'controller' => array(
+                        'test6-controller',
+                        'test7-controller',
+                    ),
+                    'action'     => null,
+                    'roles'      => 'user5'
+                ),
+                array(
+                    'controller' => array(
+                        'test6-controller',
+                        'test7-controller',
+                    ),
+                    'action'     => array(
+                        'test6-action',
+                        'test7-action',
+                    ),
+                    'roles'      => array(
+                        'admin5',
+                        'user6',
+                    ),
+                ),
             ),
             $this->serviceLocator
         );
 
         $resources = $controller->getResources();
 
-        $this->assertCount(6, $resources);
+        $this->assertCount(12, $resources);
         $this->assertContains('controller/test-controller:test-action', $resources);
         $this->assertContains('controller/test2-controller', $resources);
         $this->assertContains('controller/test3-controller:test3-action', $resources);
         $this->assertContains('controller/test4-controller:test4-action', $resources);
         $this->assertContains('controller/test4-controller:test5-action', $resources);
         $this->assertContains('controller/test5-controller', $resources);
+        $this->assertContains('controller/test6-controller', $resources);
+        $this->assertContains('controller/test7-controller', $resources);
+        $this->assertContains('controller/test6-controller:test6-action', $resources);
+        $this->assertContains('controller/test7-controller:test7-action', $resources);
 
         $rules = $controller->getRules();
 
-        $this->assertCount(6, $rules['allow']);
+        $this->assertCount(12, $rules['allow']);
         $this->assertContains(
             array(array('admin', 'user'), 'controller/test-controller:test-action'),
             $rules['allow']
@@ -166,6 +192,22 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         );
         $this->assertContains(
             array(array('user4'), 'controller/test5-controller'),
+            $rules['allow']
+        );
+        $this->assertContains(
+            array(array('user5'), 'controller/test6-controller'),
+            $rules['allow']
+        );
+        $this->assertContains(
+            array(array('user5'), 'controller/test7-controller'),
+            $rules['allow']
+        );
+        $this->assertContains(
+            array(array('admin5', 'user6'), 'controller/test6-controller:test6-action'),
+            $rules['allow']
+        );
+        $this->assertContains(
+            array(array('admin5', 'user6'), 'controller/test7-controller:test6-action'),
             $rules['allow']
         );
     }
