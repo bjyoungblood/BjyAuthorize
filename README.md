@@ -158,6 +158,12 @@ return array(
             'BjyAuthorize\Guard\Controller' => array(
                 array('controller' => 'index', 'action' => 'index', 'roles' => array('guest','user')),
                 array('controller' => 'index', 'action' => 'stuff', 'roles' => array('user')),
+                array(
+                    'controller' => array('index', 'static', 'console'),
+                    'action' => array('list', 'manage'),
+                    'roles' => array('guest', 'admin')
+                ),
+                array('controller' => array('search', 'administration'), 'roles' => array('staffer', 'admin')),
                 array('controller' => 'zfcuser', 'roles' => array()),
                 // Below is the default index action used by the [ZendSkeletonApplication](https://github.com/zendframework/ZendSkeletonApplication)
                 // array('controller' => 'Application\Controller\Index', 'roles' => array('guest', 'user')),
