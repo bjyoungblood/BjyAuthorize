@@ -38,6 +38,12 @@ return array(
 
         // Template name for the unauthorized strategy
         'template'              => 'error/403',
+
+        // Adapter used by the cache
+        'cache_adapter'         => 'Zend\Cache\Storage\Adapter\Apc',
+
+        // Key used by the cache for caching the acl
+        'cache_key'             => 'bjyauthorize_acl'
     ),
 
     'service_manager' => array(
