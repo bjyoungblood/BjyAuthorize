@@ -1,12 +1,16 @@
-## Upgrade to 1.3.0
+## Upgrade to [1.2.6](https://github.com/bjyoungblood/BjyAuthorize/issues?milestone=4&page=1&state=closed)
 
  * The column `default` in table `user_role` was renamed to `is_default` to avoid problems with the colliding
-   SQL keyword `DEFAULT`
+   SQL keyword `DEFAULT` [#113](https://github.com/bjyoungblood/BjyAuthorize/pull/113)
+   [#104](https://github.com/bjyoungblood/BjyAuthorize/pull/104)
+ * Methods `BjyAuthorize\Controller\Plugin\IsAllowed#getAuthorizeService`,
+   `BjyAuthorize\Controller\Plugin\IsAllowed#setAuthorizeService`,
+   `BjyAuthorize\View\Helper\IsAllowed#getAuthorizeService`,
+   `BjyAuthorize\View\Helper\IsAllowed#setAuthorizeService` were removed
+   [#127](https://github.com/bjyoungblood/BjyAuthorize/pull/127)
+   [#94](https://github.com/bjyoungblood/BjyAuthorize/pull/94)
    
-## Upgrade to 1.2.0
-
-Version [1.2.0](https://github.com/bjyoungblood/BjyAuthorize/issues?milestone=1&page=1&state=closed) brings in
-following new features:
+## Upgrade to [1.2.0](https://github.com/bjyoungblood/BjyAuthorize/issues?milestone=1&page=1&state=closed)
 
  * Zend Developer Tools integration
  * Better Doctrine ORM support
