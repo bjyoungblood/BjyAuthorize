@@ -32,7 +32,6 @@ class IsAllowedTest extends PHPUnit_Framework_TestCase
 
         $plugin = new IsAllowed($authorize);
         $this->assertTrue($plugin->__invoke('test', 'privilege'));
-        $this->assertSame($authorize, $plugin->getAuthorizeService());
 
         $authorize2 = $this->getMock('BjyAuthorize\\Service\\Authorize', array(), array(), '', false);
         $authorize2
@@ -41,8 +40,8 @@ class IsAllowedTest extends PHPUnit_Framework_TestCase
             ->with('test2', 'privilege2')
             ->will($this->returnValue(false));
 
-        $plugin->setAuthorizeService($authorize2);
-        $this->assertSame($authorize2, $plugin->getAuthorizeService());
+        $plugin = new IsAllowed($authorize2);
+
         $this->assertFalse($plugin->__invoke('test2', 'privilege2'));
     }
 }
