@@ -149,6 +149,8 @@ return array(
         ),
 
         /* Currently, only controller and route guards exist
+         *
+         * Consider enabling either the controller or the route guard depending on your needs.
          */
         'guards' => array(
             /* If this guard is specified here (i.e. it is enabled), it will block
@@ -158,8 +160,20 @@ return array(
             'BjyAuthorize\Guard\Controller' => array(
                 array('controller' => 'index', 'action' => 'index', 'roles' => array('guest','user')),
                 array('controller' => 'index', 'action' => 'stuff', 'roles' => array('user')),
+                // You can also specify an array of actions or an array of controllers (or both)
+                // allow "guest" and "admin" to access actions "list" and "manage" on these "index",
+                // "static" and "console" controllers
+                array(
+                    'controller' => array('index', 'static', 'console'),
+                    'action' => array('list', 'manage'),
+                    'roles' => array('guest', 'admin')
+                ),
+                array(
+                    'controller' => array('search', 'administration'),
+                    'roles' => array('staffer', 'admin')
+                ),
                 array('controller' => 'zfcuser', 'roles' => array()),
-                // Below is the default index action used by the [ZendSkeletonApplication](https://github.com/zendframework/ZendSkeletonApplication)
+                // Below is the default index action used by the ZendSkeletonApplication
                 // array('controller' => 'Application\Controller\Index', 'roles' => array('guest', 'user')),
             ),
 
@@ -171,7 +185,7 @@ return array(
                 array('route' => 'zfcuser/logout', 'roles' => array('user')),
                 array('route' => 'zfcuser/login', 'roles' => array('guest')),
                 array('route' => 'zfcuser/register', 'roles' => array('guest')),
-                // Below is the default index action used by the [ZendSkeletonApplication](https://github.com/zendframework/ZendSkeletonApplication)
+                // Below is the default index action used by the ZendSkeletonApplication
                 array('route' => 'home', 'roles' => array('guest', 'user')),
             ),
         ),
