@@ -82,13 +82,60 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $this->controllerGuard->detach($eventManager);
     }
 
+    public function controllersRulesProvider() {
+        return array(
+            array(
+                'controller/test-controller:test-action',
+                array('admin', 'user')
+            ),
+            array(
+                'controller/test2-controller',
+                array('admin2', 'user2')
+            ),
+            array(
+                'controller/test3-controller:test3-action',
+                array('admin3')
+            ),
+            array(
+                'controller/test4-controller:test4-action',
+                array('admin4', 'user3')
+            ),
+            array(
+                'controller/test4-controller:test5-action',
+                array('admin4', 'user3')
+            ),
+            array(
+                'controller/test5-controller',
+                array('user4')
+            ),
+            array(
+                'controller/test6-controller',
+                array('user5')
+            ),
+            array(
+                'controller/test7-controller',
+                array('user5')
+            ),
+            array(
+                'controller/test6-controller:test6-action',
+                array('admin5', 'user6')
+            ),
+            array(
+                'controller/test7-controller:test7-action',
+                array('admin5', 'user6')
+            )
+        );
+
+    }
+
     /**
+     * @dataProvider controllersRulesProvider
      * @covers \BjyAuthorize\Guard\Controller::__construct
      * @covers \BjyAuthorize\Guard\Controller::getResources
      * @covers \BjyAuthorize\Guard\Controller::getRules
      */
-    public function testGetResourcesGetRules()
-    {
+    public function testGetResourcesGetRules($a, $b) {
+
         $controller = new Controller(
             array(
                 array(
@@ -156,60 +203,16 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $resources = $controller->getResources();
 
         $this->assertCount(12, $resources);
-        $this->assertContains('controller/test-controller:test-action', $resources);
-        $this->assertContains('controller/test2-controller', $resources);
-        $this->assertContains('controller/test3-controller:test3-action', $resources);
-        $this->assertContains('controller/test4-controller:test4-action', $resources);
-        $this->assertContains('controller/test4-controller:test5-action', $resources);
-        $this->assertContains('controller/test5-controller', $resources);
-        $this->assertContains('controller/test6-controller', $resources);
-        $this->assertContains('controller/test7-controller', $resources);
-        $this->assertContains('controller/test6-controller:test6-action', $resources);
-        $this->assertContains('controller/test7-controller:test7-action', $resources);
+        $this->assertContains($a, $resources);
 
         $rules = $controller->getRules();
 
         $this->assertCount(12, $rules['allow']);
         $this->assertContains(
-            array(array('admin', 'user'), 'controller/test-controller:test-action'),
+            array($b, $a),
             $rules['allow']
         );
-        $this->assertContains(
-            array(array('admin2', 'user2'), 'controller/test2-controller'),
-            $rules['allow']
-        );
-        $this->assertContains(
-            array(array('admin3'), 'controller/test3-controller:test3-action'),
-            $rules['allow']
-        );
-        $this->assertContains(
-            array(array('admin4', 'user3'), 'controller/test4-controller:test4-action'),
-            $rules['allow']
-        );
-        $this->assertContains(
-            array(array('admin4', 'user3'), 'controller/test4-controller:test5-action'),
-            $rules['allow']
-        );
-        $this->assertContains(
-            array(array('user4'), 'controller/test5-controller'),
-            $rules['allow']
-        );
-        $this->assertContains(
-            array(array('user5'), 'controller/test6-controller'),
-            $rules['allow']
-        );
-        $this->assertContains(
-            array(array('user5'), 'controller/test7-controller'),
-            $rules['allow']
-        );
-        $this->assertContains(
-            array(array('admin5', 'user6'), 'controller/test6-controller:test6-action'),
-            $rules['allow']
-        );
-        $this->assertContains(
-            array(array('admin5', 'user6'), 'controller/test7-controller:test6-action'),
-            $rules['allow']
-        );
+
     }
 
     /**
