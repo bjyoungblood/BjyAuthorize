@@ -82,6 +82,12 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $this->controllerGuard->detach($eventManager);
     }
 
+    /**
+     * Return a set of rules, with expected resources count, expected resource names
+     * and expected output rules
+     *
+     * @return array
+     */
     public function controllersRulesProvider() {
         return array(
             array(
@@ -231,27 +237,33 @@ class ControllerTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider controllersRulesProvider
+     *
      * @covers \BjyAuthorize\Guard\Controller::__construct
      * @covers \BjyAuthorize\Guard\Controller::getResources
      * @covers \BjyAuthorize\Guard\Controller::getRules
+     *
+     * @param array     $rule
+     * @param int       $expectedCount
+     * @param string    $resource
+     * @param array     $roles
      */
-    public function testGetResourcesGetRules($a, $b, $c, $d) {
+    public function testGetResourcesGetRules($rule, $expectedCount, $resource, $roles) {
 
         $controller = new Controller(
-            array($a),
+            array($rule),
             $this->serviceLocator
         );
 
         $resources = $controller->getResources();
 
-        $this->assertCount($b, $resources);
-        $this->assertContains($c, $resources);
+        $this->assertCount($expectedCount, $resources);
+        $this->assertContains($resource, $resources);
 
         $rules = $controller->getRules();
 
-        $this->assertCount($b, $rules['allow']);
+        $this->assertCount($expectedCount, $rules['allow']);
         $this->assertContains(
-            array($d, $c),
+            array($roles, $resource),
             $rules['allow']
         );
 
