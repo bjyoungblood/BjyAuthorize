@@ -36,8 +36,7 @@
         "doctrine/common":                    ">=2.3,<2.5-dev",
         "zendframework/zend-developer-tools": "0.*",
         "zf-commons/zfc-user":                "0.*",
-        "zendframework/zend-cache":           "~2.1",
-        "phpunit/phpunit": "~3.7"
+        "zendframework/zend-cache":           "~2.1"
     },
     "suggests": {
         "zendframework/zend-developer-tools": "if you need to see current authorization details while developing",
