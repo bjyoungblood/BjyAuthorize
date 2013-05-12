@@ -36,13 +36,13 @@
         "doctrine/common":                    ">=2.3,<2.5-dev",
         "zendframework/zend-developer-tools": "0.*",
         "zf-commons/zfc-user":                "0.*",
-        "zendframework/zend-permissions-acl": "~2.1"
+        "zendframework/zend-cache":           "~2.1"
     },
     "suggests": {
         "zendframework/zend-developer-tools": "if you need to see current authorization details while developing",
         "zf-commons/zfc-user":                "zfc-user provides a good default setup to get started with bjyauthorize",
         "zf-commons/zfc-user-doctrine-orm":   "if you want to use BjyAuthorize with Doctrine ORM",
-        "zendframework/zend-permissions-acl": "needed to perform the ACL cache"
+        "zendframework/zend-cache":           "needed to perform the ACL cache"
     },
     "autoload": {
         "psr-0": {
