@@ -19,6 +19,7 @@ use Zend\Permissions\Acl\Resource\GenericResource;
 use BjyAuthorize\Acl\Role;
 use BjyAuthorize\Guard\GuardInterface;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
+use Zend\Cache\StorageFactory;
 
 /**
  * Authorize service
@@ -250,49 +251,65 @@ class Authorize
         }
 
         $this->loaded = null;
-        $this->acl    = new Acl();
 
-        foreach ($this->serviceLocator->get('BjyAuthorize\RoleProviders') as $provider) {
-            $this->addRoleProvider($provider);
+        $cache = StorageFactory::factory(array(
+            'adapter' => 'apc',
+            'plugins' => array(
+                'exception_handler' => array('throw_exceptions' => true),
+            ),
+        ));
+
+        if ($cache->hasItem('bjyauthorize_acl')) {
+            $this->acl = $cache->getItem('bjyauthorize_acl');
         }
+        else {
 
-        foreach ($this->serviceLocator->get('BjyAuthorize\ResourceProviders') as $provider) {
-            $this->addResourceProvider($provider);
-        }
+            $this->acl = new Acl();
 
-        foreach ($this->serviceLocator->get('BjyAuthorize\RuleProviders') as $provider) {
-            $this->addRuleProvider($provider);
+            foreach ($this->serviceLocator->get('BjyAuthorize\RoleProviders') as $provider) {
+                $this->addRoleProvider($provider);
+            }
+
+            foreach ($this->serviceLocator->get('BjyAuthorize\ResourceProviders') as $provider) {
+                $this->addResourceProvider($provider);
+            }
+
+            foreach ($this->serviceLocator->get('BjyAuthorize\RuleProviders') as $provider) {
+                $this->addRuleProvider($provider);
+            }
+
+            foreach ($this->serviceLocator->get('BjyAuthorize\Guards') as $guard) {
+                $this->addGuard($guard);
+            }
+
+            foreach ($this->roleProviders as $provider) {
+                $this->addRoles($provider->getRoles());
+            }
+
+            foreach ($this->resourceProviders as $provider) {
+                $this->loadResource($provider->getResources(), null);
+            }
+
+            foreach ($this->ruleProviders as $provider) {
+                $rules = $provider->getRules();
+                if (isset($rules['allow'])) {
+                    foreach ($rules['allow'] as $rule) {
+                        $this->loadRule($rule, static::TYPE_ALLOW);
+                    }
+                }
+
+                if (isset($rules['deny'])) {
+                    foreach ($rules['deny'] as $rule) {
+                        $this->loadRule($rule, static::TYPE_DENY);
+                    }
+                }
+            }
+
+            $cache->setItem('bjyauthorize_acl', $this->acl);
+
         }
 
         $this->setIdentityProvider($this->serviceLocator->get('BjyAuthorize\Provider\Identity\ProviderInterface'));
-
-        foreach ($this->serviceLocator->get('BjyAuthorize\Guards') as $guard) {
-            $this->addGuard($guard);
-        }
-
-        foreach ($this->roleProviders as $provider) {
-            $this->addRoles($provider->getRoles());
-        }
-
-        foreach ($this->resourceProviders as $provider) {
-            $this->loadResource($provider->getResources(), null);
-        }
-
-        foreach ($this->ruleProviders as $provider) {
-            $rules = $provider->getRules();
-            if (isset($rules['allow'])) {
-                foreach ($rules['allow'] as $rule) {
-                    $this->loadRule($rule, static::TYPE_ALLOW);
-                }
-            }
-
-            if (isset($rules['deny'])) {
-                foreach ($rules['deny'] as $rule) {
-                    $this->loadRule($rule, static::TYPE_DENY);
-                }
-            }
-        }
-
         $parentRoles = $this->getIdentityProvider()->getIdentityRoles();
 
         $this->acl->addRole($this->getIdentity(), $parentRoles);
