@@ -83,60 +83,190 @@ class ControllerTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * Return a set of rules, with expected resources count, expected resource names
+     * and expected output rules
+     *
+     * @return array
+     */
+    public function controllersRulesProvider() {
+        return array(
+            array(
+                array(
+                    'controller' => 'test-controller',
+                    'action'     => 'test-action',
+                    'roles'      => array(
+                        'admin',
+                        'user',
+                    ),
+                ),
+                1,
+                'controller/test-controller:test-action',
+                array('admin', 'user')
+            ),
+            array(
+                array(
+                    'controller' => 'test2-controller',
+                    'roles'      => array(
+                        'admin2',
+                        'user2',
+                    ),
+                ),
+                1,
+                'controller/test2-controller',
+                array('admin2', 'user2')
+            ),
+            array(
+                array(
+                    'controller' => 'test3-controller',
+                    'action'     => 'test3-action',
+                    'roles'      => 'admin3'
+                ),
+                1,
+                'controller/test3-controller:test3-action',
+                array('admin3')
+            ),
+            array(
+                array(
+                    'controller' => 'test4-controller',
+                    'action'     => array(
+                        'test4-action',
+                        'test5-action',
+                    ),
+                    'roles'      => array(
+                        'admin4',
+                        'user3',
+                    ),
+                ),
+                2,
+                'controller/test4-controller:test4-action',
+                array('admin4', 'user3')
+            ),
+            array(
+                array(
+                    'controller' => 'test4-controller',
+                    'action'     => array(
+                        'test4-action',
+                        'test5-action',
+                    ),
+                    'roles'      => array(
+                        'admin4',
+                        'user3',
+                    ),
+                ),
+                2,
+                'controller/test4-controller:test5-action',
+                array('admin4', 'user3')
+            ),
+            array(
+                array(
+                    'controller' => 'test5-controller',
+                    'action'     => null,
+                    'roles'      => 'user4'
+                ),
+                1,
+                'controller/test5-controller',
+                array('user4')
+            ),
+            array(
+                array(
+                    'controller' => array(
+                        'test6-controller',
+                        'test7-controller',
+                    ),
+                    'action'     => null,
+                    'roles'      => 'user5'
+                ),
+                2,
+                'controller/test6-controller',
+                array('user5')
+            ),
+            array(
+                array(
+                    'controller' => array(
+                        'test6-controller',
+                        'test7-controller',
+                    ),
+                    'action'     => null,
+                    'roles'      => 'user5'
+                ),
+                2,
+                'controller/test7-controller',
+                array('user5')
+            ),
+            array(
+                array(
+                    'controller' => array(
+                        'test6-controller',
+                        'test7-controller',
+                    ),
+                    'action'     => array(
+                        'test6-action',
+                        'test7-action',
+                    ),
+                    'roles'      => array(
+                        'admin5',
+                        'user6',
+                    ),
+                ),
+                4,
+                'controller/test6-controller:test6-action',
+                array('admin5', 'user6')
+            ),
+            array(
+                array(
+                    'controller' => array(
+                        'test6-controller',
+                        'test7-controller',
+                    ),
+                    'action'     => array(
+                        'test6-action',
+                        'test7-action',
+                    ),
+                    'roles'      => array(
+                        'admin5',
+                        'user6',
+                    ),
+                ),
+                4,
+                'controller/test7-controller:test7-action',
+                array('admin5', 'user6')
+            )
+        );
+
+    }
+
+    /**
+     * @dataProvider controllersRulesProvider
+     *
      * @covers \BjyAuthorize\Guard\Controller::__construct
      * @covers \BjyAuthorize\Guard\Controller::getResources
      * @covers \BjyAuthorize\Guard\Controller::getRules
+     *
+     * @param array     $rule
+     * @param int       $expectedCount
+     * @param string    $resource
+     * @param array     $roles
      */
-    public function testGetResourcesGetRules()
-    {
+    public function testGetResourcesGetRules($rule, $expectedCount, $resource, $roles) {
+
         $controller = new Controller(
-            array(
-                 array(
-                     'controller' => 'test-controller',
-                     'action'     => 'test-action',
-                     'roles'      => array(
-                         'admin',
-                         'user',
-                     ),
-                 ),
-                 array(
-                     'controller' => 'test2-controller',
-                     'roles'      => array(
-                         'admin2',
-                         'user2',
-                     ),
-                 ),
-                 array(
-                     'controller' => 'test3-controller',
-                     'action'     => 'test3-action',
-                     'roles'      => 'admin3'
-                 ),
-            ),
+            array($rule),
             $this->serviceLocator
         );
 
         $resources = $controller->getResources();
 
-        $this->assertCount(3, $resources);
-        $this->assertContains('controller/test-controller:test-action', $resources);
-        $this->assertContains('controller/test2-controller', $resources);
-        $this->assertContains('controller/test3-controller:test3-action', $resources);
+        $this->assertCount($expectedCount, $resources);
+        $this->assertContains($resource, $resources);
 
         $rules = $controller->getRules();
 
-        $this->assertCount(3, $rules['allow']);
+        $this->assertCount($expectedCount, $rules['allow']);
         $this->assertContains(
-            array(array('admin', 'user'), 'controller/test-controller:test-action'),
+            array($roles, $resource),
             $rules['allow']
         );
-        $this->assertContains(
-            array(array('admin2', 'user2'), 'controller/test2-controller'),
-            $rules['allow']
-        );
-        $this->assertContains(
-            array(array('admin3'), 'controller/test3-controller:test3-action'),
-            $rules['allow']
-        );
+
     }
 
     /**
