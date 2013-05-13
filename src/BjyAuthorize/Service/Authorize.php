@@ -279,7 +279,7 @@ class Authorize
         $success = false;
 
         if ($this->cache && $this->cacheKey) {
-            $this->acl = $this->cache->getItem($this->cacheKey, $success = null);
+            $this->acl = $this->cache->getItem($this->cacheKey, $success);
         }
 
         if (! $success || ! $this->acl) {

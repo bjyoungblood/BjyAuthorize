@@ -28,9 +28,9 @@ class AuthorizeFactory implements FactoryInterface
         $config     = $serviceLocator->get('BjyAuthorize\Config');
         $authorize  = new Authorize($config, $serviceLocator);
 
-        if (isset($config['bjyauthorize']['cache_adapter']) && isset($config['bjyauthorize']['cache_key'])) {
-            $authorize->setCacheKey($config['bjyauthorize']['cache_key']);
-            $authorize->setCache(new $serviceLocator->get($config['bjyauthorize']['cache_adapter']));
+        if (isset($config['cache_adapter']) && isset($config['cache_key'])) {
+            $authorize->setCacheKey($config['cache_key']);
+            $authorize->setCache(new $config['cache_adapter']);
         }
 
         return $authorize;
