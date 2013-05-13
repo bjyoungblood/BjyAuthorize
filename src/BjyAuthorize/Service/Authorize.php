@@ -32,6 +32,8 @@ class Authorize
 
     const TYPE_DENY = 'deny';
 
+    const CACHE_NAME = 'bjyauthorize_acl';
+
     /**
      * @var Acl
      */
@@ -80,16 +82,21 @@ class Authorize
     /**
      * @param array                     $config
      * @param ServiceLocatorInterface   $serviceLocator
-     * @param StorageInterface          $cache
      */
-    public function __construct(array $config, ServiceLocatorInterface $serviceLocator, StorageInterface $cache = null)
+    public function __construct(array $config, ServiceLocatorInterface $serviceLocator)
     {
         $this->serviceLocator = $serviceLocator;
         $that                 = $this;
-        $this->cache          = $cache;
         $this->loaded         = function () use ($that) {
             $that->load();
         };
+    }
+
+    /**
+     * @param StorageInterface $cache
+     */
+    public function setCache(StorageInterface $cache = null) {
+        $this->cache = $cache;
     }
 
     /**
@@ -312,15 +319,14 @@ class Authorize
         ));
         */
 
-        if ($this->cache == null) {
-            $this->loadAcl();
+        if ($this->cache && $this->cache->hasItem(self::CACHE_NAME)) {
+            $this->acl = $this->cache->getItem(self::CACHE_NAME);
         }
-        else {
-            if ($this->cache->hasItem('bjyauthorize_acl')) {
-                $this->acl = $this->cache->getItem('bjyauthorize_acl');
-            } else {
-                $this->loadAcl();
-                $this->cache->setItem('bjyauthorize_acl', $this->acl);
+
+        if (!$this->acl) {
+            $this->loadAcl();
+            if ($this->cache) {
+                $this->cache->setItem(self::CACHE_NAME, $this->acl);
             }
         }
 
