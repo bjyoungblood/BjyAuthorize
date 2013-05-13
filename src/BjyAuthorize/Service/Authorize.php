@@ -276,15 +276,6 @@ class Authorize
 
         $this->loaded = null;
 
-        /*
-        $cache = StorageFactory::factory(array(
-            'adapter' => 'apc',
-            'plugins' => array(
-                'exception_handler' => array('throw_exceptions' => true),
-            ),
-        ));
-        */
-
         $success = false;
 
         if ($this->cache && $this->cacheKey) {
