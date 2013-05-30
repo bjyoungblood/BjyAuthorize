@@ -35,7 +35,7 @@ class ZfcUserZendDb implements ProviderInterface
     /**
      * @var string
      */
-    protected $tableName = 'user_role_linker';
+    protected $tableName;
 
     /**
      * @param \Zend\Db\Adapter\Adapter $adapter
@@ -95,5 +95,13 @@ class ZfcUserZendDb implements ProviderInterface
         }
 
         $this->defaultRole = $defaultRole;
+    }
+    
+    /**
+     * @param string
+     */
+    public function setTableName($tableName)
+    {
+        $this->tableName = (string) $tableName;
     }
 }
