@@ -12,7 +12,7 @@ use BjyAuthorize\Acl\HierarchicalRoleInterface;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 
 /**
- * An example entity that represents a role.
+ * An example document that represents a role.
  *
  * @ODM\Document(
  *     collection="role"
@@ -22,16 +22,16 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 class Role implements HierarchicalRoleInterface
 {
     /**
-     * @var $id
+     * @var int
      * @ODM\Id(strategy="AUTO")
      */
     protected $id;
 
     /**
-     * @var string $role_id
-     * @ODM\Field(type="string")
+     * @var string
+     * @ODM\Field(type="string", name="role_id")
      */
-    protected $role_id;
+    protected $roleId;
 
     /**
      * @var MyNamespace\Role
@@ -58,7 +58,7 @@ class Role implements HierarchicalRoleInterface
      */
     public function setId($id)
     {
-        $this->id = (int)$id;
+        $this->id = (int) $id;
     }
 
     /**
@@ -68,7 +68,7 @@ class Role implements HierarchicalRoleInterface
      */
     public function getRoleId()
     {
-        return $this->role_id;
+        return $this->roleId;
     }
 
     /**
@@ -80,7 +80,7 @@ class Role implements HierarchicalRoleInterface
      */
     public function setRoleId($roleId)
     {
-        $this->role_id = (string) $roleId;
+        $this->roleId = (string) $roleId;
     }
 
     /**
@@ -100,7 +100,7 @@ class Role implements HierarchicalRoleInterface
      *
      * @return void
      */
-    public function setParent(Role $parent)
+    public function setParent(Role $parent = null)
     {
         $this->parent = $parent;
     }

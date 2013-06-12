@@ -12,9 +12,10 @@ use BjyAuthorize\Provider\Role\ProviderInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use ZfcUser\Entity\UserInterface;
+use MyNamespace\Role;
 
 /**
- * An example of how to implement a role aware user entity.
+ * An example of how to implement a role aware user document.
  *
  * @ODM\Document(
  *     collection="user"
@@ -25,28 +26,28 @@ use ZfcUser\Entity\UserInterface;
 class User implements UserInterface, ProviderInterface
 {
     /**
-     * @var $id
+     * @var int
      * @ODM\Id(strategy="AUTO")
      */
     protected $id;
 
     /**
-     * @var string $username
+     * @var string
      * @ODM\Field(type="string")
      */
     protected $username;
 
     /**
-     * @var string $email
+     * @var string
      * @ODM\Field(type="string")
      */
     protected $email;
 
     /**
      * @var string
-     * @ODM\Field(type="string")
+     * @ODM\Field(type="string", name="display_name")
      */
-    protected $display_name;
+    protected $displayName;
 
     /**
      * @var string
@@ -61,17 +62,17 @@ class User implements UserInterface, ProviderInterface
     protected $state;
 
     /**
-     * @var MyNamespace\Role
+     * @var \MyNamespace\Role[]|\Doctrine\Common\Collections\Collection
      * @ODM\ReferenceMany(targetDocument="MyNamespace\Role")
      */
-    protected $roles = array();
+    protected $roles;
 
     /**
      * Initializes the roles variable.
      */
     public function __construct()
     {
-        $this->roles = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->roles = new ArrayCollection();
     }
 
     
@@ -148,7 +149,7 @@ class User implements UserInterface, ProviderInterface
      */
     public function getDisplayName()
     {
-        return $this->display_name;
+        return $this->displayName;
     }
 
     /**
@@ -160,7 +161,7 @@ class User implements UserInterface, ProviderInterface
      */
     public function setDisplayName($displayName)
     {
-        $this->display_name = $displayName;
+        $this->displayName = $displayName;
     }
 
     /**
@@ -214,7 +215,7 @@ class User implements UserInterface, ProviderInterface
      */
     public function getRoles()
     {
-        return $this->roles->getValues();
+        return $this->roles->toArray();
     }
 
 
@@ -223,7 +224,7 @@ class User implements UserInterface, ProviderInterface
      *
      * @param MyNamespace\Role $roles
      */
-    public function addRole(\MyNamespace\Role $roles)
+    public function addRole(Role $roles)
     {
         $this->roles[] = $roles;
     }
@@ -233,7 +234,7 @@ class User implements UserInterface, ProviderInterface
     *
     * @param MyNamespace\Role $roles
     */
-    public function removeRole(\MyNamespace\Role $roles)
+    public function removeRole(Role $roles)
     {
         $this->roles->removeElement($roles);
     }
