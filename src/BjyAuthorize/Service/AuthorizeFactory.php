@@ -8,6 +8,7 @@
 
 namespace BjyAuthorize\Service;
 
+use Zend\Cache\StorageFactory;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Console\Request as ConsoleRequest;
@@ -30,13 +31,19 @@ class AuthorizeFactory implements FactoryInterface
         $authorize  = new Authorize($config, $serviceLocator);
         $application = $serviceLocator->get('Application');
 
-        if (
-            isset($config['cache_adapter'])
-            && isset($config['cache_key'])
+        // Is caching enabled?
+        if (isset($config['cache_enabled'])
+            && $config['cache_enabled']
             && ! ($application->getRequest() instanceof ConsoleRequest)
         ) {
+            // Check if cache options are set
+            if (!isset($config['cache_options'])) {
+                throw new \Exception('Cache is enabled but no cache_options are set.');
+            }
+
+            $authorize->setCacheEnabled();
             $authorize->setCacheKey($config['cache_key']);
-            $authorize->setCache(new $config['cache_adapter']);
+            $authorize->setCache(StorageFactory::factory($config['cache_options']));
         }
 
         return $authorize;

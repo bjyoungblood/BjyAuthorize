@@ -39,11 +39,21 @@ return array(
         // Template name for the unauthorized strategy
         'template'              => 'error/403',
 
-        // Adapter used by the cache
-        'cache_adapter'         => 'Zend\Cache\Storage\Adapter\Apc',
+        // Enable caching of acl
+        // 'cache_enabled'         => true,
+
+        // Cache options for acl. These must be compatible with Zend\Cache\StorageFactory::factory.
+        /*'cache_options'         => array(
+            'adapter'   => array(
+                'name' => 'filesystem',
+            ),
+            'plugins'   => array(
+                'serializer',
+            )
+        ),*/
 
         // Key used by the cache for caching the acl
-        'cache_key'             => 'bjyauthorize_acl'
+        //'cache_key'             => 'bjyauthorize_acl'
     ),
 
     'service_manager' => array(

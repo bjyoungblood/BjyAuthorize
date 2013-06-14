@@ -73,14 +73,19 @@ class Authorize
     protected $serviceLocator;
 
     /**
+     * @var bool
+     */
+    protected $cacheEnabled = false;
+
+    /**
      * @var \Zend\Cache\Storage\StorageInterface|null
      */
     protected $cache;
 
     /**
-     * @var string|null
+     * @var string
      */
-    protected $cacheKey;
+    protected $cacheKey = 'bjyauthorize-acl';
 
     /**
      * @param array                                         $config
@@ -96,17 +101,45 @@ class Authorize
     }
 
     /**
-     * @param \Zend\Cache\Storage\StorageInterface|null $cache
+     * @return null|\Zend\Cache\Storage\StorageInterface
      */
-    public function setCache(StorageInterface $cache = null) {
-        $this->cache = $cache;
+    public function getCache()
+    {
+        return $this->cache;
     }
 
     /**
-     * @param string|null $cacheKey
+     * Set the cache storage
+     *
+     * @param   StorageInterface|null   $cache
+     * @return  $this
      */
-    public function setCacheKey($cacheKey = null) {
+    public function setCache(StorageInterface $cache = null)
+    {
+        $this->cache = $cache;
+        return $this;
+    }
+
+    /**
+     * Set the cache key
+     *
+     * @param   string  $cacheKey
+     * @return  $this
+     */
+    public function setCacheKey($cacheKey)
+    {
         $this->cacheKey = $cacheKey;
+        return $this;
+    }
+
+    /**
+     * Get the cache key
+     *
+     * @return string
+     */
+    public function getCacheKey()
+    {
+        return $this->cacheKey;
     }
 
     /**
@@ -276,17 +309,15 @@ class Authorize
 
         $this->loaded = null;
 
-        $success = false;
-
-        if ($this->cache && $this->cacheKey) {
-            $this->acl = $this->cache->getItem($this->cacheKey, $success);
+        if ($this->useCache()) {
+            $this->acl = $this->cache->getItem($this->getCacheKey());
         }
 
-        if (! $success || ! $this->acl) {
+        if (!$this->acl) {
             $this->loadAcl();
 
-            if ($this->cache && $this->cacheKey) {
-                $this->cache->setItem($this->cacheKey, $this->acl);
+            if ($this->useCache()) {
+                $this->cache->setItem($this->getCacheKey(), $this->acl);
             }
         }
 
@@ -384,7 +415,7 @@ class Authorize
     /**
      * Initialize the Acl
      */
-    private function loadAcl()
+    protected function loadAcl()
     {
         $this->acl = new Acl();
 
@@ -426,5 +457,29 @@ class Authorize
                 }
             }
         }
+    }
+
+    /**
+     * @param boolean $cacheEnabled
+     */
+    public function setCacheEnabled($cacheEnabled = true)
+    {
+        $this->cacheEnabled = (bool) $cacheEnabled;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isCacheEnabled()
+    {
+        return $this->cacheEnabled;
+    }
+
+    /**
+     * @return bool
+     */
+    public function useCache()
+    {
+        return $this->isCacheEnabled() && $this->getCacheKey() && null !== $this->cache;
     }
 }
