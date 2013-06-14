@@ -73,14 +73,9 @@ class Authorize
     protected $serviceLocator;
 
     /**
-     * @var \Zend\Cache\Storage\StorageInterface|null
+     * @var array
      */
-    protected $cache;
-
-    /**
-     * @var string|null
-     */
-    protected $cacheKey;
+    protected $config;
 
     /**
      * @param array                                         $config
@@ -88,25 +83,12 @@ class Authorize
      */
     public function __construct(array $config, ServiceLocatorInterface $serviceLocator)
     {
+        $this->config         = $config;
         $this->serviceLocator = $serviceLocator;
         $that                 = $this;
         $this->loaded         = function () use ($that) {
             $that->load();
         };
-    }
-
-    /**
-     * @param \Zend\Cache\Storage\StorageInterface|null $cache
-     */
-    public function setCache(StorageInterface $cache = null) {
-        $this->cache = $cache;
-    }
-
-    /**
-     * @param string|null $cacheKey
-     */
-    public function setCacheKey($cacheKey = null) {
-        $this->cacheKey = $cacheKey;
     }
 
     /**
@@ -276,18 +258,14 @@ class Authorize
 
         $this->loaded = null;
 
-        $success = false;
+        /** @var $cache StorageInterface */
+        $cache      = $this->serviceLocator->get('BjyAuthorize\Cache');
+        $success    = false;
+        $this->acl  = $cache->getItem($this->config['cache_key'], $success);
 
-        if ($this->cache && $this->cacheKey) {
-            $this->acl = $this->cache->getItem($this->cacheKey, $success);
-        }
-
-        if (! $success || ! $this->acl) {
+        if (!($this->acl instanceof Acl) || !$success) {
             $this->loadAcl();
-
-            if ($this->cache && $this->cacheKey) {
-                $this->cache->setItem($this->cacheKey, $this->acl);
-            }
+            $cache->setItem($this->config['cache_key'], $this->acl);
         }
 
         $this->setIdentityProvider($this->serviceLocator->get('BjyAuthorize\Provider\Identity\ProviderInterface'));
@@ -384,7 +362,7 @@ class Authorize
     /**
      * Initialize the Acl
      */
-    private function loadAcl()
+    protected function loadAcl()
     {
         $this->acl = new Acl();
 
