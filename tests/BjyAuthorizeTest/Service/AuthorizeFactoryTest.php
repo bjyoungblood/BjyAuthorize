@@ -27,63 +27,14 @@ class AuthorizeFactoryTest extends PHPUnit_Framework_TestCase
         $serviceLocator = new ServiceManager();
         $serviceLocator->setFactory('BjyAuthorize\Config', function() {
             return array(
-                'cache_enabled'         => true,
-                'cache_options'         => array(
-                    'adapter'   => array(
-                        'name' => 'filesystem',
-                    ),
-                ),
                 'cache_key'             => 'bjyauthorize_acl'
             );
-        });
-        $serviceLocator->setFactory('Application', function() {
-            $application = $this->getMockBuilder('Zend\Mvc\Application')
-                                ->disableOriginalConstructor()
-                                ->getMock();
-            $application->expects($this->once())
-                        ->method('getRequest')
-                        ->will($this->returnValue(
-                            $this->getMock('Zend\Http\PhpEnvironment\Request')
-                        ));
-            return $application;
         });
 
         $authorizeFactory = new AuthorizeFactory();
 
         $authorize = $authorizeFactory->createService($serviceLocator);
 
-        $this->assertTrue($authorize->isCacheEnabled());
-        $this->assertEquals('bjyauthorize_acl', $authorize->getCacheKey());
-        $this->assertInstanceOf('Zend\Cache\Storage\Adapter\Filesystem', $authorize->getCache());
-    }
-
-    /**
-     * @expectedException   \Exception
-     */
-    public function testCreateServiceThrowsAnExceptionIfCacheIsEnabledButOptionsAreNotProvided()
-    {
-        $serviceLocator = new ServiceManager();
-        $serviceLocator->setFactory('BjyAuthorize\Config', function() {
-                return array(
-                    'cache_enabled'         => true,
-                    'cache_key'             => 'bjyauthorize_acl'
-                );
-            });
-        $serviceLocator->setFactory('Application', function() {
-                $application = $this->getMockBuilder('Zend\Mvc\Application')
-                               ->disableOriginalConstructor()
-                               ->getMock();
-                $application->expects($this->once())
-                ->method('getRequest')
-                ->will($this->returnValue(
-                            $this->getMock('Zend\Http\PhpEnvironment\Request')
-                        ));
-                return $application;
-            });
-
-        $authorizeFactory = new AuthorizeFactory();
-
-        // Expect exception here
-        $authorizeFactory->createService($serviceLocator);
+        $this->assertInstanceOf('BjyAuthorize\Service\Authorize', $authorize);
     }
 }

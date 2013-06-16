@@ -73,19 +73,9 @@ class Authorize
     protected $serviceLocator;
 
     /**
-     * @var bool
+     * @var array
      */
-    protected $cacheEnabled = false;
-
-    /**
-     * @var \Zend\Cache\Storage\StorageInterface|null
-     */
-    protected $cache;
-
-    /**
-     * @var string
-     */
-    protected $cacheKey = 'bjyauthorize-acl';
+    protected $config;
 
     /**
      * @param array                                         $config
@@ -93,53 +83,12 @@ class Authorize
      */
     public function __construct(array $config, ServiceLocatorInterface $serviceLocator)
     {
+        $this->config         = $config;
         $this->serviceLocator = $serviceLocator;
         $that                 = $this;
         $this->loaded         = function () use ($that) {
             $that->load();
         };
-    }
-
-    /**
-     * @return null|\Zend\Cache\Storage\StorageInterface
-     */
-    public function getCache()
-    {
-        return $this->cache;
-    }
-
-    /**
-     * Set the cache storage
-     *
-     * @param   StorageInterface|null   $cache
-     * @return  $this
-     */
-    public function setCache(StorageInterface $cache = null)
-    {
-        $this->cache = $cache;
-        return $this;
-    }
-
-    /**
-     * Set the cache key
-     *
-     * @param   string  $cacheKey
-     * @return  $this
-     */
-    public function setCacheKey($cacheKey)
-    {
-        $this->cacheKey = $cacheKey;
-        return $this;
-    }
-
-    /**
-     * Get the cache key
-     *
-     * @return string
-     */
-    public function getCacheKey()
-    {
-        return $this->cacheKey;
     }
 
     /**
@@ -309,16 +258,14 @@ class Authorize
 
         $this->loaded = null;
 
-        if ($this->useCache()) {
-            $this->acl = $this->cache->getItem($this->getCacheKey());
-        }
+        /** @var $cache StorageInterface */
+        $cache      = $this->serviceLocator->get('BjyAuthorize\Cache');
+        $success    = false;
+        $this->acl  = $cache->getItem($this->config['cache_key'], $success);
 
-        if (!$this->acl) {
+        if (!($this->acl instanceof Acl) || !$success) {
             $this->loadAcl();
-
-            if ($this->useCache()) {
-                $this->cache->setItem($this->getCacheKey(), $this->acl);
-            }
+            $cache->setItem($this->config['cache_key'], $this->acl);
         }
 
         $this->setIdentityProvider($this->serviceLocator->get('BjyAuthorize\Provider\Identity\ProviderInterface'));
@@ -457,29 +404,5 @@ class Authorize
                 }
             }
         }
-    }
-
-    /**
-     * @param boolean $cacheEnabled
-     */
-    public function setCacheEnabled($cacheEnabled = true)
-    {
-        $this->cacheEnabled = (bool) $cacheEnabled;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isCacheEnabled()
-    {
-        return $this->cacheEnabled;
-    }
-
-    /**
-     * @return bool
-     */
-    public function useCache()
-    {
-        return $this->isCacheEnabled() && $this->getCacheKey() && null !== $this->cache;
     }
 }
