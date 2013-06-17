@@ -8,25 +8,27 @@
 
 namespace BjyAuthorize\Service;
 
+use Zend\Cache\Storage\StorageInterface;
 use Zend\Cache\StorageFactory;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Console\Request as ConsoleRequest;
 
 /**
- * Factory responsible of building the {@see \BjyAuthorize\Service\Authorize} service
+ * Factory for building the cache storage
  *
- * @author Ben Youngblood <bx.youngblood@gmail.com>
+ * @author Christian Bergau <cbergau86@gmail.com>
  */
-class AuthorizeFactory implements FactoryInterface
+class CacheFactory implements FactoryInterface
 {
     /**
-     * {@inheritDoc}
+     * Create service
      *
-     * @return \BjyAuthorize\Service\Authorize
+     * @param   ServiceLocatorInterface $serviceLocator
+     * @return  StorageInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        return new Authorize($serviceLocator->get('BjyAuthorize\Config'), $serviceLocator);
+        $options = $serviceLocator->get('BjyAuthorize\Config');
+        return StorageFactory::factory($options['cache_options']);
     }
 }

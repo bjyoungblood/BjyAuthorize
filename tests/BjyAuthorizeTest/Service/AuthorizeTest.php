@@ -1,10 +1,15 @@
 <?php
+/**
+ * BjyAuthorize Module (https://github.com/bjyoungblood/BjyAuthorize)
+ *
+ * @link https://github.com/bjyoungblood/BjyAuthorize for the canonical source repository
+ * @license http://framework.zend.com/license/new-bsd New BSD License
+ */
 
 namespace BjyAuthorizeTest\Service;
 
 use BjyAuthorize\Service\Authorize;
-use \PHPUnit_Framework_TestCase;
-use Zend\Di\ServiceLocator;
+use PHPUnit_Framework_TestCase;
 use Zend\ServiceManager\ServiceManager;
 
 /**
@@ -15,110 +20,72 @@ use Zend\ServiceManager\ServiceManager;
 class AuthorizeTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @covers  \BjyAuthorize\Service\Authorize::load
+     * @covers \BjyAuthorize\Service\Authorize::load
      */
     public function testLoadLoadsAclFromCacheAndDoesNotBuildANewAclObject()
     {
-        $this->markTestIncomplete('Unable to change the value of $success');
-        $success = false;
+        $acl = $this->getMock('Zend\Permissions\Acl\Acl');
 
-        $cache = $this->getMockBuilder('\Zend\Cache\Storage\Adapter\Filesystem')
-                 ->disableOriginalConstructor()
-                 ->getMock();
+        $cache = $this->getMockBuilder('Zend\Cache\Storage\Adapter\Filesystem')
+                      ->disableOriginalConstructor()
+                      ->getMock();
 
         $cache->expects($this->once())
               ->method('getItem')
-              ->with('bjyauthorize-acl', $success)
-              ->will($this->returnCallback(function() use (&$success) {
+              ->will($this->returnCallback(function($key, &$success) use ($acl) {
                   $success = true;
-                  return $this->getMock('\Zend\Permissions\Acl\Acl');
+                  return $acl;
               }));
 
         $serviceManager = new ServiceManager();
-
-        $serviceManager->setFactory(
+        $serviceManager->setService(
             'BjyAuthorize\Provider\Identity\ProviderInterface',
-            function () {
-                return $this->getMock('BjyAuthorize\Provider\Identity\ProviderInterface');
-            }
+            $this->getMock('BjyAuthorize\Provider\Identity\ProviderInterface')
         );
-
-        $serviceManager->setFactory(
-            'BjyAuthorize\Cache',
-            function () use ($cache) {
-                return $cache;
-            }
-        );
+        $serviceManager->setService('BjyAuthorize\Cache', $cache);
 
         $authorize = new Authorize(array('cache_key' => 'bjyauthorize-acl'), $serviceManager);
         $authorize->load();
+
+        $this->assertSame($acl, $authorize->getAcl());
     }
 
     /**
-     * @covers  \BjyAuthorize\Service\Authorize::load
+     * @covers \BjyAuthorize\Service\Authorize::load
      */
     public function testLoadWritesAclToCacheIfCacheIsEnabledButAclIsNotStoredInCache()
     {
-        $this->markTestIncomplete('Unable to change the value of $success');
-        $serviceLocator = $this->getServiceManagerForLoadAcl();
+        $cache = $this->getMockBuilder('Zend\Cache\Storage\Adapter\Filesystem')
+                      ->disableOriginalConstructor()
+                      ->getMock();
 
-        $authorize = new Authorize(array(), $serviceLocator);
+        $cache->expects($this->once())->method('getItem');
+        $cache->expects($this->once())->method('setItem');
 
-        $cache = $this->getMockBuilder('\Zend\Cache\Storage\Adapter\Filesystem')
-                 ->disableOriginalConstructor()
-                 ->getMock();
-
-        $cacheKey = 'bjyauthorize-acl';
-
-        // getItem will return null, so we expect that after loading acl, the data will be stored into cache
-        $cache->expects($this->once())
-              ->method('getItem')
-              ->with($cacheKey)
-              ->will($this->returnValue(null));
-
-        $cache->expects($this->once())
-              ->method('setItem')
-              ->will($this->returnValue(null));
-
-        $authorize->load();
-    }
-
-    /**
-     * @return ServiceManager
-     */
-    public function getServiceManagerForLoadAcl()
-    {
         $serviceLocator = new ServiceManager();
-        $serviceLocator->setFactory(
+        $serviceLocator->setService('BjyAuthorize\Cache', $cache);
+        $serviceLocator->setService(
             'BjyAuthorize\Provider\Identity\ProviderInterface',
-            function () {
-                return $this->getMock('BjyAuthorize\Provider\Identity\ProviderInterface');
-            }
+            $this->getMock('BjyAuthorize\Provider\Identity\ProviderInterface')
         );
-        $serviceLocator->setFactory(
+        $serviceLocator->setService(
             'BjyAuthorize\RoleProviders',
-            function () {
-                return $this->getMock('BjyAuthorize\Service\RoleProvidersServiceFactory');
-            }
+            $this->getMock('BjyAuthorize\Service\RoleProvidersServiceFactory')
         );
-        $serviceLocator->setFactory(
+        $serviceLocator->setService(
             'BjyAuthorize\ResourceProviders',
-            function () {
-                return $this->getMock('BjyAuthorize\Service\ResourceProvidersServiceFactory');
-            }
+            $this->getMock('BjyAuthorize\Service\ResourceProvidersServiceFactory')
         );
-        $serviceLocator->setFactory(
+        $serviceLocator->setService(
             'BjyAuthorize\RuleProviders',
-            function () {
-                return $this->getMock('BjyAuthorize\Service\RuleProvidersServiceFactory');
-            }
+            $this->getMock('BjyAuthorize\Service\RuleProvidersServiceFactory')
         );
-        $serviceLocator->setFactory(
+        $serviceLocator->setService(
             'BjyAuthorize\Guards',
-            function () {
-                return $this->getMock('BjyAuthorize\Service\GuardsServiceFactory');
-            }
+            $this->getMock('BjyAuthorize\Service\GuardsServiceFactory')
         );
-        return $serviceLocator;
+
+        $authorize = new Authorize(array('cache_key' => 'acl'), $serviceLocator);
+        $authorize->load();
     }
 }
