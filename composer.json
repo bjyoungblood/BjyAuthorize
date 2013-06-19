@@ -30,7 +30,8 @@
         "zendframework/zend-mvc":             "~2.1",
         "zendframework/zend-eventmanager":    "~2.1",
         "zendframework/zend-servicemanager":  "~2.1",
-        "zendframework/zend-view":            "~2.1"
+        "zendframework/zend-view":            "~2.1",
+        "zendframework/zend-cache":           "~2.1"
     },
     "require-dev": {
         "phpunit/phpunit":                    "~3.7",
@@ -42,7 +43,7 @@
     "suggests": {
         "zendframework/zend-developer-tools": "if you need to see current authorization details while developing",
         "zf-commons/zfc-user":                "zfc-user provides a good default setup to get started with bjyauthorize",
-        "zf-commons/zfc-user-doctrine-orm":   "If you want to use BjyAuthorize with Doctrine ORM"
+        "zf-commons/zfc-user-doctrine-orm":   "if you want to use BjyAuthorize with Doctrine ORM"
     },
     "autoload": {
         "psr-0": {
