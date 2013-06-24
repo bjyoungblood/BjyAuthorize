@@ -51,6 +51,7 @@ return array(
             'BjyAuthorize\Guard\Route'              => 'BjyAuthorize\Service\RouteGuardServiceFactory',
             'BjyAuthorize\Provider\Role\Config'     => 'BjyAuthorize\Service\ConfigRoleProviderServiceFactory',
             'BjyAuthorize\Provider\Role\ZendDb'     => 'BjyAuthorize\Service\ZendDbRoleProviderServiceFactory',
+            'BjyAuthorize\Provider\Rule\Config'     => 'BjyAuthorize\Service\ConfigRuleProviderServiceFactory',
             'BjyAuthorize\Provider\Resource\Config' => 'BjyAuthorize\Service\ConfigResourceProviderServiceFactory',
             'BjyAuthorize\Service\Authorize'        => 'BjyAuthorize\Service\AuthorizeFactory',
             'BjyAuthorize\Provider\Identity\ProviderInterface'
