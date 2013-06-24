@@ -30,6 +30,7 @@
         "zendframework/zend-mvc":             "~2.1",
         "zendframework/zend-eventmanager":    "~2.1",
         "zendframework/zend-servicemanager":  "~2.1",
+        "zendframework/zend-http":            "~2.1",
         "zendframework/zend-view":            "~2.1"
     },
     "require-dev": {
