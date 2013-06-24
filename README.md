@@ -56,9 +56,8 @@ also check the [doctrine documentation](https://github.com/bjyoungblood/BjyAutho
      * `ZfcUser`
      * `BjyAuthorize`
  3. Import the SQL schema located in `./vendor/BjyAuthorize/data/schema.sql`.
- 4. Copy `./vendor/BjyAuthorize/config/module.config.php` to
-    `./config/autoload/module.bjyauthorize.global.php`.
- 5. Fill in the required configuration variable values in  `./config/autoload/module.bjyauthorize.global.php`
+ 4. Create a `./config/autoload/bjyauthorize.global.php` file and fill it with
+    configuration variable values as described in the following annotated example.
 
 Here is an annotated sample configuration file:
 
