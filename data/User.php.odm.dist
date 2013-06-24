@@ -1,0 +1,241 @@
+<?php
+/**
+ * BjyAuthorize Module (https://github.com/bjyoungblood/BjyAuthorize)
+ *
+ * @link https://github.com/bjyoungblood/BjyAuthorize for the canonical source repository
+ * @license http://framework.zend.com/license/new-bsd New BSD License
+ */
+
+namespace MyNamespace;
+
+use BjyAuthorize\Provider\Role\ProviderInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+use ZfcUser\Entity\UserInterface;
+use MyNamespace\Role;
+
+/**
+ * An example of how to implement a role aware user document.
+ *
+ * @ODM\Document(
+ *     collection="user"
+ * )
+ *     
+ * @ODM\ChangeTrackingPolicy("DEFERRED_IMPLICIT")
+ */
+class User implements UserInterface, ProviderInterface
+{
+    /**
+     * @var int
+     * @ODM\Id(strategy="AUTO")
+     */
+    protected $id;
+
+    /**
+     * @var string
+     * @ODM\Field(type="string")
+     */
+    protected $username;
+
+    /**
+     * @var string
+     * @ODM\Field(type="string")
+     */
+    protected $email;
+
+    /**
+     * @var string
+     * @ODM\Field(type="string", name="display_name")
+     */
+    protected $displayName;
+
+    /**
+     * @var string
+     * @ODM\Field(type="string")
+     */
+    protected $password;
+
+    /**
+     * @var int
+     * @ODM\Field(type="int")
+     */
+    protected $state;
+
+    /**
+     * @var \MyNamespace\Role[]|\Doctrine\Common\Collections\Collection
+     * @ODM\ReferenceMany(targetDocument="MyNamespace\Role")
+     */
+    protected $roles;
+
+    /**
+     * Initializes the roles variable.
+     */
+    public function __construct()
+    {
+        $this->roles = new ArrayCollection();
+    }
+
+    
+    /**
+     * Set id.
+     *
+     * @param int $id
+     *
+     * @return void
+     */
+    public function setId($id)
+    {
+        $this->id = (int) $id;
+    }
+
+    /**
+     * Get id
+     *
+     * @return id $id
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set email
+     *
+     * @param string $email
+     *
+     * @return void
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+    }
+
+    /**
+     * Get email
+     *
+     * @return string $email
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * Get username.
+     *
+     * @return string
+     */
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
+    /**
+     * Set username.
+     *
+     * @param string $username
+     *
+     * @return void
+     */
+    public function setUsername($username)
+    {
+        $this->username = $username;
+    }
+
+    /**
+     * Get displayName.
+     *
+     * @return string
+     */
+    public function getDisplayName()
+    {
+        return $this->displayName;
+    }
+
+    /**
+     * Set displayName.
+     *
+     * @param string $displayName
+     *
+     * @return void
+     */
+    public function setDisplayName($displayName)
+    {
+        $this->displayName = $displayName;
+    }
+
+    /**
+     * Get password.
+     *
+     * @return string
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    /**
+     * Set password.
+     *
+     * @param string $password
+     *
+     * @return void
+     */
+    public function setPassword($password)
+    {
+        $this->password = $password;
+    }
+
+    /**
+     * Get state.
+     *
+     * @return int
+     */
+    public function getState()
+    {
+        return $this->state;
+    }
+
+    /**
+     * Set state.
+     *
+     * @param int $state
+     *
+     * @return void
+     */
+    public function setState($state)
+    {
+        $this->state = $state;
+    }
+
+    /**
+     * Get role.
+     *
+     * @return array
+     */
+    public function getRoles()
+    {
+        return $this->roles->toArray();
+    }
+
+
+    /**
+     * Add roles
+     *
+     * @param MyNamespace\Role $roles
+     */
+    public function addRole(Role $roles)
+    {
+        $this->roles[] = $roles;
+    }
+
+    /**
+    * Remove roles
+    *
+    * @param MyNamespace\Role $roles
+    */
+    public function removeRole(Role $roles)
+    {
+        $this->roles->removeElement($roles);
+    }
+}
