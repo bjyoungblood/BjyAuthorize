@@ -33,17 +33,18 @@ class IdentityProviderServiceFactoryTest extends PHPUnit_Framework_TestCase
         $serviceLocator
             ->expects($this->any())
             ->method('get')
-            ->will($this->returnCallback(function ($serviceName) use ($identityProvider, $config) {
-                if ('BjyAuthorize\\Config' === $serviceName) {
-                    return $config;
-                }
+            ->with($this->logicalOr('BjyAuthorize\\Config', 'foo'))
+            ->will(
+                $this->returnCallback(
+                    function ($serviceName) use ($identityProvider, $config) {
+                        if ('BjyAuthorize\\Config' === $serviceName) {
+                            return $config;
+                        }
 
-                if ('foo' === $serviceName) {
-                    return $identityProvider;
-                }
-
-                throw new \InvalidArgumentException();
-            }));
+                        return $identityProvider;
+                    }
+                )
+            );
 
         $this->assertSame($identityProvider, $factory->createService($serviceLocator));
     }

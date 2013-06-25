@@ -24,10 +24,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase
      */
     public function testGetResources()
     {
-        $config = new Config(array(
-            'resource1',
-            'resource2',
-        ));
+        $config = new Config(array('resource1', 'resource2',));
 
         $resources = $config->getResources();
 

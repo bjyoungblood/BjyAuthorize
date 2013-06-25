@@ -30,12 +30,18 @@ class AuthorizeTest extends PHPUnit_Framework_TestCase
                       ->disableOriginalConstructor()
                       ->getMock();
 
-        $cache->expects($this->once())
-              ->method('getItem')
-              ->will($this->returnCallback(function($key, &$success) use ($acl) {
-                  $success = true;
-                  return $acl;
-              }));
+        $cache
+            ->expects($this->once())
+            ->method('getItem')
+            ->will(
+                $this->returnCallback(
+                    function ($key, & $success) use ($acl) {
+                        $success = true;
+
+                        return $acl;
+                    }
+                )
+            );
 
         $serviceManager = new ServiceManager();
         $serviceManager->setService(

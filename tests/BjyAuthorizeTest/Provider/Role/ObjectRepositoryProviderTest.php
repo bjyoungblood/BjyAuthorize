@@ -81,7 +81,7 @@ class ObjectRepositoryProviderTest extends PHPUnit_Framework_TestCase
             new Role('role2', null),
         );
 
-       $this->assertEquals($expects, $this->provider->getRoles());
+        $this->assertEquals($expects, $this->provider->getRoles());
     }
 
     /**
@@ -109,6 +109,6 @@ class ObjectRepositoryProviderTest extends PHPUnit_Framework_TestCase
             new Role('role3', $expectedRole1),
         );
 
-       $this->assertEquals($expects, $this->provider->getRoles());
+        $this->assertEquals($expects, $this->provider->getRoles());
     }
 }

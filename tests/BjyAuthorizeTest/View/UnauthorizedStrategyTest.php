@@ -85,24 +85,36 @@ class UnauthorizedStrategyTest extends PHPUnit_Framework_TestCase
         $mvcEvent
             ->expects($this->any())
             ->method('getParam')
-            ->will($this->returnCallback(function ($name) use ($exception) {
+            ->will(
+                $this->returnCallback(
+                    function ($name) use ($exception) {
                         return $name === 'exception' ? $exception : null;
-                    }));
+                    }
+                )
+            );
 
         $test = $this;
 
         $viewModel
             ->expects($this->once())
             ->method('addChild')
-            ->with($this->callback(function (ModelInterface $model) use ($test) {
-                return 'template/name' === $model->getTemplate();
-            }));
+            ->with(
+                $this->callback(
+                    function (ModelInterface $model) use ($test) {
+                        return 'template/name' === $model->getTemplate();
+                    }
+                )
+            );
         $mvcEvent
             ->expects($this->once())
             ->method('setResponse')
-            ->with($this->callback(function (Response $response) use ($test) {
-                return 403 === $response->getStatusCode();
-            }));
+            ->with(
+                $this->callback(
+                    function (Response $response) use ($test) {
+                        return 403 === $response->getStatusCode();
+                    }
+                )
+            );
 
         $this->assertNull($this->strategy->onDispatchError($mvcEvent));
     }
@@ -121,9 +133,13 @@ class UnauthorizedStrategyTest extends PHPUnit_Framework_TestCase
         $mvcEvent
             ->expects($this->any())
             ->method('getParam')
-            ->will($this->returnCallback(function ($name) use ($exception) {
-                return $name === 'exception' ? $exception : null;
-            }));
+            ->will(
+                $this->returnCallback(
+                    function ($name) use ($exception) {
+                        return $name === 'exception' ? $exception : null;
+                    }
+                )
+            );
 
         $viewModel->expects($this->never())->method('addChild');
         $mvcEvent->expects($this->never())->method('setResponse');

@@ -51,13 +51,8 @@ class RouteTest extends PHPUnit_Framework_TestCase
             ->serviceLocator
             ->expects($this->any())
             ->method('get')
-            ->will($this->returnCallback(function ($name) use ($authorize) {
-                if ($name === 'BjyAuthorize\Service\Authorize') {
-                    return $authorize;
-                }
-
-                throw new \UnexpectedValueException();
-            }));
+            ->with('BjyAuthorize\\Service\\Authorize')
+            ->will($this->returnValue($authorize));
     }
 
     /**
@@ -148,9 +143,13 @@ class RouteTest extends PHPUnit_Framework_TestCase
             ->authorize
             ->expects($this->any())
             ->method('isAllowed')
-            ->will($this->returnValue(function ($resource) {
-                return $resource === 'route/test-route';
-            }));
+            ->will(
+                $this->returnValue(
+                    function ($resource) {
+                        return $resource === 'route/test-route';
+                    }
+                )
+            );
 
         $this->assertNull($this->routeGuard->onRoute($event), 'Does not stop event propagation');
     }
@@ -169,12 +168,8 @@ class RouteTest extends PHPUnit_Framework_TestCase
             ->will($this->returnValue(false));
         $event->expects($this->once())->method('setError')->with(Route::ERROR);
         $event->expects($this->exactly(2))->method('setParam')->with(
-            $this->callback(function ($key) {
-                return in_array($key, array('identity', 'route'));
-            }),
-            $this->callback(function ($val) {
-                return in_array($val, array('admin', 'test-route'));
-            })
+            $this->logicalOr('identity', 'route'),
+            $this->logicalOr('admin', 'test-route')
         );
         $event
             ->getTarget()
