@@ -12,7 +12,6 @@ use Zend\EventManager\EventInterface;
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\ModuleManager\Feature\BootstrapListenerInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
-use Zend\ModuleManager\Feature\ServiceProviderInterface;
 use Zend\ModuleManager\Feature\ControllerPluginProviderInterface;
 use Zend\ModuleManager\Feature\ViewHelperProviderInterface;
 use Zend\Mvc\ApplicationInterface;

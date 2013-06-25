@@ -249,6 +249,8 @@ class Authorize
      * Initializes the service
      *
      * @internal
+     *
+     * @return void
      */
     public function load()
     {

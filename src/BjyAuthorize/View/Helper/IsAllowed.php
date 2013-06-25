@@ -10,7 +10,6 @@ namespace BjyAuthorize\View\Helper;
 
 use Zend\View\Helper\AbstractHelper;
 use BjyAuthorize\Service\Authorize;
-use BjyAuthorize\Service\AuthorizeAwareInterface;
 
 /**
  * IsAllowed View helper. Allows checking access to a resource/privilege in views.
