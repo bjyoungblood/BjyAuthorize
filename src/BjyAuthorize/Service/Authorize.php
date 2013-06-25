@@ -269,6 +269,7 @@ class Authorize
         }
 
         $this->setIdentityProvider($this->serviceLocator->get('BjyAuthorize\Provider\Identity\ProviderInterface'));
+
         $parentRoles = $this->getIdentityProvider()->getIdentityRoles();
 
         $this->acl->addRole($this->getIdentity(), $parentRoles);
@@ -362,7 +363,7 @@ class Authorize
     /**
      * Initialize the Acl
      */
-    protected function loadAcl()
+    private function loadAcl()
     {
         $this->acl = new Acl();
 

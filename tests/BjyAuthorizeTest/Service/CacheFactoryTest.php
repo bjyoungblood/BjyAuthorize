@@ -24,20 +24,26 @@ class CacheFactoryTest extends PHPUnit_Framework_TestCase
      */
     public function testCreateService()
     {
-        $serviceLocator = new ServiceManager();
-
-        $serviceLocator->setService('BjyAuthorize\Config', array('cache_options' => array(
-            'adapter'   => array(
-                'name' => 'memory',
-            ),
-            'plugins'   => array(
-                'serializer',
+        $serviceLocator = $this->getMock('Zend\\ServiceManager\\ServiceLocatorInterface');
+        $config         = array(
+            'cache_options' => array(
+                'adapter'   => array(
+                    'name' => 'memory',
+                ),
+                'plugins'   => array(
+                    'serializer',
+                )
             )
-        )));
+        );
+
+        $serviceLocator
+            ->expects($this->any())
+            ->method('get')
+            ->with('BjyAuthorize\Config')
+            ->will($this->returnValue($config));
 
         $factory = new CacheFactory();
-        $cache   = $factory->createService($serviceLocator);
 
-        $this->assertInstanceOf('Zend\Cache\Storage\Adapter\Memory', $cache);
+        $this->assertInstanceOf('Zend\Cache\Storage\Adapter\Memory', $factory->createService($serviceLocator));
     }
 }

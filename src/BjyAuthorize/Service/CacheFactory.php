@@ -21,7 +21,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 class CacheFactory implements FactoryInterface
 {
     /**
-     * Create service
+     * Create a cache
      *
      * @param   ServiceLocatorInterface $serviceLocator
      * @return  StorageInterface
@@ -29,6 +29,7 @@ class CacheFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $options = $serviceLocator->get('BjyAuthorize\Config');
+
         return StorageFactory::factory($options['cache_options']);
     }
 }
