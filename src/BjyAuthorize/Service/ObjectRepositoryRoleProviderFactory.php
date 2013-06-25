@@ -30,7 +30,7 @@ class ObjectRepositoryRoleProviderFactory implements FactoryInterface
     {
         $config = $serviceLocator->get('BjyAuthorize\Config');
 
-        if ( ! isset($config['role_providers']['BjyAuthorize\Provider\Role\ObjectRepositoryProvider'])) {
+        if (! isset($config['role_providers']['BjyAuthorize\Provider\Role\ObjectRepositoryProvider'])) {
             throw new InvalidArgumentException(
                 'Config for "BjyAuthorize\Provider\Role\ObjectRepositoryProvider" not set'
             );
@@ -38,11 +38,11 @@ class ObjectRepositoryRoleProviderFactory implements FactoryInterface
 
         $providerConfig = $config['role_providers']['BjyAuthorize\Provider\Role\ObjectRepositoryProvider'];
 
-        if ( ! isset($providerConfig['role_entity_class'])) {
+        if (! isset($providerConfig['role_entity_class'])) {
             throw new InvalidArgumentException('role_entity_class not set in the bjyauthorize role_providers config.');
         }
 
-        if ( ! isset($providerConfig['object_manager'])) {
+        if (! isset($providerConfig['object_manager'])) {
             throw new InvalidArgumentException('object_manager not set in the bjyauthorize role_providers config.');
         }
 

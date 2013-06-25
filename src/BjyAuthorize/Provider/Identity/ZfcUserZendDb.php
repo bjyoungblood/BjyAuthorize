@@ -54,7 +54,7 @@ class ZfcUserZendDb implements ProviderInterface
     {
         $authService = $this->userService->getAuthService();
 
-        if ( ! $authService->hasIdentity()) {
+        if (! $authService->hasIdentity()) {
             return array($this->getDefaultRole());
         }
 
@@ -90,7 +90,7 @@ class ZfcUserZendDb implements ProviderInterface
      */
     public function setDefaultRole($defaultRole)
     {
-        if ( ! ($defaultRole instanceof RoleInterface || is_string($defaultRole))) {
+        if (! ($defaultRole instanceof RoleInterface || is_string($defaultRole))) {
             throw InvalidRoleException::invalidRoleInstance($defaultRole);
         }
 

@@ -105,11 +105,13 @@ class RoleCollectorTest extends PHPUnit_Framework_TestCase
             ->method('getIdentityRoles')
             ->will(
                 $this->returnValue(
-                    new \ArrayIterator(array(
-                        $role1,
-                        'role2',
-                        'key' => 'role3',
-                    ))
+                    new \ArrayIterator(
+                        array(
+                            $role1,
+                            'role2',
+                            'key' => 'role3',
+                        )
+                    )
                 )
             );
 

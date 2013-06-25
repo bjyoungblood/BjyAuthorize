@@ -33,9 +33,7 @@ class ConfigRuleProviderServiceFactoryTest extends PHPUnit_Framework_TestCase
             ->expects($this->any())
             ->method('get')
             ->with('BjyAuthorize\\Config')
-            ->will(
-                $this->returnValue(array('rule_providers' => array('BjyAuthorize\Provider\Rule\Config' => array())))
-            );
+            ->will($this->returnValue($config));
 
         $this->assertInstanceOf('BjyAuthorize\\Provider\\Rule\\Config', $factory->createService($serviceLocator));
     }

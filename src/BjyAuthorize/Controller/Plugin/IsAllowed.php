@@ -10,7 +10,6 @@ namespace BjyAuthorize\Controller\Plugin;
 
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 use BjyAuthorize\Service\Authorize;
-use BjyAuthorize\Service\AuthorizeAwareInterface;
 
 /**
  * IsAllowed Controller plugin. Allows checking access to a resource/privilege in controllers.

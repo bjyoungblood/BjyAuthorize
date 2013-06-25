@@ -31,13 +31,15 @@
         "zendframework/zend-eventmanager":    "~2.1",
         "zendframework/zend-servicemanager":  "~2.1",
         "zendframework/zend-http":            "~2.1",
-        "zendframework/zend-view":            "~2.1"
+        "zendframework/zend-view":            "~2.1",
+        "zendframework/zend-cache":           "~2.1"
     },
     "require-dev": {
         "phpunit/phpunit":                    "~3.7",
         "doctrine/common":                    ">=2.3,<2.5-dev",
         "zendframework/zend-developer-tools": "0.*",
         "zf-commons/zfc-user":                "0.*",
+        "squizlabs/php_codesniffer":          "1.4.*",
         "satooshi/php-coveralls":             "~0.6"
     },
     "suggests": {

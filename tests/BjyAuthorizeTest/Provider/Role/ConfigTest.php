@@ -25,19 +25,21 @@ class ConfigTest extends PHPUnit_Framework_TestCase
      */
     public function testConstructor()
     {
-        $config = new Config(array(
-            'role1' => array(),
-            'role2',
-            'role3' => array(
-                'children' => array('role4'),
-            ),
-            'role5' => array(
-                'children' => array(
-                    'role6',
-                    'role7' => array(),
+        $config = new Config(
+            array(
+                'role1' => array(),
+                'role2',
+                'role3' => array(
+                    'children' => array('role4'),
                 ),
-            ),
-        ));
+                'role5' => array(
+                    'children' => array(
+                        'role6',
+                        'role7' => array(),
+                    ),
+                ),
+            )
+        );
 
         $roles = $config->getRoles();
 
@@ -46,10 +48,10 @@ class ConfigTest extends PHPUnit_Framework_TestCase
         /* @var $role \BjyAuthorize\Acl\Role */
         foreach ($roles as $role) {
             $this->assertInstanceOf('BjyAuthorize\Acl\Role', $role);
-            $this->assertTrue(in_array(
+            $this->assertContains(
                 $role->getRoleId(),
                 array('role1', 'role2', 'role3', 'role4', 'role5', 'role6', 'role7')
-            ));
+            );
 
             if ('role4' === $role->getRoleId()) {
                 $this->assertNotNull($role->getParent());

@@ -74,8 +74,7 @@ class RedirectionStrategy implements ListenerAggregateInterface
         $error      = $event->getError();
         $url        = $this->redirectUri;
 
-        if (
-            $result instanceof Response
+        if ($result instanceof Response
             || ! $routeMatch
             || ($response && ! $response instanceof Response)
             || ! (

@@ -33,21 +33,22 @@ class ZfcUserZendDbIdentityProviderServiceFactoryTest extends PHPUnit_Framework_
         $serviceLocator
             ->expects($this->any())
             ->method('get')
-            ->will($this->returnCallback(function ($serviceName) use ($adapter, $userService) {
-                if ('zfcuser_zend_db_adapter' === $serviceName) {
-                    return $adapter;
-                }
+            ->with($this->logicalOr('zfcuser_zend_db_adapter', 'zfcuser_user_service', 'BjyAuthorize\\Config'))
+            ->will(
+                $this->returnCallback(
+                    function ($serviceName) use ($adapter, $userService) {
+                        if ('zfcuser_zend_db_adapter' === $serviceName) {
+                            return $adapter;
+                        }
 
-                if ('zfcuser_user_service' === $serviceName) {
-                    return $userService;
-                }
+                        if ('zfcuser_user_service' === $serviceName) {
+                            return $userService;
+                        }
 
-                if ('BjyAuthorize\Config' === $serviceName) {
-                    return array('default_role' => 'test_role');
-                }
-
-                throw new \InvalidArgumentException();
-            }));
+                        return array('default_role' => 'test_role');
+                    }
+                )
+            );
 
         $provider = $factory->createService($serviceLocator);
 

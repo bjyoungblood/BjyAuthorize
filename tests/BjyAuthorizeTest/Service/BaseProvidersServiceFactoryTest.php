@@ -11,7 +11,6 @@
 namespace BjyAuthorizeTest\Service;
 
 use PHPUnit_Framework_TestCase;
-use BjyAuthorize\Service\BaseProvidersServiceFactory;
 
 /**
  * Test for {@see \BjyAuthorize\Service\ResourceProvidersServiceFactory}
@@ -40,24 +39,33 @@ class BaseProvidersServiceFactoryTest extends PHPUnit_Framework_TestCase
         $serviceLocator
             ->expects($this->any())
             ->method('has')
-            ->will($this->returnCallback(function ($serviceName) {
-                return in_array($serviceName, array('foo', 'bar'), true);
-            }));
+            ->will(
+                $this->returnCallback(
+                    function ($serviceName) {
+                        return in_array($serviceName, array('foo', 'bar'), true);
+                    }
+                )
+            );
 
         $serviceLocator
             ->expects($this->any())
             ->method('get')
-            ->will($this->returnCallback(function ($serviceName) use ($foo, $bar, $config) {
-                if ('BjyAuthorize\\Config' === $serviceName) {
-                    return $config;
-                }
+            ->with($this->logicalOr('BjyAuthorize\\Config', 'foo', 'bar'))
+            ->will(
+                $this->returnCallback(
+                    function ($serviceName) use ($foo, $bar, $config) {
+                        if ('BjyAuthorize\\Config' === $serviceName) {
+                            return $config;
+                        }
 
-                if ('foo' === $serviceName) {
-                    return $foo;
-                }
+                        if ('foo' === $serviceName) {
+                            return $foo;
+                        }
 
-                return $bar;
-            }));
+                        return $bar;
+                    }
+                )
+            );
 
         $providers = $factory->createService($serviceLocator);
 

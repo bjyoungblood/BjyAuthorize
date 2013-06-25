@@ -40,17 +40,18 @@ class AuthenticationIdentityProviderServiceFactoryTest extends PHPUnit_Framework
         $serviceLocator
             ->expects($this->any())
             ->method('get')
-            ->will($this->returnCallback(function ($service) use ($user, $config) {
-                if ('zfcuser_user_service' === $service) {
-                    return $user;
-                }
+            ->with($this->logicalOr('zfcuser_user_service', 'BjyAuthorize\\Config'))
+            ->will(
+                $this->returnCallback(
+                    function ($service) use ($user, $config) {
+                        if ('zfcuser_user_service' === $service) {
+                            return $user;
+                        }
 
-                if ('BjyAuthorize\Config' === $service) {
-                    return $config;
-                }
-
-                throw new \InvalidArgumentException();
-            }));
+                        return $config;
+                    }
+                )
+            );
 
         $authenticationFactory = new AuthenticationIdentityProviderServiceFactory();
         $authentication        = $authenticationFactory->createService($serviceLocator);
@@ -58,5 +59,4 @@ class AuthenticationIdentityProviderServiceFactoryTest extends PHPUnit_Framework
         $this->assertEquals($authentication->getDefaultRole(), 'test-guest');
         $this->assertEquals($authentication->getAuthenticatedRole(), 'test-user');
     }
-
 }
