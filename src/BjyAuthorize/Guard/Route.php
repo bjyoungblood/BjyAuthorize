@@ -8,6 +8,7 @@
 
 namespace BjyAuthorize\Guard;
 
+use BjyAuthorize\Exception\UnAuthorizedException;
 use BjyAuthorize\Provider\Rule\ProviderInterface as RuleProviderInterface;
 use BjyAuthorize\Provider\Resource\ProviderInterface as ResourceProviderInterface;
 
@@ -129,6 +130,7 @@ class Route implements GuardInterface, RuleProviderInterface, ResourceProviderIn
         $event->setError(static::ERROR);
         $event->setParam('route', $routeName);
         $event->setParam('identity', $service->getIdentity());
+        $event->setParam('exception', new UnAuthorizedException('You are not authorized to access ' . $routeName));
 
         /* @var $app \Zend\Mvc\Application */
         $app = $event->getTarget();
