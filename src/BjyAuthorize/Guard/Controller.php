@@ -166,7 +166,7 @@ class Controller implements GuardInterface, RuleProviderInterface, ResourceProvi
         $event->setParam('action', $action);
 
         $errorMessage = sprintf("You are not authorized to access %s:%s", $controller, $action);
-        $event->setParam('exception', new UnAuthorizedException('You are not authorized to access ' . $errorMessage));
+        $event->setParam('exception', new UnAuthorizedException($errorMessage));
 
         /* @var $app \Zend\Mvc\ApplicationInterface */
         $app = $event->getTarget();
