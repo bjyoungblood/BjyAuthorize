@@ -167,10 +167,14 @@ class RouteTest extends PHPUnit_Framework_TestCase
             ->method('isAllowed')
             ->will($this->returnValue(false));
         $event->expects($this->once())->method('setError')->with(Route::ERROR);
-        $event->expects($this->exactly(3))->method('setParam')->with(
-            $this->logicalOr('identity', 'route', 'exception'),
-            $this->logicalOr('admin', 'test-route', $this->isInstanceOf('BjyAuthorize\Exception\UnAuthorizedException'))
+
+        $event->expects($this->at(3))->method('setParam')->with('route', 'test-route');
+        $event->expects($this->at(4))->method('setParam')->with('identity', 'admin');
+        $event->expects($this->at(5))->method('setParam')->with(
+            'exception',
+            $this->isInstanceOf('BjyAuthorize\Exception\UnAuthorizedException')
         );
+
         $event
             ->getTarget()
             ->getEventManager()
