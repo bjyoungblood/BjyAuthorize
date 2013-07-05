@@ -32,7 +32,7 @@ And here's how it would look like with BjyAuthorize enabled:
 The suggested installation method is via [composer](http://getcomposer.org/):
 
 ```sh
-php composer.phar require bjyoungblood/bjy-authorize:1.2.*
+php composer.phar require bjyoungblood/bjy-authorize:1.4.*
 php composer.phar require zf-commons/zfc-user:0.1.*
 ```
 
