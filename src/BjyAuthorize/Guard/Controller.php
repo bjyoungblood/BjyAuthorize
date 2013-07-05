@@ -8,6 +8,7 @@
 
 namespace BjyAuthorize\Guard;
 
+use BjyAuthorize\Exception\UnAuthorizedException;
 use BjyAuthorize\Provider\Rule\ProviderInterface as RuleProviderInterface;
 use BjyAuthorize\Provider\Resource\ProviderInterface as ResourceProviderInterface;
 
@@ -163,6 +164,9 @@ class Controller implements GuardInterface, RuleProviderInterface, ResourceProvi
         $event->setParam('identity', $service->getIdentity());
         $event->setParam('controller', $controller);
         $event->setParam('action', $action);
+
+        $errorMessage = sprintf("You are not authorized to access %s:%s", $controller, $action);
+        $event->setParam('exception', new UnAuthorizedException($errorMessage));
 
         /* @var $app \Zend\Mvc\ApplicationInterface */
         $app = $event->getTarget();
