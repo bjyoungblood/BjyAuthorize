@@ -32,7 +32,7 @@ class ZendDb implements ProviderInterface
     /**
      * @var string
      */
-    protected $resourceIdFieldName     = 'resource_id';
+    protected $resourceIdFieldName = 'id';
 
     /**
      * @param                         $options
@@ -40,39 +40,39 @@ class ZendDb implements ProviderInterface
      */
     public function __construct($options, ServiceLocatorInterface $serviceLocator)
     {
-	$this->serviceLocator = $serviceLocator;
+    $this->serviceLocator = $serviceLocator;
 
-	if (isset($options['adapter'])) {
-	    $this->adapterName = $options['adapter'];
-	}
+    if (isset($options['adapter'])) {
+        $this->adapterName = $options['adapter'];
+    }
 
-	if (isset($options['table'])) {
-	    $this->tableName = $options['table'];
-	}
+    if (isset($options['table'])) {
+        $this->tableName = $options['table'];
+    }
 
-	if (isset($options['resource_id_field'])) {
-	    $this->resourceIdFieldName = $options['resource_id_field'];
-	}
+    if (isset($options['resource_id_field'])) {
+        $this->resourceIdFieldName = $options['resource_id_field'];
+    }
     }
 
     public function getResources()
     {
-	/* @var $adapter \Zend\Db\Adapter\Adapter */
-	$adapter      = $this->serviceLocator->get($this->adapterName);
-	$tableGateway = new TableGateway($this->tableName, $adapter);
-	$sql          = new Select;
+        /* @var $adapter \Zend\Db\Adapter\Adapter */
+        $adapter      = $this->serviceLocator->get($this->adapterName);
+        $tableGateway = new TableGateway($this->tableName, $adapter);
+        $sql          = new Select;
 
-	$sql->from($this->tableName);
+        $sql->from($this->tableName);
 
-	$rowset = $tableGateway->selectWith($sql);
+        $rowset = $tableGateway->selectWith($sql);
 
-	$resources = array();
+        $resources = array();
 
-	// Pass One: Build each object
-	foreach ($rowset as $row) {
-	    $resources[$row->resource_id] = [];
-	}
+        // Pass One: Build each object
+        foreach ($rowset as $row) {
+        $resources[$row->{$this->resourceIdFieldName}] = [];
+        }
 
-	return $resources;
+       return $resources;
     }
 }
