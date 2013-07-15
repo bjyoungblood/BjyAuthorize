@@ -40,19 +40,19 @@ class ZendDb implements ProviderInterface
      */
     public function __construct($options, ServiceLocatorInterface $serviceLocator)
     {
-    $this->serviceLocator = $serviceLocator;
+        $this->serviceLocator = $serviceLocator;
 
-    if (isset($options['adapter'])) {
-        $this->adapterName = $options['adapter'];
-    }
+        if (isset($options['adapter'])) {
+            $this->adapterName = $options['adapter'];
+        }
 
-    if (isset($options['table'])) {
-        $this->tableName = $options['table'];
-    }
+        if (isset($options['table'])) {
+            $this->tableName = $options['table'];
+        }
 
-    if (isset($options['resource_id_field'])) {
-        $this->resourceIdFieldName = $options['resource_id_field'];
-    }
+        if (isset($options['resource_id_field'])) {
+            $this->resourceIdFieldName = $options['resource_id_field'];
+        }
     }
 
     public function getResources()
@@ -70,7 +70,7 @@ class ZendDb implements ProviderInterface
 
         // Pass One: Build each object
         foreach ($rowset as $row) {
-	       $resources[$row->{$this->resourceIdFieldName}] = array();
+           $resources[$row->{$this->resourceIdFieldName}] = array();
         }
 
        return $resources;

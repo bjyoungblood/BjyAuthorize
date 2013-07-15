@@ -55,31 +55,31 @@ class ZendDb implements ProviderInterface
      */
     public function __construct($options, ServiceLocatorInterface $serviceLocator)
     {
-    $this->serviceLocator = $serviceLocator;
+        $this->serviceLocator = $serviceLocator;
 
-    if (isset($options['adapter'])) {
-        $this->adapterName = $options['adapter'];
-    }
+        if (isset($options['adapter'])) {
+            $this->adapterName = $options['adapter'];
+        }
 
-    if (isset($options['table'])) {
-        $this->tableName = $options['table'];
-    }
+        if (isset($options['table'])) {
+            $this->tableName = $options['table'];
+        }
 
-    if (isset($options['rule_type'])) {
-        $this->ruleType = $options['rule_type'];
-    }
+        if (isset($options['rule_type'])) {
+            $this->ruleType = $options['rule_type'];
+        }
 
-    if (isset($options['role_id_field'])) {
-        $this->roleIdField = $options['role_id_field'];
-    }
+        if (isset($options['role_id_field'])) {
+            $this->roleIdField = $options['role_id_field'];
+        }
 
-    if (isset($options['resource_id_field'])) {
-        $this->resourceIdField = $options['resource_id_field'];
-    }
+        if (isset($options['resource_id_field'])) {
+            $this->resourceIdField = $options['resource_id_field'];
+        }
 
-    if (isset($options['privilege_id_field'])) {
-        $this->privilegeField = $options['privilege_id_field'];
-    }
+        if (isset($options['privilege_id_field'])) {
+            $this->privilegeField = $options['privilege_id_field'];
+        }
     }
 
     public function getRules()
@@ -107,7 +107,11 @@ class ZendDb implements ProviderInterface
                 }
             }
             if (!$found) {
-                $rules[$row->{$this->ruleType}][] = array(array($row->{$this->roleIdField}), $row->{$this->resourceIdField}, $row->{$this->privilegeField});
+                $rules[$row->{$this->ruleType}][] = array(
+                    array($row->{$this->roleIdField}), 
+                    $row->{$this->resourceIdField}, 
+                    $row->{$this->privilegeField}
+                );
             }
         }
         return $rules;
