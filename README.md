@@ -32,7 +32,7 @@ And here's how it would look like with BjyAuthorize enabled:
 The suggested installation method is via [composer](http://getcomposer.org/):
 
 ```sh
-php composer.phar require bjyoungblood/bjy-authorize:1.4.*
+php composer.phar require bjyoungblood/bjy-authorize:1.2.*
 php composer.phar require zf-commons/zfc-user:0.1.*
 ```
 
@@ -123,6 +123,13 @@ return array(
             'BjyAuthorize\Provider\Resource\Config' => array(
                 'pants' => array(),
             ),
+
+            // this will load resources from the acl_resource table in a database
+            // format: acl_resource(id(varchar))
+            'BjyAuthorize\Provider\Resource\ZendDb' => array(
+                'table'             => 'acl_resource',
+                'resource_id_field' => 'id',
+            ),
         ),
 
         /* rules can be specified here with the format:
@@ -144,6 +151,16 @@ return array(
                 'deny' => array(
                     // ...
                 ),
+            ),
+
+            // this will load rules from the acl_rule table in a database
+            // format: acl_rule(type(varchar), user_role_id(varchar), acl_resource_id(varchar), privilege(varchar))
+            'BjyAuthorize\Provider\Rule\ZendDb' => array(
+                'table'              => 'acl_rule',
+                'rule_type'          => 'type',
+                'role_id_field'      => 'user_role_id',
+                'resource_id_field'  => 'acl_resource_id',
+                'privilege_id_field' => 'privilege',
             ),
         ),
 
