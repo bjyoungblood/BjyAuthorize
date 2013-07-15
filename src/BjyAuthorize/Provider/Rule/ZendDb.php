@@ -108,8 +108,8 @@ class ZendDb implements ProviderInterface
             }
             if (!$found) {
                 $rules[$row->{$this->ruleType}][] = array(
-                    array($row->{$this->roleIdField}), 
-                    $row->{$this->resourceIdField}, 
+                    array($row->{$this->roleIdField}),
+                    $row->{$this->resourceIdField},
                     $row->{$this->privilegeField}
                 );
             }

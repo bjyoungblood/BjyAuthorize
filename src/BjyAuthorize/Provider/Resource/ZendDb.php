@@ -70,9 +70,9 @@ class ZendDb implements ProviderInterface
 
         // Pass One: Build each object
         foreach ($rowset as $row) {
-           $resources[$row->{$this->resourceIdFieldName}] = array();
+            $resources[$row->{$this->resourceIdFieldName}] = array();
         }
 
-       return $resources;
+        return $resources;
     }
 }
