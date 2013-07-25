@@ -156,7 +156,7 @@ class RouteTest extends PHPUnit_Framework_TestCase
 
         $this->assertCount(1, $rules['allow']);
         $this->assertContains(
-            array(array('admin', 'user'), 'route/test/route', 'test-assertion'),
+            array(array('admin', 'user'), 'route/test/route', null, 'test-assertion'),
             $rules['allow']
         );
     }

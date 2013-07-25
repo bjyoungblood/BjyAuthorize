@@ -112,6 +112,7 @@ class Route implements GuardInterface, RuleProviderInterface, ResourceProviderIn
             $rule[] = $resource;
 
             if (isset($ruleData['assertion'])) {
+                $rule[] = null; // no privilege
                 $rule[] = $ruleData['assertion'];
             }
 

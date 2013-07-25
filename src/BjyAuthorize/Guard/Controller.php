@@ -120,6 +120,7 @@ class Controller implements GuardInterface, RuleProviderInterface, ResourceProvi
             $rule[] = $resource;
 
             if (isset($ruleData['assertion'])) {
+                $rule[] = null; // no privilege
                 $rule[] = $ruleData['assertion'];
             }
 
