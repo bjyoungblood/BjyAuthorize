@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS `user_role` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `roleId` varchar(255) NOT NULL,
+  `role_id` varchar(255) NOT NULL,
   `is_default` tinyint(1) NOT NULL,
   `parent_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
