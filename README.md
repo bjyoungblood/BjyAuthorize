@@ -107,9 +107,10 @@ return array(
             // this will load roles from the user_role table in a database
             // format: user_role(role_id(varchar), parent(varchar))
             'BjyAuthorize\Provider\Role\ZendDb' => array(
-                'table'             => 'user_role',
-                'role_id_field'     => 'role_id',
-                'parent_role_field' => 'parent_id',
+                'table'                 => 'user_role',
+                'identifier_field_name' => 'id',
+                'role_id_field'         => 'role_id',
+                'parent_role_field'     => 'parent_id',
             ),
 
             // this will load roles from the 'BjyAuthorize\Provider\Role\Doctrine'
