@@ -43,7 +43,7 @@ class ZendDb implements ProviderInterface
     /**
      * @var string
      */
-    protected $parentRoleFieldName = 'parent';
+    protected $parentRoleFieldName = 'parent_id';
 
     /**
      * @param                         $options
