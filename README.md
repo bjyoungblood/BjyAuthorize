@@ -109,7 +109,7 @@ return array(
             'BjyAuthorize\Provider\Role\ZendDb' => array(
                 'table'             => 'user_role',
                 'role_id_field'     => 'role_id',
-                'parent_role_field' => 'parent',
+                'parent_role_field' => 'parent_id',
             ),
 
             // this will load roles from the 'BjyAuthorize\Provider\Role\Doctrine'
