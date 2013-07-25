@@ -57,7 +57,12 @@ class Route implements GuardInterface, RuleProviderInterface, ResourceProviderIn
                 $rule['roles'] = array($rule['roles']);
             }
 
-            $this->rules['route/' . $rule['route']] = $rule['roles'];
+            $resource = 'route/' . $rule['route'];
+            $this->rules[$resource] = array('roles' => $rule['roles']);
+
+            if (isset($rule['assertion'])) {
+                $this->rules[$resource]['assertion'] = $rule['assertion'];
+            }
         }
     }
 
@@ -101,9 +106,16 @@ class Route implements GuardInterface, RuleProviderInterface, ResourceProviderIn
     public function getRules()
     {
         $rules = array();
+        foreach ($this->rules as $resource => $ruleData) {
+            $rule   = array();
+            $rule[] = $ruleData['roles'];
+            $rule[] = $resource;
 
-        foreach ($this->rules as $resource => $roles) {
-            $rules[] = array($roles, $resource);
+            if (isset($ruleData['assertion'])) {
+                $rule[] = $ruleData['assertion'];
+            }
+
+            $rules[] = $rule;
         }
 
         return array('allow' => $rules);

@@ -133,6 +133,35 @@ class RouteTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers \BjyAuthorize\Guard\Route::__construct
+     * @covers \BjyAuthorize\Guard\Route::getRules
+     */
+    public function testGetRulesWithAssertion()
+    {
+        $controller = new Route(
+            array(
+                 array(
+                     'route' => 'test/route',
+                     'roles' => array(
+                         'admin',
+                         'user',
+                     ),
+                     'assertion' => 'test-assertion'
+                 ),
+            ),
+            $this->serviceLocator
+        );
+
+        $rules = $controller->getRules();
+
+        $this->assertCount(1, $rules['allow']);
+        $this->assertContains(
+            array(array('admin', 'user'), 'route/test/route', 'test-assertion'),
+            $rules['allow']
+        );
+    }
+
+    /**
      * @covers \BjyAuthorize\Guard\Route::onRoute
      */
     public function testOnRouteWithValidRoute()

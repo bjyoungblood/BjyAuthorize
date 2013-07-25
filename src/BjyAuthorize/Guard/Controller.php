@@ -62,7 +62,13 @@ class Controller implements GuardInterface, RuleProviderInterface, ResourceProvi
 
             foreach ((array) $rule['controller'] as $controller) {
                 foreach ($rule['action'] as $action) {
-                    $this->rules[$this->getResourceName($controller, $action)] = $rule['roles'];
+                    $resource = $this->getResourceName($controller, $action);
+
+                    $this->rules[$resource] = array('roles' => $rule['roles']);
+
+                    if (isset($rule['assertion'])) {
+                        $this->rules[$resource]['assertion'] = $rule['assertion'];
+                    }
                 }
             }
         }
@@ -108,8 +114,16 @@ class Controller implements GuardInterface, RuleProviderInterface, ResourceProvi
     public function getRules()
     {
         $rules = array();
-        foreach ($this->rules as $resource => $roles) {
-            $rules[] = array($roles, $resource);
+        foreach ($this->rules as $resource => $ruleData) {
+            $rule   = array();
+            $rule[] = $ruleData['roles'];
+            $rule[] = $resource;
+
+            if (isset($ruleData['assertion'])) {
+                $rule[] = $ruleData['assertion'];
+            }
+
+            $rules[] = $rule;
         }
 
         return array('allow' => $rules);
