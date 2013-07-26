@@ -121,7 +121,6 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $controller = new Controller(array($rule), $this->serviceLocator);
 
         $rules = $controller->getRules();
-        \Zend\Debug\Debug::dump($rules);
         $this->assertCount($expectedCount, $rules['allow']);
         $this->assertContains(array($roles, $resource, null, $assertion), $rules['allow']);
     }
