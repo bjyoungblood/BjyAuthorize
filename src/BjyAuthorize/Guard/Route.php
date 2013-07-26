@@ -9,8 +9,6 @@
 namespace BjyAuthorize\Guard;
 
 use BjyAuthorize\Exception\UnAuthorizedException;
-use BjyAuthorize\Provider\Rule\ProviderInterface as RuleProviderInterface;
-use BjyAuthorize\Provider\Resource\ProviderInterface as ResourceProviderInterface;
 
 use Zend\EventManager\EventManagerInterface;
 use Zend\Mvc\MvcEvent;
@@ -22,27 +20,12 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  *
  * @author Ben Youngblood <bx.youngblood@gmail.com>
  */
-class Route implements GuardInterface, RuleProviderInterface, ResourceProviderInterface
+class Route extends AbstractGuard
 {
     /**
      * Marker for invalid route errors
      */
     const ERROR = 'error-unauthorized-route';
-
-    /**
-     * @var ServiceLocatorInterface
-     */
-    protected $serviceLocator;
-
-    /**
-     * @var array[]
-     */
-    protected $rules = array();
-
-    /**
-     * @var \Zend\Stdlib\CallbackHandler[]
-     */
-    protected $listeners = array();
 
     /**
      * @param array                   $rules
@@ -87,42 +70,6 @@ class Route implements GuardInterface, RuleProviderInterface, ResourceProviderIn
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public function getResources()
-    {
-        $resources = array();
-
-        foreach (array_keys($this->rules) as $resource) {
-            $resources[] = $resource;
-        }
-
-        return $resources;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getRules()
-    {
-        $rules = array();
-        foreach ($this->rules as $resource => $ruleData) {
-            $rule   = array();
-            $rule[] = $ruleData['roles'];
-            $rule[] = $resource;
-
-            if (isset($ruleData['assertion'])) {
-                $rule[] = null; // no privilege
-                $rule[] = $ruleData['assertion'];
-            }
-
-            $rules[] = $rule;
-        }
-
-        return array('allow' => $rules);
-    }
-
-    /**
      * Event callback to be triggered on dispatch, causes application error triggering
      * in case of failed authorization check
      *
@@ -132,6 +79,7 @@ class Route implements GuardInterface, RuleProviderInterface, ResourceProviderIn
      */
     public function onRoute(MvcEvent $event)
     {
+        /* @var $service \BjyAuthorize\Service\Authorize */
         $service    = $this->serviceLocator->get('BjyAuthorize\Service\Authorize');
         $match      = $event->getRouteMatch();
         $routeName  = $match->getMatchedRouteName();
