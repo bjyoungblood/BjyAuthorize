@@ -31,13 +31,14 @@ class Role implements HierarchicalRoleInterface
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=255, unique=true, nullable=true)
+     * @ORM\Column(type="string", name="role_id", length=255, unique=true, nullable=true)
      */
     protected $roleId;
 
     /**
      * @var Role
      * @ORM\ManyToOne(targetEntity="MyNamespace\Role")
+     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", nullable=true)
      */
     protected $parent;
 

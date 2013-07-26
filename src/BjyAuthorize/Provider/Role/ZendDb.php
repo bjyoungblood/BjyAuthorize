@@ -113,8 +113,8 @@ class ZendDb implements ProviderInterface
         foreach ($roles as $role) {
             $parentRoleObj = $role->getParent();
 
-            if ($parentRoleObj && $parentRoleObj->getRoleId()) {
-                $role->setParent($roles[$parentRoleObj->getRoleId()]);
+            if ($parentRoleObj && ($parentRoleId = $parentRoleObj->getRoleId())) {
+                $role->setParent($roles[$parentRoleId]);
             }
         }
 
