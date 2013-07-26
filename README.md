@@ -112,9 +112,14 @@ return array(
                 'parent_role_field' => 'parent',
             ),
 
-            // this will load roles from the 'BjyAuthorize\Provider\Role\Doctrine'
-            // service
-            'BjyAuthorize\Provider\Role\Doctrine' => array(),
+            // this will load roles from
+            // the 'BjyAuthorize\Provider\Role\ObjectRepositoryProvider' service
+            'BjyAuthorize\Provider\Role\ObjectRepositoryProvider' => array(
+                // class name of the entity representing the role
+                'role_entity_class' => 'My\Role\Entity',
+                // service name of the object manager
+                'object_manager'    => 'My\Doctrine\Common\Persistence\ObjectManager',
+            ),
         ),
 
         // resource providers provide a list of resources that will be tracked
