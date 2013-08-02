@@ -50,7 +50,7 @@ class UnauthorizedStrategy implements ListenerAggregateInterface
      */
     public function attach(EventManagerInterface $events)
     {
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH_ERROR, array($this, 'onDispatchError'), -5000);
+        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH_ERROR, array($this, 'onDispatchError'), -50);
     }
 
     /**
@@ -136,7 +136,7 @@ class UnauthorizedStrategy implements ListenerAggregateInterface
         $response = $response ?: new HttpResponse();
 
         $model->setTemplate($this->getTemplate());
-        $event->getViewModel()->addChild($model);
+        $event->setResult($model);
         $response->setStatusCode(403);
         $event->setResponse($response);
     }

@@ -95,9 +95,9 @@ class UnauthorizedStrategyTest extends PHPUnit_Framework_TestCase
 
         $test = $this;
 
-        $viewModel
+        $mvcEvent
             ->expects($this->once())
-            ->method('addChild')
+            ->method('setResult')
             ->with(
                 $this->callback(
                     function (ModelInterface $model) use ($test) {
