@@ -43,6 +43,46 @@ class ZendDbTest extends PHPUnit_Framework_TestCase
      */
     public function testGetRoles()
     {
-        $this->markTestIncomplete();
+		$tableGateway = $this->getMockBuilder('Zend\Db\TableGateway\TableGateway')
+              				->disableOriginalConstructor()
+              				->getMock();
+		$tableGateway->expects($this->any())->method('selectWith')->will($this->returnValue(
+			array(
+				array('id' => 1, 'role_id' => 'guest', 'is_default' => 1, 'parent_id' => NULL),
+				array('id' => 2, 'role_id' => 'user', 'is_default' => 0, 'parent_id' => NULL),
+			)
+		));
+
+		$this->serviceLocator->expects($this->any())->method('get')->will($this->returnValue($tableGateway));
+		$provider = new ZendDb(array(), $this->serviceLocator);
+		
+		$this->assertEquals($provider->getRoles(), array(
+			new \BjyAuthorize\Acl\Role('guest'),
+			new \BjyAuthorize\Acl\Role('user'),
+		));
+    }
+
+    /**
+     * @covers \BjyAuthorize\Provider\Role\ZendDb::getRoles
+     */
+    public function testGetRolesWithInheritance()
+    {
+		$tableGateway = $this->getMockBuilder('Zend\Db\TableGateway\TableGateway')
+              				->disableOriginalConstructor()
+              				->getMock();
+		$tableGateway->expects($this->any())->method('selectWith')->will($this->returnValue(
+			array(
+				array('id' => 1, 'role_id' => 'guest', 'is_default' => 1, 'parent_id' => NULL),
+				array('id' => 2, 'role_id' => 'user', 'is_default' => 0, 'parent_id' => 1),
+			)
+		));
+
+		$this->serviceLocator->expects($this->any())->method('get')->will($this->returnValue($tableGateway));
+		$provider = new ZendDb(array(), $this->serviceLocator);
+		
+		$this->assertEquals($provider->getRoles(), array(
+			new \BjyAuthorize\Acl\Role('guest'),
+			new \BjyAuthorize\Acl\Role('user', 'guest'),
+		));
     }
 }

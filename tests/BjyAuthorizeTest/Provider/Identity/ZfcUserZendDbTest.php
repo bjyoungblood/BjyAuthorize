@@ -29,9 +29,9 @@ class ZfcUserZendDbTest extends PHPUnit_Framework_TestCase
     protected $userService;
 
     /**
-     * @var \Zend\Db\Adapter\Adapter|\PHPUnit_Framework_MockObject_MockObject
+     * @var \Zend\Db\TableGateway\TableGateway|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected $adapter;
+    protected $tableGateway;
 
     /**
      * @var \BjyAuthorize\Provider\Identity\ZfcUserZendDb
@@ -45,9 +45,9 @@ class ZfcUserZendDbTest extends PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $this->authService = $this->getMock('Zend\Authentication\AuthenticationService');
-        $this->userService = $this->getMock('ZfcUser\Service\User');
-        $this->adapter     = $this->getMock('Zend\Db\Adapter\Adapter', array(), array(), '', false);
+        $this->authService  = $this->getMock('Zend\Authentication\AuthenticationService');
+        $this->userService  = $this->getMock('ZfcUser\Service\User');
+        $this->tableGateway = $this->getMock('Zend\Db\TableGateway\TableGateway', array(), array(), '', false);
 
         $this
             ->userService
@@ -55,7 +55,7 @@ class ZfcUserZendDbTest extends PHPUnit_Framework_TestCase
             ->method('getAuthService')
             ->will($this->returnValue($this->authService));
 
-        $this->provider = new ZfcUserZendDb($this->adapter, $this->userService);
+        $this->provider = new ZfcUserZendDb($this->tableGateway, $this->userService);
     }
 
     /**
@@ -90,6 +90,7 @@ class ZfcUserZendDbTest extends PHPUnit_Framework_TestCase
      */
     public function testGetIdentityRoles()
     {
-        $this->markTestIncomplete();
+		$roles = $this->provider->getIdentityRoles();
+		$this->assertEquals($roles, array(null));
     }
 }

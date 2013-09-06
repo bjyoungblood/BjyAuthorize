@@ -79,6 +79,7 @@ return array(
                 => 'BjyAuthorize\Service\ZfcUserZendDbIdentityProviderServiceFactory',
             'BjyAuthorize\View\UnauthorizedStrategy'
                 => 'BjyAuthorize\Service\UnauthorizedStrategyServiceFactory',
+            'role_table_gateway'                   => 'BjyAuthorize\Service\UserRoleServiceFactory',
         ),
         'invokables'  => array(
             'BjyAuthorize\View\RedirectionStrategy' => 'BjyAuthorize\View\RedirectionStrategy',

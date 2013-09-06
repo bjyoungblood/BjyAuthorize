@@ -84,9 +84,8 @@ class ZendDb implements ProviderInterface
      */
     public function getRoles()
     {
-        /* @var $adapter \Zend\Db\Adapter\Adapter */
-        $adapter      = $this->serviceLocator->get($this->adapterName);
-        $tableGateway = new TableGateway($this->tableName, $adapter);
+        /* @var $tableGateway \Zend\Db\TableGateway\TableGateway */
+        $tableGateway = $this->serviceLocator->get('role_table_gateway'); 
         $sql          = new Select();
 
         $sql->from($this->tableName);
