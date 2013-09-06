@@ -38,12 +38,17 @@ class ZendDb implements ProviderInterface
     /**
      * @var string
      */
+    protected $identifierFieldName = 'id';
+
+    /**
+     * @var string
+     */
     protected $roleIdFieldName     = 'role_id';
 
     /**
      * @var string
      */
-    protected $parentRoleFieldName = 'parent';
+    protected $parentRoleFieldName = 'parent_id';
 
     /**
      * @param                         $options
@@ -61,6 +66,10 @@ class ZendDb implements ProviderInterface
             $this->tableName = $options['table'];
         }
 
+        if (isset($options['identifier_field_name'])) {
+            $this->identifierFieldName = $options['identifier_field_name'];
+        }
+
         if (isset($options['role_id_field'])) {
             $this->roleIdFieldName = $options['role_id_field'];
         }
@@ -75,29 +84,36 @@ class ZendDb implements ProviderInterface
      */
     public function getRoles()
     {
-        /* @var $adapter \Zend\Db\Adapter\Adapter */
-        $adapter      = $this->serviceLocator->get($this->adapterName);
-        $tableGateway = new TableGateway($this->tableName, $adapter);
-        $sql          = new Select;
+        /* @var $tableGateway \Zend\Db\TableGateway\TableGateway */
+        $tableGateway = $this->serviceLocator->get('BjyAuthorize\Service\RoleDbTableGateway'); 
+        $sql          = new Select();
 
         $sql->from($this->tableName);
 
-        $rowset = $tableGateway->selectWith($sql);
-        $roles  = array();
+        /* @var $roles Role[] */
+        $roles       = array();
+        $indexedRows = array();
+        $rowset      = $tableGateway->selectWith($sql);
 
-        // Pass One: Build each object
+        // Pass 1: collect all rows and index them by PK
         foreach ($rowset as $row) {
-            $roleId = $row[$this->roleIdFieldName];
-            $roles[$roleId] = new Role($roleId, $row[$this->parentRoleFieldName]);
+            $indexedRows[$row[$this->identifierFieldName]] = $row;
         }
 
-        // Pass Two: Re-inject parent objects to preserve hierarchy
-        /* @var $roleObj Role */
-        foreach ($roles as $roleObj) {
-            $parentRoleObj = $roleObj->getParent();
+        // Pass 2: build a role for each indexed row
+        foreach ($indexedRows as $row) {
+            $parentRoleId   = isset($row[$this->parentRoleFieldName])
+                ? $indexedRows[$row[$this->parentRoleFieldName]][$this->roleIdFieldName] : null;
+            $roleId         = $row[$this->roleIdFieldName];
+            $roles[$roleId] = new Role($roleId, $parentRoleId);
+        }
 
-            if ($parentRoleObj && $parentRoleObj->getRoleId()) {
-                $roleObj->setParent($roles[$parentRoleObj->getRoleId()]);
+        // Pass 3: Re-inject parent objects to preserve hierarchy
+        foreach ($roles as $role) {
+            $parentRoleObj = $role->getParent();
+
+            if ($parentRoleObj && ($parentRoleId = $parentRoleObj->getRoleId())) {
+                $role->setParent($roles[$parentRoleId]);
             }
         }
 
