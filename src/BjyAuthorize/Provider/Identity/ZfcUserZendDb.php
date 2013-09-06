@@ -10,8 +10,10 @@ namespace BjyAuthorize\Provider\Identity;
 
 use BjyAuthorize\Exception\InvalidRoleException;
 use Zend\Db\Adapter\Adapter;
+use Zend\Db\TableGateway\TableGateway;
 use Zend\Db\Sql\Where;
 use Zend\Db\Sql\Sql;
+use Zend\Db\Sql\Select;
 use Zend\Permissions\Acl\Role\RoleInterface;
 use ZfcUser\Service\User;
 
@@ -36,15 +38,20 @@ class ZfcUserZendDb implements ProviderInterface
      * @var string
      */
     protected $tableName = 'user_role_linker';
+	
+	/**
+	 * @var Zend\Db\TableGateway\TableGateway
+	 */
+	protected $tableGateway;
 
     /**
      * @param \Zend\Db\Adapter\Adapter $adapter
      * @param \ZfcUser\Service\User    $userService
      */
-    public function __construct(Adapter $adapter, User $userService)
+    public function __construct(TableGateway $tableGateway, User $userService)
     {
-        $this->adapter     = $adapter;
-        $this->userService = $userService;
+        $this->tableGateway = $tableGateway;
+        $this->userService  = $userService;
     }
 
     /**
@@ -59,20 +66,20 @@ class ZfcUserZendDb implements ProviderInterface
         }
 
         // get roles associated with the logged in user
-        $sql    = new Sql($this->adapter);
-        $select = $sql->select()->from($this->tableName);
-        $where  = new Where();
+        $sql = new Select();
+		$sql->from($this->tableName);
+		$sql->join('user_role', 'user_role.id = ' . $this->tableName . '.role_id');
+		$sql->where(array('user_id' => $authService->getIdentity()->getId()));
+		$results = $this->tableGateway->selectWith($sql);
 
-        $where->equalTo('user_id', $authService->getIdentity()->getId());
-
-        $results = $sql->prepareStatementForSqlObject($select->where($where))->execute();
-        $roles     = array();
+        $roles = array();
 
         foreach ($results as $i) {
             $roles[] = $i['role_id'];
         }
 
         return $roles;
+
     }
 
     /**
