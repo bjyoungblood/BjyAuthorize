@@ -21,6 +21,8 @@ class UserRoleServiceFactory implements FactoryInterface
 {
     /**
      * {@inheritDoc}
+     * 
+     * @return \Zend\Db\TableGateway\TableGateway
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
