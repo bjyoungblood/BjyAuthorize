@@ -8,12 +8,14 @@
 
 namespace BjyAuthorize\Service;
 
-use Zend\ServiceManager\FactoryInterface,
-    Zend\ServiceManager\ServiceLocatorInterface,
-	Zend\Db\TableGateway\TableGateway;
+use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\Db\TableGateway\TableGateway;
 
 /**
- * @author Marco Pivetta <ocramius@gmail.com>
+ * @author Simone Castellaneta <s.castel@gmail.com>
+ * 
+ * @return Zend\Db\TableGateway\TableGateway
  */
 class UserRoleServiceFactory implements FactoryInterface
 {
