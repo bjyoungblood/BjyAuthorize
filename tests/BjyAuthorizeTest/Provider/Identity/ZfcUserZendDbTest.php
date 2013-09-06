@@ -31,7 +31,7 @@ class ZfcUserZendDbTest extends PHPUnit_Framework_TestCase
     /**
      * @var \Zend\Db\TableGateway\TableGateway|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected $tableGateway;
+    private $tableGateway;
 
     /**
      * @var \BjyAuthorize\Provider\Identity\ZfcUserZendDb

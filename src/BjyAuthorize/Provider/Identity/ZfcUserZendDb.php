@@ -39,10 +39,10 @@ class ZfcUserZendDb implements ProviderInterface
      */
     protected $tableName = 'user_role_linker';
 	
-	/**
-	 * @var Zend\Db\TableGateway\TableGateway
-	 */
-	protected $tableGateway;
+    /**
+     * @var Zend\Db\TableGateway\TableGateway
+     */
+    private $tableGateway;
 
     /**
      * @param \Zend\Db\Adapter\Adapter $adapter
@@ -67,19 +67,20 @@ class ZfcUserZendDb implements ProviderInterface
 
         // get roles associated with the logged in user
         $sql = new Select();
-		$sql->from($this->tableName);
-		$sql->join('user_role', 'user_role.id = ' . $this->tableName . '.role_id');
-		$sql->where(array('user_id' => $authService->getIdentity()->getId()));
-		$results = $this->tableGateway->selectWith($sql);
+
+        $sql->from($this->tableName);
+        $sql->join('user_role', 'user_role.id = ' . $this->tableName . '.role_id');
+        $sql->where(array('user_id' => $authService->getIdentity()->getId()));
+
+        $results = $this->tableGateway->selectWith($sql);
 
         $roles = array();
 
-        foreach ($results as $i) {
-            $roles[] = $i['role_id'];
+        foreach ($results as $role) {
+            $roles[] = $role['role_id'];
         }
 
         return $roles;
-
     }
 
     /**
