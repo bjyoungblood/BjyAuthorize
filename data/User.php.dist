@@ -17,7 +17,7 @@ use ZfcUser\Entity\UserInterface;
  * An example of how to implement a role aware user entity.
  *
  * @ORM\Entity
- * @ORM\Table(name="users")
+ * @ORM\Table(name="user")
  *
  * @author Tom Oram <tom@scl.co.uk>
  */
