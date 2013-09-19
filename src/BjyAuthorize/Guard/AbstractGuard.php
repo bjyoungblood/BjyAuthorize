@@ -17,7 +17,7 @@ abstract class AbstractGuard implements GuardInterface, RuleProviderInterface, R
     /**
      * @var ServiceLocatorInterface
      */
-    protected $service;
+    protected $serviceLocator;
 
     /**
      * @var \Zend\Stdlib\CallbackHandler[]
@@ -28,6 +28,26 @@ abstract class AbstractGuard implements GuardInterface, RuleProviderInterface, R
      * @var array[]
      */
     protected $rules = array();
+
+    public function __construct(array $rules, ServiceLocatorInterface $serviceLocator)
+    {
+        $this->serviceLocator = $serviceLocator;
+
+        foreach ($rules as $rule) {
+            $rule['roles'] = (array) $rule['roles'];
+
+            $rule['action'] = isset($rule['action']) ? (array) $rule['action'] : array(null);
+
+            foreach ($this->extractResourcesFromRule($rule) as $resource) {
+                $this->rules[$resource] = array('roles' => (array) $rule['roles']);
+                if (isset($rule['assertion'])) {
+                    $this->rules[$resource]['assertion'] = $rule['assertion'];
+                }
+            }
+        }
+    }
+
+    abstract protected function extractResourcesFromRule(array $rule);
 
     /**
      * {@inheritDoc}

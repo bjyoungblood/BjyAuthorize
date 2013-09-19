@@ -12,7 +12,6 @@ use BjyAuthorize\Exception\UnAuthorizedException;
 
 use Zend\EventManager\EventManagerInterface;
 use Zend\Mvc\MvcEvent;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Route Guard listener, allows checking of permissions
@@ -27,26 +26,9 @@ class Route extends AbstractGuard
      */
     const ERROR = 'error-unauthorized-route';
 
-    /**
-     * @param array                   $rules
-     * @param ServiceLocatorInterface $serviceLocator
-     */
-    public function __construct(array $rules, ServiceLocatorInterface $serviceLocator)
+    protected function extractResourcesFromRule(array $rule)
     {
-        $this->serviceLocator = $serviceLocator;
-
-        foreach ($rules as $rule) {
-            if (!is_array($rule['roles'])) {
-                $rule['roles'] = array($rule['roles']);
-            }
-
-            $resource = 'route/' . $rule['route'];
-            $this->rules[$resource] = array('roles' => $rule['roles']);
-
-            if (isset($rule['assertion'])) {
-                $this->rules[$resource]['assertion'] = $rule['assertion'];
-            }
-        }
+        return array('route/' . $rule['route']);
     }
 
     /**

@@ -12,7 +12,6 @@ use BjyAuthorize\Exception\UnAuthorizedException;
 
 use Zend\EventManager\EventManagerInterface;
 use Zend\Mvc\MvcEvent;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Http\Request as HttpRequest;
 
 /**
@@ -28,33 +27,18 @@ class Controller extends AbstractGuard
      */
     const ERROR = 'error-unauthorized-controller';
 
-    /**
-     * @param array                   $rules
-     * @param ServiceLocatorInterface $serviceLocator
-     */
-    public function __construct(array $rules, ServiceLocatorInterface $serviceLocator)
+    protected function extractResourcesFromRule(array $rule)
     {
-        $this->serviceLocator = $serviceLocator;
+        $results = array();
 
-        foreach ($rules as $rule) {
-            if (!is_array($rule['roles'])) {
-                $rule['roles'] = array($rule['roles']);
-            }
-
-            $rule['action'] = isset($rule['action']) ? (array) $rule['action'] : array(null);
-
-            foreach ((array) $rule['controller'] as $controller) {
-                foreach ($rule['action'] as $action) {
-                    $resource = $this->getResourceName($controller, $action);
-
-                    $this->rules[$resource] = array('roles' => $rule['roles']);
-
-                    if (isset($rule['assertion'])) {
-                        $this->rules[$resource]['assertion'] = $rule['assertion'];
-                    }
-                }
+        $rule['action'] = isset($rule['action']) ? (array) $rule['action'] : array(null);
+        foreach ((array) $rule['controller'] as $controller) {
+            foreach ($rule['action'] as $action) {
+                $results[] = $this->getResourceName($controller, $action);
             }
         }
+
+        return $results;
     }
 
     /**
