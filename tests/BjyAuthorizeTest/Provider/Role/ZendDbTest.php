@@ -51,20 +51,19 @@ class ZendDbTest extends PHPUnit_Framework_TestCase
      */
     public function testGetRoles()
     {
-        $this->tableGateway->expects($this->any())->method('selectWith')->will($this->returnValue(
-            array(
-                array('id' => 1, 'role_id' => 'guest', 'is_default' => 1, 'parent_id' => NULL),
-                array('id' => 2, 'role_id' => 'user', 'is_default' => 0, 'parent_id' => NULL),
+        $this->tableGateway->expects($this->any())->method('selectWith')->will(
+            $this->returnValue(
+                array(
+                    array('id' => 1, 'role_id' => 'guest', 'is_default' => 1, 'parent_id' => null),
+                    array('id' => 2, 'role_id' => 'user', 'is_default' => 0, 'parent_id' => null),
+                )
             )
-        ));
+        );
 
         $this->serviceLocator->expects($this->any())->method('get')->will($this->returnValue($this->tableGateway));
         $provider = new ZendDb(array(), $this->serviceLocator);
-		
-        $this->assertEquals($provider->getRoles(), array(
-            new Role('guest'),
-            new Role('user'),
-        ));
+
+        $this->assertEquals($provider->getRoles(), array(new Role('guest'), new Role('user')));
     }
 
     /**
@@ -72,19 +71,18 @@ class ZendDbTest extends PHPUnit_Framework_TestCase
      */
     public function testGetRolesWithInheritance()
     {
-        $this->tableGateway->expects($this->any())->method('selectWith')->will($this->returnValue(
-            array(
-                array('id' => 1, 'role_id' => 'guest', 'is_default' => 1, 'parent_id' => NULL),
-                array('id' => 2, 'role_id' => 'user', 'is_default' => 0, 'parent_id' => 1),
+        $this->tableGateway->expects($this->any())->method('selectWith')->will(
+            $this->returnValue(
+                array(
+                    array('id' => 1, 'role_id' => 'guest', 'is_default' => 1, 'parent_id' => null),
+                    array('id' => 2, 'role_id' => 'user', 'is_default' => 0, 'parent_id' => 1),
+                )
             )
-        ));
+        );
 
         $this->serviceLocator->expects($this->any())->method('get')->will($this->returnValue($this->tableGateway));
         $provider = new ZendDb(array(), $this->serviceLocator);
-		
-        $this->assertEquals($provider->getRoles(), array(
-            new Role('guest'),
-            new Role('user', 'guest'),
-        ));
+
+        $this->assertEquals($provider->getRoles(), array(new Role('guest'), new Role('user', 'guest')));
     }
 }

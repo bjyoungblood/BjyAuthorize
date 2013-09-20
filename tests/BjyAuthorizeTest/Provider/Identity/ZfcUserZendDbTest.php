@@ -90,7 +90,7 @@ class ZfcUserZendDbTest extends PHPUnit_Framework_TestCase
      */
     public function testGetIdentityRoles()
     {
-		$roles = $this->provider->getIdentityRoles();
-		$this->assertEquals($roles, array(null));
+        $roles = $this->provider->getIdentityRoles();
+        $this->assertEquals($roles, array(null));
     }
 }
