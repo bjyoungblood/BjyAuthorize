@@ -32,11 +32,6 @@ class ZfcUserZendDb implements ProviderInterface
     protected $defaultRole;
 
     /**
-     * @var string
-     */
-    protected $tableName = 'user_role_linker';
-
-    /**
      * @var \Zend\Db\TableGateway\TableGateway
      */
     private $tableGateway;
@@ -65,9 +60,14 @@ class ZfcUserZendDb implements ProviderInterface
         // get roles associated with the logged in user
         $sql = new Select();
 
-        $sql->from($this->tableName);
-        // @todo these fields should eventually be configurable
-        $sql->join('user_role', 'user_role.id = ' . $this->tableName . '.role_id');
+        $sql->from($this->tableGateway->getTable());
+
+        $config = $this->userService->getServiceManager()->get( 'Config' );
+        $roleTable = $config['bjyauthorize']['role_providers']['BjyAuthorize\Provider\Role\ZendDb']['table'];
+        $idField = $config['bjyauthorize']['role_providers']['BjyAuthorize\Provider\Role\ZendDb']['identifier_field_name'];
+        $roleIdField = $config['bjyauthorize']['role_providers']['BjyAuthorize\Provider\Role\ZendDb']['role_id_field'];
+
+        $sql->join($roleTable, $roleTable. '.'. $idField .' = ' . $this->tableGateway->getTable() . '.' . $roleIdField);
         $sql->where(array('user_id' => $authService->getIdentity()->getId()));
 
         $results = $this->tableGateway->selectWith($sql);
