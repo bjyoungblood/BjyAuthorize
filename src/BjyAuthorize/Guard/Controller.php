@@ -15,8 +15,6 @@ use BjyAuthorize\Provider\Resource\ProviderInterface as ResourceProviderInterfac
 use Zend\EventManager\EventManagerInterface;
 use Zend\Mvc\MvcEvent;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Mvc\ApplicationInterface;
-use BjyAuthorize\Service\Authorize;
 use Zend\Http\Request as HttpRequest;
 
 /**

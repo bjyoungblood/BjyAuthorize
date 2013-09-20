@@ -9,10 +9,7 @@
 namespace BjyAuthorize\Provider\Identity;
 
 use BjyAuthorize\Exception\InvalidRoleException;
-use Zend\Db\Adapter\Adapter;
 use Zend\Db\TableGateway\TableGateway;
-use Zend\Db\Sql\Where;
-use Zend\Db\Sql\Sql;
 use Zend\Db\Sql\Select;
 use Zend\Permissions\Acl\Role\RoleInterface;
 use ZfcUser\Service\User;

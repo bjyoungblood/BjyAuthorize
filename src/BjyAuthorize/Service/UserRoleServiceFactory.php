@@ -15,7 +15,7 @@ use Zend\Db\TableGateway\TableGateway;
 /**
  * @author Simone Castellaneta <s.castel@gmail.com>
  * 
- * @return Zend\Db\TableGateway\TableGateway
+ * @return \Zend\Db\TableGateway\TableGateway
  */
 class UserRoleServiceFactory implements FactoryInterface
 {
