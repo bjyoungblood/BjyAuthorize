@@ -35,7 +35,7 @@ class ZfcUserZendDb implements ProviderInterface
      * @var string
      */
     protected $tableName = 'user_role_linker';
-	
+
     /**
      * @var \Zend\Db\TableGateway\TableGateway
      */
