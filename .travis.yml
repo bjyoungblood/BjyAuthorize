@@ -9,7 +9,6 @@ php:
 before_script:
   - composer self-update
   - composer update --prefer-source --dev
-  - wget http://cs.sensiolabs.org/get/php-cs-fixer.phar
 
 script:
   - ./vendor/bin/phpunit --coverage-clover ./build/logs/clover.xml
