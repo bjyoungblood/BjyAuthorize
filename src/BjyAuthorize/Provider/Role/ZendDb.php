@@ -28,12 +28,7 @@ class ZendDb implements ProviderInterface
     /**
      * @var string
      */
-    protected $adapterName         = 'bjyauthorize_zend_db_adapter';
-
-    /**
-     * @var string
-     */
-    protected $tableName           = 'user_role';
+    protected $tableName = 'user_role';
 
     /**
      * @var string
@@ -43,7 +38,7 @@ class ZendDb implements ProviderInterface
     /**
      * @var string
      */
-    protected $roleIdFieldName     = 'role_id';
+    protected $roleIdFieldName = 'role_id';
 
     /**
      * @var string
@@ -57,10 +52,6 @@ class ZendDb implements ProviderInterface
     public function __construct($options, ServiceLocatorInterface $serviceLocator)
     {
         $this->serviceLocator = $serviceLocator;
-
-        if (isset($options['adapter'])) {
-            $this->adapterName = $options['adapter'];
-        }
 
         if (isset($options['table'])) {
             $this->tableName = $options['table'];
