@@ -69,6 +69,7 @@ class ZfcUserZendDb implements ProviderInterface
         $sql = new Select();
 
         $sql->from($this->tableName);
+        // @todo these fields should eventually be configurable
         $sql->join('user_role', 'user_role.id = ' . $this->tableName . '.role_id');
         $sql->where(array('user_id' => $authService->getIdentity()->getId()));
 
