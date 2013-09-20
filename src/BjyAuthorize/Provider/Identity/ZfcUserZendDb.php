@@ -40,13 +40,13 @@ class ZfcUserZendDb implements ProviderInterface
     protected $tableName = 'user_role_linker';
 	
     /**
-     * @var Zend\Db\TableGateway\TableGateway
+     * @var \Zend\Db\TableGateway\TableGateway
      */
     private $tableGateway;
 
     /**
-     * @param \Zend\Db\Adapter\Adapter $adapter
-     * @param \ZfcUser\Service\User    $userService
+     * @param \Zend\Db\TableGateway\TableGateway $tableGateway
+     * @param \ZfcUser\Service\User              $userService
      */
     public function __construct(TableGateway $tableGateway, User $userService)
     {
