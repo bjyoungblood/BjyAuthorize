@@ -58,7 +58,7 @@ class ZendDbTest extends PHPUnit_Framework_TestCase
             )
         ));
 
-        $this->serviceLocator->expects($this->any())->method('get')->will($this->returnValue($tableGateway));
+        $this->serviceLocator->expects($this->any())->method('get')->will($this->returnValue($this->tableGateway));
         $provider = new ZendDb(array(), $this->serviceLocator);
 		
         $this->assertEquals($provider->getRoles(), array(
@@ -79,7 +79,7 @@ class ZendDbTest extends PHPUnit_Framework_TestCase
             )
         ));
 
-        $this->serviceLocator->expects($this->any())->method('get')->will($this->returnValue($tableGateway));
+        $this->serviceLocator->expects($this->any())->method('get')->will($this->returnValue($this->tableGateway));
         $provider = new ZendDb(array(), $this->serviceLocator);
 		
         $this->assertEquals($provider->getRoles(), array(
