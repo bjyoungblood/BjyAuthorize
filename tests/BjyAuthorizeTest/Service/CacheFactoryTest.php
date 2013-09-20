@@ -10,7 +10,6 @@ namespace BjyAuthorizeTest\Service;
 
 use BjyAuthorize\Service\CacheFactory;
 use PHPUnit_Framework_TestCase;
-use Zend\ServiceManager\ServiceManager;
 
 /**
  * PHPUnit tests for {@see \BjyAuthorize\Service\CacheFactory}

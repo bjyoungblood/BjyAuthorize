@@ -10,7 +10,6 @@
 
 namespace BjyAuthorize\Service;
 
-use BjyAuthorize\Service\AuthorizeAwareInterface;
 use Zend\ServiceManager\InitializerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
