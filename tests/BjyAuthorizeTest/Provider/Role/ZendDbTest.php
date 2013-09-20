@@ -8,9 +8,9 @@
 
 namespace BjyAuthorizeTest\Provider\Role;
 
+use BjyAuthorize\Acl\Role;
 use BjyAuthorize\Provider\Role\ZendDb;
 use PHPUnit_Framework_TestCase;
-use BjyAuthorize\Provider\Role\ObjectRepositoryProvider;
 
 /**
  * {@see \BjyAuthorize\Provider\Role\ZendDb} test
@@ -62,8 +62,8 @@ class ZendDbTest extends PHPUnit_Framework_TestCase
         $provider = new ZendDb(array(), $this->serviceLocator);
 		
         $this->assertEquals($provider->getRoles(), array(
-            new \BjyAuthorize\Acl\Role('guest'),
-            new \BjyAuthorize\Acl\Role('user'),
+            new Role('guest'),
+            new Role('user'),
         ));
     }
 
@@ -83,8 +83,8 @@ class ZendDbTest extends PHPUnit_Framework_TestCase
         $provider = new ZendDb(array(), $this->serviceLocator);
 		
         $this->assertEquals($provider->getRoles(), array(
-            new \BjyAuthorize\Acl\Role('guest'),
-            new \BjyAuthorize\Acl\Role('user', 'guest'),
+            new Role('guest'),
+            new Role('user', 'guest'),
         ));
     }
 }
