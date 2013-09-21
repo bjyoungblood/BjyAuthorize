@@ -57,17 +57,15 @@ class ZfcUserZendDb implements ProviderInterface
             return array($this->getDefaultRole());
         }
 
+        $roleProvider = $this->getZendDbRoleProvider();
+
         // get roles associated with the logged in user
         $sql = new Select();
-
         $sql->from($this->tableGateway->getTable());
-
-        $config = $this->userService->getServiceManager()->get( 'Config' );
-        $roleTable = $config['bjyauthorize']['role_providers']['BjyAuthorize\Provider\Role\ZendDb']['table'];
-        $idField = $config['bjyauthorize']['role_providers']['BjyAuthorize\Provider\Role\ZendDb']['identifier_field_name'];
-        $roleIdField = $config['bjyauthorize']['role_providers']['BjyAuthorize\Provider\Role\ZendDb']['role_id_field'];
-
-        $sql->join($roleTable, $roleTable. '.'. $idField .' = ' . $this->tableGateway->getTable() . '.' . $roleIdField);
+        $sql->join($roleProvider->getTableName(), $roleProvider->getTableName() . '.' .
+            $roleProvider->getIdentifierFieldName() . ' = ' . $this->tableGateway->getTable() . '.' .
+            $roleProvider->getRoleIdFieldName()
+        );
         $sql->where(array('user_id' => $authService->getIdentity()->getId()));
 
         $results = $this->tableGateway->selectWith($sql);
@@ -79,6 +77,14 @@ class ZfcUserZendDb implements ProviderInterface
         }
 
         return $roles;
+    }
+
+    /**
+     * @return \BjyAuthorize\Provider\Role\ZendDb
+     */
+    private function getZendDbRoleProvider()
+    {
+        return $this->userService->getServiceManager()->get('BjyAuthorize\Provider\Role\ZendDb');
     }
 
     /**

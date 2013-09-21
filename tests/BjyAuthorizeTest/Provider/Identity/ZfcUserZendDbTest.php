@@ -10,6 +10,7 @@ namespace BjyAuthorizeTest\Provider\Identity;
 
 use PHPUnit_Framework_TestCase;
 use BjyAuthorize\Provider\Identity\ZfcUserZendDb;
+use BjyAuthorize\Service\ZendDbRoleProviderServiceFactory;
 
 /**
  * {@see \BjyAuthorize\Provider\Identity\ZfcUserZendDb} test
@@ -56,6 +57,14 @@ class ZfcUserZendDbTest extends PHPUnit_Framework_TestCase
             ->will($this->returnValue($this->authService));
 
         $this->provider = new ZfcUserZendDb($this->tableGateway, $this->userService);
+    }
+
+    public function testGetZendDbRoleProvider()
+    {
+        $factory        = new ZendDbRoleProviderServiceFactory();
+        $serviceLocator = $this->getMock('Zend\\ServiceManager\\ServiceLocatorInterface');
+        $roleProvider   = $factory->createService($serviceLocator);
+        $this->assertInstanceOf('BjyAuthorize\\Provider\\Role\\ZendDb', $roleProvider);
     }
 
     /**
