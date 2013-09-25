@@ -10,7 +10,6 @@ namespace BjyAuthorizeTest\Provider\Identity;
 
 use PHPUnit_Framework_TestCase;
 use BjyAuthorize\Provider\Identity\ZfcUserZendDb;
-use BjyAuthorize\Service\ZendDbRoleProviderServiceFactory;
 
 /**
  * {@see \BjyAuthorize\Provider\Identity\ZfcUserZendDb} test
@@ -59,14 +58,6 @@ class ZfcUserZendDbTest extends PHPUnit_Framework_TestCase
         $this->provider = new ZfcUserZendDb($this->tableGateway, $this->userService);
     }
 
-    public function testGetZendDbRoleProvider()
-    {
-        $factory        = new ZendDbRoleProviderServiceFactory();
-        $serviceLocator = $this->getMock('Zend\\ServiceManager\\ServiceLocatorInterface');
-        $roleProvider   = $factory->createService($serviceLocator);
-        $this->assertInstanceOf('BjyAuthorize\\Provider\\Role\\ZendDb', $roleProvider);
-    }
-
     /**
      * @covers \BjyAuthorize\Provider\Identity\ZfcUserZendDb::getIdentityRoles
      * @covers \BjyAuthorize\Provider\Identity\ZfcUserZendDb::setDefaultRole
@@ -101,5 +92,12 @@ class ZfcUserZendDbTest extends PHPUnit_Framework_TestCase
     {
         $roles = $this->provider->getIdentityRoles();
         $this->assertEquals($roles, array(null));
+    }
+
+    public function testEmptyRoleProviderConfig()
+    {
+        list($tableName, $identifierFieldName) = $this->provider->getRoleProviderTableMeta(array());
+        $this->assertSame('user_role', $tableName);
+        $this->assertSame('id', $identifierFieldName);
     }
 }

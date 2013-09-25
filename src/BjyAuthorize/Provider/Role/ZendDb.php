@@ -70,38 +70,6 @@ class ZendDb implements ProviderInterface
     }
 
     /**
-     * @return string
-     */
-    public function getIdentifierFieldName()
-    {
-        return $this->identifierFieldName;
-    }
-
-    /**
-     * @return string
-     */
-    public function getParentRoleFieldName()
-    {
-        return $this->parentRoleFieldName;
-    }
-
-    /**
-     * @return string
-     */
-    public function getRoleIdFieldName()
-    {
-        return $this->roleIdFieldName;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTableName()
-    {
-        return $this->tableName;
-    }
-
-    /**
      * {@inheritDoc}
      */
     public function getRoles()

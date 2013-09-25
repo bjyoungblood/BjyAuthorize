@@ -57,15 +57,12 @@ class ZfcUserZendDb implements ProviderInterface
             return array($this->getDefaultRole());
         }
 
-        $roleProvider = $this->getZendDbRoleProvider();
+        list($tableName, $identifierFieldName) = $this->getRoleProviderTableMeta($this->userService->getServiceManager()->get('BjyAuthorize\Config'));
 
         // get roles associated with the logged in user
         $sql = new Select();
         $sql->from($this->tableGateway->getTable());
-        $sql->join($roleProvider->getTableName(), $roleProvider->getTableName() . '.' .
-            $roleProvider->getIdentifierFieldName() . ' = ' . $this->tableGateway->getTable() . '.' .
-            $roleProvider->getRoleIdFieldName()
-        );
+        $sql->join($tableName, $tableName . '.' . $identifierFieldName . ' = ' . $this->tableGateway->getTable() . '.role_id');
         $sql->where(array('user_id' => $authService->getIdentity()->getId()));
 
         $results = $this->tableGateway->selectWith($sql);
@@ -80,11 +77,42 @@ class ZfcUserZendDb implements ProviderInterface
     }
 
     /**
-     * @return \BjyAuthorize\Provider\Role\ZendDb
+     * @param $config
+     * @return array
      */
-    private function getZendDbRoleProvider()
+    public function getRoleProviderTableMeta($config)
     {
-        return $this->userService->getServiceManager()->get('BjyAuthorize\Provider\Role\ZendDb');
+        return array($this->getUserRoleTableName($config), $this->getUserRoleIdentifierFieldName($config));
+    }
+
+    /**
+     * @param $config
+     * @return string
+     */
+    private function getUserRoleTableName($config)
+    {
+        $tableName = 'user_role';
+        if (isset($config['role_providers']['BjyAuthorize\Provider\Role\ZendDb']) &&
+            isset($config['role_providers']['BjyAuthorize\Provider\Role\ZendDb']['table'])) {
+            $tableName = $config['role_providers']['BjyAuthorize\Provider\Role\ZendDb']['table'];
+        }
+
+        return $tableName;
+    }
+
+    /**
+     * @param $config
+     * @return string
+     */
+    private function getUserRoleIdentifierFieldName($config)
+    {
+        $identifierFieldName = 'id';
+        if (isset($config['role_providers']['BjyAuthorize\Provider\Role\ZendDb']) &&
+            isset($config['role_providers']['BjyAuthorize\Provider\Role\ZendDb']['identifier_field_name'])) {
+            $identifierFieldName = $config['role_providers']['BjyAuthorize\Provider\Role\ZendDb']['identifier_field_name'];
+        }
+
+        return $identifierFieldName;
     }
 
     /**
