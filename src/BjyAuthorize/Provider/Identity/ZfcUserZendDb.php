@@ -57,7 +57,9 @@ class ZfcUserZendDb implements ProviderInterface
             return array($this->getDefaultRole());
         }
 
-        list($tableName, $identifierFieldName) = $this->getRoleProviderTableMeta($this->userService->getServiceManager()->get('BjyAuthorize\Config'));
+        $config = $this->userService->getServiceManager()->get('BjyAuthorize\Config');
+        $tableName = $this->getUserRoleTableName($config);
+        $identifierFieldName = $this->getUserRoleIdentifierFieldName($config);
 
         // get roles associated with the logged in user
         $sql = new Select();
@@ -74,15 +76,6 @@ class ZfcUserZendDb implements ProviderInterface
         }
 
         return $roles;
-    }
-
-    /**
-     * @param $config
-     * @return array
-     */
-    public function getRoleProviderTableMeta($config)
-    {
-        return array($this->getUserRoleTableName($config), $this->getUserRoleIdentifierFieldName($config));
     }
 
     /**
