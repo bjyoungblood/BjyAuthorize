@@ -9,12 +9,9 @@
 namespace BjyAuthorize\Guard;
 
 use BjyAuthorize\Exception\UnAuthorizedException;
-use BjyAuthorize\Provider\Rule\ProviderInterface as RuleProviderInterface;
-use BjyAuthorize\Provider\Resource\ProviderInterface as ResourceProviderInterface;
 
 use Zend\EventManager\EventManagerInterface;
 use Zend\Mvc\MvcEvent;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Http\Request as HttpRequest;
 
 /**
@@ -23,49 +20,25 @@ use Zend\Http\Request as HttpRequest;
  *
  * @author Ben Youngblood <bx.youngblood@gmail.com>
  */
-class Controller implements GuardInterface, RuleProviderInterface, ResourceProviderInterface
+class Controller extends AbstractGuard
 {
     /**
      * Marker for invalid route errors
      */
     const ERROR = 'error-unauthorized-controller';
 
-    /**
-     * @var ServiceLocatorInterface
-     */
-    protected $serviceLocator;
-
-    /**
-     * @var array[]
-     */
-    protected $rules = array();
-
-    /**
-     * @var \Zend\Stdlib\CallbackHandler[]
-     */
-    protected $listeners = array();
-
-    /**
-     * @param array                   $rules
-     * @param ServiceLocatorInterface $serviceLocator
-     */
-    public function __construct(array $rules, ServiceLocatorInterface $serviceLocator)
+    protected function extractResourcesFromRule(array $rule)
     {
-        $this->serviceLocator = $serviceLocator;
+        $results        = array();
+        $rule['action'] = isset($rule['action']) ? (array) $rule['action'] : array(null);
 
-        foreach ($rules as $rule) {
-            if (!is_array($rule['roles'])) {
-                $rule['roles'] = array($rule['roles']);
-            }
-
-            $rule['action'] = isset($rule['action']) ? (array) $rule['action'] : array(null);
-
-            foreach ((array) $rule['controller'] as $controller) {
-                foreach ($rule['action'] as $action) {
-                    $this->rules[$this->getResourceName($controller, $action)] = $rule['roles'];
-                }
+        foreach ((array) $rule['controller'] as $controller) {
+            foreach ($rule['action'] as $action) {
+                $results[] = $this->getResourceName($controller, $action);
             }
         }
+
+        return $results;
     }
 
     /**
@@ -74,45 +47,6 @@ class Controller implements GuardInterface, RuleProviderInterface, ResourceProvi
     public function attach(EventManagerInterface $events)
     {
         $this->listeners[] = $events->attach(MvcEvent::EVENT_ROUTE, array($this, 'onDispatch'), -1000);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function detach(EventManagerInterface $events)
-    {
-        foreach ($this->listeners as $index => $listener) {
-            if ($events->detach($listener)) {
-                unset($this->listeners[$index]);
-            }
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getResources()
-    {
-        $resources = array();
-
-        foreach (array_keys($this->rules) as $resource) {
-            $resources[] = $resource;
-        }
-
-        return $resources;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getRules()
-    {
-        $rules = array();
-        foreach ($this->rules as $resource => $roles) {
-            $rules[] = array($roles, $resource);
-        }
-
-        return array('allow' => $rules);
     }
 
     /**

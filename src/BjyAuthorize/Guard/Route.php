@@ -9,12 +9,9 @@
 namespace BjyAuthorize\Guard;
 
 use BjyAuthorize\Exception\UnAuthorizedException;
-use BjyAuthorize\Provider\Rule\ProviderInterface as RuleProviderInterface;
-use BjyAuthorize\Provider\Resource\ProviderInterface as ResourceProviderInterface;
 
 use Zend\EventManager\EventManagerInterface;
 use Zend\Mvc\MvcEvent;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Route Guard listener, allows checking of permissions
@@ -22,43 +19,16 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  *
  * @author Ben Youngblood <bx.youngblood@gmail.com>
  */
-class Route implements GuardInterface, RuleProviderInterface, ResourceProviderInterface
+class Route extends AbstractGuard
 {
     /**
      * Marker for invalid route errors
      */
     const ERROR = 'error-unauthorized-route';
 
-    /**
-     * @var ServiceLocatorInterface
-     */
-    protected $serviceLocator;
-
-    /**
-     * @var array[]
-     */
-    protected $rules = array();
-
-    /**
-     * @var \Zend\Stdlib\CallbackHandler[]
-     */
-    protected $listeners = array();
-
-    /**
-     * @param array                   $rules
-     * @param ServiceLocatorInterface $serviceLocator
-     */
-    public function __construct(array $rules, ServiceLocatorInterface $serviceLocator)
+    protected function extractResourcesFromRule(array $rule)
     {
-        $this->serviceLocator = $serviceLocator;
-
-        foreach ($rules as $rule) {
-            if (!is_array($rule['roles'])) {
-                $rule['roles'] = array($rule['roles']);
-            }
-
-            $this->rules['route/' . $rule['route']] = $rule['roles'];
-        }
+        return array('route/' . $rule['route']);
     }
 
     /**
@@ -67,46 +37,6 @@ class Route implements GuardInterface, RuleProviderInterface, ResourceProviderIn
     public function attach(EventManagerInterface $events)
     {
         $this->listeners[] = $events->attach(MvcEvent::EVENT_ROUTE, array($this, 'onRoute'), -1000);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function detach(EventManagerInterface $events)
-    {
-        foreach ($this->listeners as $index => $listener) {
-            if ($events->detach($listener)) {
-                unset($this->listeners[$index]);
-            }
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getResources()
-    {
-        $resources = array();
-
-        foreach (array_keys($this->rules) as $resource) {
-            $resources[] = $resource;
-        }
-
-        return $resources;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getRules()
-    {
-        $rules = array();
-
-        foreach ($this->rules as $resource => $roles) {
-            $rules[] = array($roles, $resource);
-        }
-
-        return array('allow' => $rules);
     }
 
     /**
@@ -119,6 +49,7 @@ class Route implements GuardInterface, RuleProviderInterface, ResourceProviderIn
      */
     public function onRoute(MvcEvent $event)
     {
+        /* @var $service \BjyAuthorize\Service\Authorize */
         $service    = $this->serviceLocator->get('BjyAuthorize\Service\Authorize');
         $match      = $event->getRouteMatch();
         $routeName  = $match->getMatchedRouteName();
