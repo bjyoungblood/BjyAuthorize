@@ -10,9 +10,10 @@ namespace BjyAuthorize\Guard;
 
 use BjyAuthorize\Provider\Rule\ProviderInterface as RuleProviderInterface;
 use BjyAuthorize\Provider\Resource\ProviderInterface as ResourceProviderInterface;
+use \Zend\EventManager\AbstractListenerAggregate;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-abstract class AbstractGuard implements GuardInterface, RuleProviderInterface, ResourceProviderInterface
+abstract class AbstractGuard extends AbstractListenerAggregate implements GuardInterface, RuleProviderInterface, ResourceProviderInterface
 {
     /**
      * @var ServiceLocatorInterface
@@ -20,26 +21,26 @@ abstract class AbstractGuard implements GuardInterface, RuleProviderInterface, R
     protected $serviceLocator;
 
     /**
-     * @var \Zend\Stdlib\CallbackHandler[]
-     */
-    protected $listeners = array();
-
-    /**
      * @var array[]
      */
     protected $rules = array();
 
+    /**
+     *
+     * @param array                   $rules
+     * @param ServiceLocatorInterface $serviceLocator
+     */
     public function __construct(array $rules, ServiceLocatorInterface $serviceLocator)
     {
         $this->serviceLocator = $serviceLocator;
 
         foreach ($rules as $rule) {
-            $rule['roles'] = (array) $rule['roles'];
-
+            $rule['roles']  = (array) $rule['roles'];
             $rule['action'] = isset($rule['action']) ? (array) $rule['action'] : array(null);
 
             foreach ($this->extractResourcesFromRule($rule) as $resource) {
                 $this->rules[$resource] = array('roles' => (array) $rule['roles']);
+
                 if (isset($rule['assertion'])) {
                     $this->rules[$resource]['assertion'] = $rule['assertion'];
                 }

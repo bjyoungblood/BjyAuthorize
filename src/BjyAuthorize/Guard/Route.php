@@ -40,18 +40,6 @@ class Route extends AbstractGuard
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public function detach(EventManagerInterface $events)
-    {
-        foreach ($this->listeners as $index => $listener) {
-            if ($events->detach($listener)) {
-                unset($this->listeners[$index]);
-            }
-        }
-    }
-
-    /**
      * Event callback to be triggered on dispatch, causes application error triggering
      * in case of failed authorization check
      *

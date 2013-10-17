@@ -29,9 +29,9 @@ class Controller extends AbstractGuard
 
     protected function extractResourcesFromRule(array $rule)
     {
-        $results = array();
-
+        $results        = array();
         $rule['action'] = isset($rule['action']) ? (array) $rule['action'] : array(null);
+
         foreach ((array) $rule['controller'] as $controller) {
             foreach ($rule['action'] as $action) {
                 $results[] = $this->getResourceName($controller, $action);
@@ -47,18 +47,6 @@ class Controller extends AbstractGuard
     public function attach(EventManagerInterface $events)
     {
         $this->listeners[] = $events->attach(MvcEvent::EVENT_ROUTE, array($this, 'onDispatch'), -1000);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function detach(EventManagerInterface $events)
-    {
-        foreach ($this->listeners as $index => $listener) {
-            if ($events->detach($listener)) {
-                unset($this->listeners[$index]);
-            }
-        }
     }
 
     /**
