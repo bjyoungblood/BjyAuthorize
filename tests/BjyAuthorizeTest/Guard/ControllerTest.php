@@ -105,6 +105,27 @@ class ControllerTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @dataProvider controllersRulesWithAssertionProvider
+     *
+     * @covers \BjyAuthorize\Guard\Controller::__construct
+     * @covers \BjyAuthorize\Guard\Controller::getRules
+     *
+     * @param array     $rule
+     * @param int       $expectedCount
+     * @param string    $resource
+     * @param array     $roles
+     * @param string    $assertion
+     */
+    public function testGetRulesWithAssertion($rule, $expectedCount, $resource, $roles, $assertion)
+    {
+        $controller = new Controller(array($rule), $this->serviceLocator);
+        $rules      = $controller->getRules();
+
+        $this->assertCount($expectedCount, $rules['allow']);
+        $this->assertContains(array($roles, $resource, null, $assertion), $rules['allow']);
+    }
+
+    /**
      * @covers \BjyAuthorize\Guard\Controller::getResourceName
      */
     public function testGetResourceName()
@@ -419,6 +440,54 @@ class ControllerTest extends PHPUnit_Framework_TestCase
                 4,
                 'controller/test7-controller:test7-action',
                 array('admin5', 'user6')
+            )
+        );
+    }
+
+    /**
+     * Return a set of rules, with expected resources count, expected resource names,
+     * expected output rules and expected assertion.
+     *
+     * @return array
+     */
+    public function controllersRulesWithAssertionProvider()
+    {
+        return array(
+            array(
+                array(
+                    'controller' => 'test-controller',
+                    'action'     => 'test-action',
+                    'roles'      => array(
+                        'admin',
+                        'user',
+                    ),
+                    'assertion' => 'test-assertion'
+                ),
+                1,
+                'controller/test-controller:test-action',
+                array('admin', 'user'),
+                'test-assertion'
+            ),
+            array(
+                array(
+                    'controller' => array(
+                        'test6-controller',
+                        'test7-controller',
+                    ),
+                    'action'     => array(
+                        'test6-action',
+                        'test7-action',
+                    ),
+                    'roles'      => array(
+                        'admin5',
+                        'user6',
+                    ),
+                    'assertion' => 'test-assertion'
+                ),
+                4,
+                'controller/test6-controller:test6-action',
+                array('admin5', 'user6'),
+                'test-assertion'
             )
         );
     }
