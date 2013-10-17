@@ -13,7 +13,10 @@ use BjyAuthorize\Provider\Resource\ProviderInterface as ResourceProviderInterfac
 use \Zend\EventManager\AbstractListenerAggregate;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-abstract class AbstractGuard extends AbstractListenerAggregate implements GuardInterface, RuleProviderInterface, ResourceProviderInterface
+abstract class AbstractGuard extends AbstractListenerAggregate implements
+    GuardInterface,
+    RuleProviderInterface,
+    ResourceProviderInterface
 {
     /**
      * @var ServiceLocatorInterface
