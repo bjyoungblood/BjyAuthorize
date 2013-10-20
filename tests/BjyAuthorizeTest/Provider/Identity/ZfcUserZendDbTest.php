@@ -93,4 +93,11 @@ class ZfcUserZendDbTest extends PHPUnit_Framework_TestCase
         $roles = $this->provider->getIdentityRoles();
         $this->assertEquals($roles, array(null));
     }
+
+    public function testEmptyRoleProviderConfig()
+    {
+        list($tableName, $identifierFieldName) = $this->provider->getRoleProviderTableMeta(array());
+        $this->assertSame('user_role', $tableName);
+        $this->assertSame('id', $identifierFieldName);
+    }
 }
