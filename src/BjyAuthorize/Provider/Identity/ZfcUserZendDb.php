@@ -9,6 +9,7 @@
 namespace BjyAuthorize\Provider\Identity;
 
 use BjyAuthorize\Exception\InvalidRoleException;
+use BjyAuthorize\Provider\Role\ZendDb;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\Db\Sql\Select;
 use Zend\Permissions\Acl\Role\RoleInterface;
@@ -37,13 +38,20 @@ class ZfcUserZendDb implements ProviderInterface
     private $tableGateway;
 
     /**
-     * @param \Zend\Db\TableGateway\TableGateway $tableGateway
-     * @param \ZfcUser\Service\User              $userService
+     * @var \BjyAuthorize\Provider\Role\ZendDb
      */
-    public function __construct(TableGateway $tableGateway, User $userService)
+    private $zendDbRole;
+
+    /**
+     * @param \Zend\Db\TableGateway\TableGateway $tableGateway
+     * @param \ZfcUser\Service\User $userService
+     * @param \BjyAuthorize\Provider\Role\ZendDb $zendDb
+     */
+    public function __construct(TableGateway $tableGateway, User $userService, ZendDb $zendDbRole)
     {
         $this->tableGateway = $tableGateway;
         $this->userService  = $userService;
+        $this->zendDbRole   = $zendDbRole;
     }
 
     /**
@@ -57,14 +65,11 @@ class ZfcUserZendDb implements ProviderInterface
             return array($this->getDefaultRole());
         }
 
-        $config = $this->userService->getServiceManager()->get('BjyAuthorize\Config');
-        $tableName = $this->getUserRoleTableName($config);
-        $identifierFieldName = $this->getUserRoleIdentifierFieldName($config);
-
         // get roles associated with the logged in user
         $sql = new Select();
         $sql->from($this->tableGateway->getTable());
-        $sql->join($tableName, $tableName . '.' . $identifierFieldName . ' = ' . $this->tableGateway->getTable() . '.role_id');
+        $sql->join($this->zendDbRole->getTableName(), $this->zendDbRole->getTableName() . '.' .
+            $this->zendDbRole->getIdentifierFieldName() . ' = ' . $this->tableGateway->getTable() . '.role_id');
         $sql->where(array('user_id' => $authService->getIdentity()->getId()));
 
         $results = $this->tableGateway->selectWith($sql);
@@ -76,36 +81,6 @@ class ZfcUserZendDb implements ProviderInterface
         }
 
         return $roles;
-    }
-
-    /**
-     * @param $config
-     * @return string
-     */
-    private function getUserRoleTableName($config)
-    {
-        $tableName = 'user_role';
-        if (isset($config['role_providers']['BjyAuthorize\Provider\Role\ZendDb']) &&
-            isset($config['role_providers']['BjyAuthorize\Provider\Role\ZendDb']['table'])) {
-            $tableName = $config['role_providers']['BjyAuthorize\Provider\Role\ZendDb']['table'];
-        }
-
-        return $tableName;
-    }
-
-    /**
-     * @param $config
-     * @return string
-     */
-    private function getUserRoleIdentifierFieldName($config)
-    {
-        $identifierFieldName = 'id';
-        if (isset($config['role_providers']['BjyAuthorize\Provider\Role\ZendDb']) &&
-            isset($config['role_providers']['BjyAuthorize\Provider\Role\ZendDb']['identifier_field_name'])) {
-            $identifierFieldName = $config['role_providers']['BjyAuthorize\Provider\Role\ZendDb']['identifier_field_name'];
-        }
-
-        return $identifierFieldName;
     }
 
     /**

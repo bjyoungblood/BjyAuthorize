@@ -39,6 +39,11 @@ class ZfcUserZendDbTest extends PHPUnit_Framework_TestCase
     protected $provider;
 
     /**
+     * @var \BjyAuthorize\Provider\Role\ZendDb
+     */
+    protected $zendDbRole;
+
+    /**
      * {@inheritDoc}
      *
      * @covers \BjyAuthorize\Provider\Identity\ZfcUserZendDb::__construct
@@ -47,6 +52,7 @@ class ZfcUserZendDbTest extends PHPUnit_Framework_TestCase
     {
         $this->authService  = $this->getMock('Zend\Authentication\AuthenticationService');
         $this->userService  = $this->getMock('ZfcUser\Service\User');
+        $this->zendDbRole   = $this->getMock('BjyAuthorize\Provider\Role\ZendDb');
         $this->tableGateway = $this->getMock('Zend\Db\TableGateway\TableGateway', array(), array(), '', false);
 
         $this
@@ -55,7 +61,7 @@ class ZfcUserZendDbTest extends PHPUnit_Framework_TestCase
             ->method('getAuthService')
             ->will($this->returnValue($this->authService));
 
-        $this->provider = new ZfcUserZendDb($this->tableGateway, $this->userService);
+        $this->provider = new ZfcUserZendDb($this->tableGateway, $this->userService, $this->zendDbRole);
     }
 
     /**
@@ -92,12 +98,5 @@ class ZfcUserZendDbTest extends PHPUnit_Framework_TestCase
     {
         $roles = $this->provider->getIdentityRoles();
         $this->assertEquals($roles, array(null));
-    }
-
-    public function testEmptyRoleProviderConfig()
-    {
-        list($tableName, $identifierFieldName) = $this->provider->getRoleProviderTableMeta(array());
-        $this->assertSame('user_role', $tableName);
-        $this->assertSame('id', $identifierFieldName);
     }
 }

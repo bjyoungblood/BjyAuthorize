@@ -32,8 +32,9 @@ class ZfcUserZendDbIdentityProviderServiceFactory implements FactoryInterface
         /* @var $userService \ZfcUser\Service\User */
         $userService = $serviceLocator->get('zfcuser_user_service');
         $config      = $serviceLocator->get('BjyAuthorize\Config');
+        $zendDbRole  = $serviceLocator->get('BjyAuthorize\Provider\Role\ZendDb');
 
-        $provider = new ZfcUserZendDb($tableGateway, $userService);
+        $provider = new ZfcUserZendDb($tableGateway, $userService, $zendDbRole);
 
         $provider->setDefaultRole($config['default_role']);
 
