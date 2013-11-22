@@ -10,6 +10,7 @@ namespace BjyAuthorizeTest\Provider\Identity;
 
 use PHPUnit_Framework_TestCase;
 use BjyAuthorize\Provider\Identity\ZfcUserZendDb;
+use BjyAuthorize\Provider\Role\ZendDb;
 
 /**
  * {@see \BjyAuthorize\Provider\Identity\ZfcUserZendDb} test
@@ -52,7 +53,7 @@ class ZfcUserZendDbTest extends PHPUnit_Framework_TestCase
     {
         $this->authService  = $this->getMock('Zend\Authentication\AuthenticationService');
         $this->userService  = $this->getMock('ZfcUser\Service\User');
-        $this->zendDbRole   = $this->getMock('BjyAuthorize\Provider\Role\ZendDb');
+        $this->zendDbRole   = new ZendDb(array(), $this->getMock('Zend\ServiceManager\ServiceLocatorInterface'));
         $this->tableGateway = $this->getMock('Zend\Db\TableGateway\TableGateway', array(), array(), '', false);
 
         $this
