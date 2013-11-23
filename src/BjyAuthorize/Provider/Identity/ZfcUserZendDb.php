@@ -68,8 +68,11 @@ class ZfcUserZendDb implements ProviderInterface
         // get roles associated with the logged in user
         $sql = new Select();
         $sql->from($this->tableGateway->getTable());
-        $sql->join($this->zendDbRole->getTableName(), $this->zendDbRole->getTableName() . '.' .
-            $this->zendDbRole->getIdentifierFieldName() . ' = ' . $this->tableGateway->getTable() . '.role_id');
+        $sql->join(
+            $this->zendDbRole->getTableName(),
+            $this->zendDbRole->getTableName() . '.' . $this->zendDbRole->getIdentifierFieldName() . ' = ' .
+            $this->tableGateway->getTable() . '.role_id'
+        );
         $sql->where(array('user_id' => $authService->getIdentity()->getId()));
 
         $results = $this->tableGateway->selectWith($sql);
