@@ -37,7 +37,7 @@ class IsAllowed extends AbstractPlugin
      *
      * @return bool
      */
-    public function __invoke($resource, $privilege = null)
+    public static function __invoke($resource, $privilege = null)
     {
         return $this->authorizeService->isAllowed($resource, $privilege);
     }
