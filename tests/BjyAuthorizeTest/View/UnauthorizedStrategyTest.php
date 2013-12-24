@@ -98,20 +98,26 @@ class UnauthorizedStrategyTest extends PHPUnit_Framework_TestCase
         $viewModel
             ->expects($this->once())
             ->method('addChild')
-            ->with(
-                $this->callback(
+            ->will(
+                $this->returnCallback(
                     function (ModelInterface $model) use ($test) {
-                        return 'template/name' === $model->getTemplate();
+                        // using a return callback because of a bug in HHVM
+                        if ('template/name' !== $model->getTemplate()) {
+                            throw new \UnexpectedValueException('Template name does not match expectations!');
+                        }
                     }
                 )
             );
         $mvcEvent
             ->expects($this->once())
             ->method('setResponse')
-            ->with(
-                $this->callback(
+            ->will(
+                $this->returnCallback(
                     function (Response $response) use ($test) {
-                        return 403 === $response->getStatusCode();
+                        // using a return callback because of a bug in HHVM
+                        if (403 !== $response->getStatusCode()) {
+                            throw new \UnexpectedValueException('Response code not match expectations!');
+                        }
                     }
                 )
             );
