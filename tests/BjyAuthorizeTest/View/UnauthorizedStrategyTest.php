@@ -102,7 +102,7 @@ class UnauthorizedStrategyTest extends PHPUnit_Framework_TestCase
                 $this->returnCallback(
                     function (ModelInterface $model) use ($test) {
                         // using a return callback because of a bug in HHVM
-                        if ('template/name' === $model->getTemplate()) {
+                        if ('template/name' !== $model->getTemplate()) {
                             throw new \UnexpectedValueException('Template name does not match expectations!');
                         }
                     }
