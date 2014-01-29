@@ -38,7 +38,7 @@ class RedirectionStrategy implements ListenerAggregateInterface
      * @var \Zend\Stdlib\CallbackHandler[]
      */
     protected $listeners = array();
-
+    
     /**
      * {@inheritDoc}
      */
@@ -73,6 +73,21 @@ class RedirectionStrategy implements ListenerAggregateInterface
         $router     = $event->getRouter();
         $error      = $event->getError();
         $url        = $this->redirectUri;
+        
+        // This is the previous url to redirect to after login
+        $redirectAfterLogin = "";
+        
+        if (isset($routeMatch)) {        	
+        	$routeName = $routeMatch->getMatchedRouteName();
+			$routeParams = $routeMatch->getParams();
+			if (array_key_exists('lang', $routeParams)) {
+				$lang = $routeParams['lang'];	
+			} else {
+				$lang = 'mg';
+			}			
+			$redirectAfterLogin = $router->assemble($routeParams, array('name' => $routeName));
+        }
+        
 
         if ($result instanceof Response
             || ! $routeMatch
@@ -90,7 +105,10 @@ class RedirectionStrategy implements ListenerAggregateInterface
         }
 
         if (null === $url) {
-            $url = $router->assemble(array(), array('name' => $this->redirectRoute));
+            $url = $router->assemble(array('lang' => $lang), array('name' => $this->redirectRoute));
+            if (strlen($redirectAfterLogin) > 0) {
+            	$url .= '?redirect='.$redirectAfterLogin;
+            }
         }
 
         $response = $response ?: new Response();
@@ -116,4 +134,5 @@ class RedirectionStrategy implements ListenerAggregateInterface
     {
         $this->redirectUri = $redirectUri ? (string) $redirectUri : null;
     }
+    
 }
