@@ -34,11 +34,21 @@ class ObjectRepositoryProvider implements ProviderInterface
     }
 
     /**
+     * Returns list of available roles
+     *
+     * @return array Role Entities
+     */
+    protected function getAllRoles()
+    {
+        return $this->objectRepository->findAll();
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function getRoles()
     {
-        $result = $this->objectRepository->findAll();
+        $result = $this->getAllRoles();
         $roles  = array();
 
         // Pass One: Build each object
