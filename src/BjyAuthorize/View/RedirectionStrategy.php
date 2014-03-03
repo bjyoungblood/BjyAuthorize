@@ -79,12 +79,7 @@ class RedirectionStrategy implements ListenerAggregateInterface
         
         if (isset($routeMatch)) {        	
         	$routeName = $routeMatch->getMatchedRouteName();
-			$routeParams = $routeMatch->getParams();
-			if (array_key_exists('lang', $routeParams)) {
-				$lang = $routeParams['lang'];	
-			} else {
-				$lang = 'mg';
-			}			
+			$routeParams = $routeMatch->getParams();				
 			$redirectAfterLogin = $router->assemble($routeParams, array('name' => $routeName));
         }
         
@@ -105,7 +100,7 @@ class RedirectionStrategy implements ListenerAggregateInterface
         }
 
         if (null === $url) {
-            $url = $router->assemble(array('lang' => $lang), array('name' => $this->redirectRoute));
+            $url = $router->assemble(array(), array('name' => $this->redirectRoute));
             if (strlen($redirectAfterLogin) > 0) {
             	$url .= '?redirect='.$redirectAfterLogin;
             }
