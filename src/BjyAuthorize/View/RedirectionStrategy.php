@@ -103,6 +103,7 @@ class RedirectionStrategy implements ListenerAggregateInterface
             $url = $router->assemble(array(), array('name' => $this->redirectRoute));
             if (strlen($redirectAfterLogin) > 0) {
             	$url .= '?redirect='.$redirectAfterLogin;
+
             }
         }
 
