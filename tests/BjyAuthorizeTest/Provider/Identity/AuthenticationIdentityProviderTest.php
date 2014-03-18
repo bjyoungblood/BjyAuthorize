@@ -90,7 +90,7 @@ class AuthenticationIdentityProviderTest extends PHPUnit_Framework_TestCase
 
         $this->provider->setDefaultRole($defaultRole);
 
-        $this->assertSame($this->provider->getIdentityRoles(), array($defaultRole));
+        $this->assertSame(array($defaultRole), $this->provider->getIdentityRoles());
     }
 
     /**
