@@ -132,6 +132,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
     {
         $this->assertSame('controller/test1:action1', $this->controllerGuard->getResourceName('test1', 'action1'));
         $this->assertSame('controller/test2', $this->controllerGuard->getResourceName('test2'));
+        $this->assertSame('controller/test3:get', $this->controllerGuard->getResourceName('test3', 'GET'));
     }
 
     /**

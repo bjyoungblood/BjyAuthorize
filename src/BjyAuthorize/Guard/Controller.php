@@ -60,7 +60,7 @@ class Controller extends AbstractGuard
     public function getResourceName($controller, $action = null)
     {
         if (isset($action)) {
-            return sprintf('controller/%s:%s', $controller, $action);
+            return sprintf('controller/%s:%s', $controller, strtolower($action));
         }
 
         return sprintf('controller/%s', $controller);
