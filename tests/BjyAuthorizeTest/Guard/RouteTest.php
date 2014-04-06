@@ -43,7 +43,7 @@ class RouteTest extends PHPUnit_Framework_TestCase
     {
         parent::setUp();
 
-        $this->serviceLocator = $locator = $this->getMock('Zend\\ServiceManager\\ServiceLocatorInterface');
+        $this->serviceLocator = $this->getMock('Zend\\ServiceManager\\ServiceLocatorInterface');
         $this->authorize = $authorize = $this->getMock('BjyAuthorize\\Service\\Authorize', array(), array(), '', false);
         $this->routeGuard = new Route(array(), $this->serviceLocator);
 
