@@ -20,19 +20,16 @@ class ZfcUserDoctrineMongoODMTest extends PHPUnit_Framework_TestCase
 {
 
     /**
-     *
      * @var \Zend\Authentication\AuthenticationService \PHPUnit_Framework_MockObject_MockObject
      */
     protected $authService;
 
     /**
-     *
      * @var \ZfcUser\Service\User \PHPUnit_Framework_MockObject_MockObject
      */
     protected $userService;
 
     /**
-     *
      * @var \BjyAuthorize\Provider\Identity\ZfcUserZendDb
      */
     protected $provider;
@@ -40,7 +37,7 @@ class ZfcUserDoctrineMongoODMTest extends PHPUnit_Framework_TestCase
     /**
      * {@inheritDoc}
      *
-     * @covers \BjyAuthorize\Provider\Identity\ZfcUserZendDb::__construct
+     * @covers \BjyAuthorize\Provider\Identity\ZfcUserDoctrineMongoODM::__construct
      */
     public function setUp()
     {
@@ -55,8 +52,8 @@ class ZfcUserDoctrineMongoODMTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \BjyAuthorize\Provider\Identity\ZfcUserZendDb::getIdentityRoles
-     * @covers \BjyAuthorize\Provider\Identity\ZfcUserZendDb::setDefaultRole
+     * @covers \BjyAuthorize\Provider\Identity\ZfcUserDoctrineMongoODM::getIdentityRoles
+     * @covers \BjyAuthorize\Provider\Identity\ZfcUserDoctrineMongoODM::setDefaultRole
      */
     public function testGetIdentityRolesWithNoAuthIdentity()
     {
@@ -68,7 +65,7 @@ class ZfcUserDoctrineMongoODMTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \BjyAuthorize\Provider\Identity\ZfcUserZendDb::getIdentityRoles
+     * @covers \BjyAuthorize\Provider\Identity\ZfcUserDoctrineMongoODM::getIdentityRoles
      */
     public function testSetGetDefaultRole()
     {
@@ -84,7 +81,7 @@ class ZfcUserDoctrineMongoODMTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \BjyAuthorize\Provider\Identity\ZfcUserZendDb::getIdentityRoles
+     * @covers \BjyAuthorize\Provider\Identity\ZfcUserDoctrineMongoODM::getIdentityRoles
      */
     public function testGetIdentityRoles()
     {

@@ -13,15 +13,16 @@ use BjyAuthorize\Exception\InvalidRoleException;
 use Zend\Permissions\Acl\Role\RoleInterface;
 use ZfcUser\Service\User;
 use BjyAuthorize\Provider\Identity\ProviderInterface;
+use ZfcUser\Entity\UserInterface;
 
 /**
- * Identity provider based on {@see \BjyAuthorize\Provider\Identity\ZfcUserZendDb}
+ * Identity provider for DoctrineMongoODM
+ * 
  *
  * @author Mat Wright <mat@bstechnologies.com>
  */
 class ZfcUserDoctrineMongoODM implements ProviderInterface
 {
-
     /**
      *
      * @var User
@@ -34,19 +35,15 @@ class ZfcUserDoctrineMongoODM implements ProviderInterface
      */
     protected $defaultRole;
 
-    /**
-     *
-     * @var string
-     */
-    protected $collectionName = 'role';
 
     /**
      *
      * @param \ZfcUser\Service\User $userService            
      */
-    public function __construct(User $userService)
+    public function __construct(User $userService, RoleInterface $defaultRole)
     {
         $this->userService = $userService;
+        $this->defaultRole = $defaultRole;
     }
 
     /**
@@ -56,9 +53,10 @@ class ZfcUserDoctrineMongoODM implements ProviderInterface
     {
         $authService = $this->userService->getAuthService();
         
-        if (! $authService->hasIdentity()) {
+        //if user is not logged in or identity is not a valid User object return default role
+        if (! $authService->getIdentity() || !$authService->getIdentity() instanceof UserInterface) {
             return array(
-                $this->getDefaultRole()
+                $this->defaultRole
             );
         }
         
@@ -73,27 +71,6 @@ class ZfcUserDoctrineMongoODM implements ProviderInterface
         return $roles;
     }
 
-    /**
-     *
-     * @return string \Zend\Permissions\Acl\Role\RoleInterface
-     */
-    public function getDefaultRole()
-    {
-        return $this->defaultRole;
-    }
 
-    /**
-     *
-     * @param string|\Zend\Permissions\Acl\Role\RoleInterface $defaultRole            
-     *
-     * @throws \BjyAuthorize\Exception\InvalidRoleException
-     */
-    public function setDefaultRole($defaultRole)
-    {
-        if (! ($defaultRole instanceof RoleInterface || is_string($defaultRole))) {
-            throw InvalidRoleException::invalidRoleInstance($defaultRole);
-        }
-        
-        $this->defaultRole = $defaultRole;
-    }
+ 
 }
