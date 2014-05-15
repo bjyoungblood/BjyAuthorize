@@ -45,7 +45,8 @@
     "suggests": {
         "zendframework/zend-developer-tools": "if you need to see current authorization details while developing",
         "zf-commons/zfc-user":                "zfc-user provides a good default setup to get started with bjyauthorize",
-        "zf-commons/zfc-user-doctrine-orm":   "If you want to use BjyAuthorize with Doctrine ORM"
+        "zf-commons/zfc-user-doctrine-orm":   "If you want to use BjyAuthorize with Doctrine ORM",
+        "zf-commons/zfc-user-doctrine-mongo-odm": "If you want to use BjyAuthorize with Doctrine ODM"
     },
     "autoload": {
         "psr-0": {
