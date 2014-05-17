@@ -64,7 +64,7 @@ This is my guard:
             array('controller' => 'zfcuser', 'roles' => array()),
             array('controller' => array('Module\Controller\Menu1Controller'), 'roles' => array('admin')),
             array('controller' => array('Module\Controller\Menu2Controller'), 'roles' => array('admin','affiliate')),
-            array('controller' => array('Module\Controller\Menu1Controller'), 'roles' => array('admin','affiliate','guest')),
+            array('controller' => array('Module\Controller\Menu3Controller'), 'roles' => array('admin','affiliate','guest')),
     ),
 
 I hope the above is useful to you!
