@@ -50,12 +50,12 @@ class Module implements
         return array(
             'factories' => array(
                 'isAllowed' => function (AbstractPluginManager $pluginManager) {
-                        $serviceLocator = $pluginManager->getServiceLocator();
-                        /* @var $authorize \BjyAuthorize\Service\Authorize */
-                        $authorize = $serviceLocator->get('BjyAuthorize\Service\Authorize');
+                    $serviceLocator = $pluginManager->getServiceLocator();
+                    /* @var $authorize \BjyAuthorize\Service\Authorize */
+                    $authorize = $serviceLocator->get('BjyAuthorize\Service\Authorize');
 
-                        return new View\Helper\IsAllowed($authorize);
-                    }
+                    return new View\Helper\IsAllowed($authorize);
+                }
             ),
         );
     }
@@ -68,12 +68,12 @@ class Module implements
         return array(
             'factories' => array(
                 'isAllowed' => function (AbstractPluginManager $pluginManager) {
-                        $serviceLocator = $pluginManager->getServiceLocator();
-                        /* @var $authorize \BjyAuthorize\Service\Authorize */
-                        $authorize = $serviceLocator->get('BjyAuthorize\Service\Authorize');
+                    $serviceLocator = $pluginManager->getServiceLocator();
+                    /* @var $authorize \BjyAuthorize\Service\Authorize */
+                    $authorize = $serviceLocator->get('BjyAuthorize\Service\Authorize');
 
-                        return new Controller\Plugin\IsAllowed($authorize);
-                    }
+                    return new Controller\Plugin\IsAllowed($authorize);
+                }
             ),
         );
     }
