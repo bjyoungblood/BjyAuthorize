@@ -15,10 +15,12 @@ at bootstrap time:
 namespace MyApp;
 
 use BjyAuthorize\View\RedirectionStrategy;
+use Zend\EventManager\EventInterface;
 
 class Module
 {
-    public function onBootstrap(EventInterface $e) {
+    public function onBootstrap(EventInterface $e) 
+    {
         $application  = $e->getTarget();
         $eventManager = $application->getEventManager();
 
@@ -32,5 +34,8 @@ class Module
 
         $eventManager->attach($strategy);
     }
+   
+    public function getConfig() { /** common code **/  }
+    public function getAutoloaderConfig()  { /** common code **/ }
 }
 ```
