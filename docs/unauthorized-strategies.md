@@ -35,7 +35,6 @@ class Module
         $eventManager->attach($strategy);
     }
    
-    public function getConfig() { /** common code **/  }
-    public function getAutoloaderConfig()  { /** common code **/ }
+    // ...
 }
 ```
