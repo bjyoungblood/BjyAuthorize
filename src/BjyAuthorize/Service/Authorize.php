@@ -312,7 +312,10 @@ class Authorize
     protected function loadResource(array $resources, $parent = null)
     {
         foreach ($resources as $key => $value) {
-            if (is_string($key)) {
+            if($value instanceof ResourceInterface) {
+                //TODO add support for heirarchical resources.
+                $key = $value;
+            } elseif (is_string($key)) {
                 $key = new GenericResource($key);
             } elseif (is_int($key)) {
                 $key = new GenericResource($value);
