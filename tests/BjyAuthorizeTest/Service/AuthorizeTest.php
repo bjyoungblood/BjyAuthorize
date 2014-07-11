@@ -102,8 +102,8 @@ class AuthorizeTest extends PHPUnit_Framework_TestCase
     public function testCanAddResourceInterfaceToLoadResource()
     {
         $cache = $this->getMockBuilder('Zend\Cache\Storage\Adapter\Filesystem')
-            ->disableOriginalConstructor()
-            ->getMock();
+                    ->disableOriginalConstructor()
+                ->getMock();
 
         $cache->expects($this->once())->method('getItem');
         $cache->expects($this->once())->method('setItem');
@@ -128,10 +128,10 @@ class AuthorizeTest extends PHPUnit_Framework_TestCase
             ->method('getResources')
             ->will(
                 $this->returnValue(
-                    array(new \Zend\Permissions\Acl\Resource\GenericResource('test')
+                    array(new \Zend\Permissions\Acl\Resource\GenericResource('test'))
                 )
-            )
-        );
+            );
+
         $serviceLocator->setService('BjyAuthorize\Provider\Resource\Config', $resourceProviderMock);
 
         $configMock = $this->getMockBuilder('BjyAuthorize\Service\ConfigServiceFactory')
@@ -142,9 +142,8 @@ class AuthorizeTest extends PHPUnit_Framework_TestCase
             ->expects($this->any())
             ->method('createService')
             ->will(
-                $this->returnValue(array($resourceProviderMock)
-            )
-        );
+                $this->returnValue(array($resourceProviderMock))
+            );
 
         $serviceLocator->setFactory('BjyAuthorize\ResourceProviders', $configMock);
 
