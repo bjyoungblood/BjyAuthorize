@@ -94,4 +94,75 @@ class AuthorizeTest extends PHPUnit_Framework_TestCase
         $authorize = new Authorize(array('cache_key' => 'acl'), $serviceLocator);
         $authorize->load();
     }
+
+
+    /**
+     * @group fix-loadResource
+     */
+    public function testCanAddResourceInterfaceToLoadResource()
+    {
+        $cache = $this->getMockBuilder('Zend\Cache\Storage\Adapter\Filesystem')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $cache->expects($this->once())->method('getItem');
+        $cache->expects($this->once())->method('setItem');
+
+        $serviceLocator = new ServiceManager();
+        $serviceLocator->setService('BjyAuthorize\Cache', $cache);
+        $serviceLocator->setService(
+            'BjyAuthorize\Provider\Identity\ProviderInterface',
+            $this->getMock('BjyAuthorize\Provider\Identity\ProviderInterface')
+        );
+        $serviceLocator->setService(
+            'BjyAuthorize\RoleProviders',
+            $this->getMock('BjyAuthorize\Service\RoleProvidersServiceFactory')
+        );
+
+        $resourceProviderMock = $this->getMockBuilder('BjyAuthorize\Provider\Resource\Config')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $resourceProviderMock
+            ->expects($this->once())
+            ->method('getResources')
+            ->will(
+                $this->returnValue(
+                    array(new \Zend\Permissions\Acl\Resource\GenericResource('test')
+                )
+            )
+        );
+        $serviceLocator->setService('BjyAuthorize\Provider\Resource\Config', $resourceProviderMock);
+
+        $configMock = $this->getMockBuilder('BjyAuthorize\Service\ConfigServiceFactory')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $configMock
+            ->expects($this->any())
+            ->method('createService')
+            ->will(
+                $this->returnValue(array($resourceProviderMock)
+            )
+        );
+
+        $serviceLocator->setFactory('BjyAuthorize\ResourceProviders', $configMock);
+
+        $serviceLocator->setService(
+            'BjyAuthorize\RuleProviders',
+            $this->getMock('BjyAuthorize\Service\RuleProvidersServiceFactory')
+        );
+        $serviceLocator->setService(
+            'BjyAuthorize\Guards',
+            $this->getMock('BjyAuthorize\Service\GuardsServiceFactory')
+        );
+
+        $authorize = new Authorize(array('cache_key' => 'acl'), $serviceLocator);
+        $authorize->load();
+
+        $acl = $authorize->getAcl();
+
+        $this->assertTrue($acl->hasResource('test'));
+
+    }
 }

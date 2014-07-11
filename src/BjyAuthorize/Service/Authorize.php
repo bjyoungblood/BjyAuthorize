@@ -313,7 +313,7 @@ class Authorize
     {
         foreach ($resources as $key => $value) {
             if ($value instanceof ResourceInterface) {
-                //TODO add support for heirarchical resources.
+                //TODO add support for hierarchical resources.
                 $key = $value;
             } elseif (is_string($key)) {
                 $key = new GenericResource($key);
