@@ -223,6 +223,49 @@ class AuthorizeTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($acl->hasResource('test'));
     }
 
+
+    /**
+     * @group bjyoungblood/BjyAuthorize#258
+     */
+    public function testCanAddNonTraversableResourceToLoadResourceThrowsInvalidArgumentException()
+    {
+        $this->setExpectedException('\InvalidArgumentException');
+
+        $serviceLocator = $this->serviceLocator;
+        $serviceLocator->setAllowOverride(true);
+
+        $resourceProviderMock = $this->getMockBuilder('BjyAuthorize\Provider\Resource\Config')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $resourceProviderMock
+            ->expects($this->once())
+            ->method('getResources')
+            ->will(
+                $this->returnValue(
+                    'test'
+                )
+            );
+
+        $serviceLocator->setService('BjyAuthorize\Provider\Resource\Config', $resourceProviderMock);
+
+        $configMock = $this->getMockBuilder('BjyAuthorize\Service\ConfigServiceFactory')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $configMock
+            ->expects($this->any())
+            ->method('createService')
+            ->will(
+                $this->returnValue(array($resourceProviderMock))
+            );
+
+        $serviceLocator->setFactory('BjyAuthorize\ResourceProviders', $configMock);
+
+        $authorize = new Authorize(array('cache_key' => 'acl'), $this->serviceLocator);
+        $authorize->load();
+    }
+
     /**
      * @group bjyoungblood/BjyAuthorize#258
      */
