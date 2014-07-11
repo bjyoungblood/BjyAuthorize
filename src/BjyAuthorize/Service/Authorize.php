@@ -284,7 +284,7 @@ class Authorize
      */
     protected function addRoles($roles)
     {
-        if (!is_array($roles)) {
+        if (!is_array($roles) && !($roles instanceof \Traversable)) {
             $roles = array($roles);
         }
 
@@ -309,11 +309,14 @@ class Authorize
      * @param string[]|\Zend\Permissions\Acl\Resource\ResourceInterface[] $resources
      * @param mixed|null                                                  $parent
      */
-    protected function loadResource(array $resources, $parent = null)
+    protected function loadResource($resources, $parent = null)
     {
+        if (!is_array($resources) && !($resources instanceof \Traversable)) {
+            throw new \InvalidArgumentException('Resources argument must be traversable: ' . print_r($resources, true));
+        }
+
         foreach ($resources as $key => $value) {
             if ($value instanceof ResourceInterface) {
-                //TODO add support for hierarchical resources.
                 $key = $value;
             } elseif (is_string($key)) {
                 $key = new GenericResource($key);
@@ -321,7 +324,7 @@ class Authorize
                 $key = new GenericResource($value);
             }
 
-            if (is_array($value)) {
+            if (is_array($value) || ($value instanceof \Traversable)) {
                 $this->acl->addResource($key, $parent);
                 $this->loadResource($value, $key);
             } elseif (!$this->acl->hasResource($key)) {
