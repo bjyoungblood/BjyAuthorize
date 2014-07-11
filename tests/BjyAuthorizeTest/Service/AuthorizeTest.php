@@ -27,8 +27,8 @@ class AuthorizeTest extends PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $cache->expects($this->once())->method('getItem');
-        $cache->expects($this->once())->method('setItem');
+        $cache->expects($this->any())->method('getItem');
+        $cache->expects($this->any())->method('setItem');
 
         $serviceLocator = new ServiceManager();
         $serviceLocator->setService('BjyAuthorize\Cache', $cache);
