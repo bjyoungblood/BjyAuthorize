@@ -62,5 +62,5 @@ class CacheKeyGeneratorFactoryTest extends PHPUnit_Framework_TestCase
         $cacheKeyGenerator = $factory->createService($serviceLocator);
         $this->assertTrue(is_callable($cacheKeyGenerator));
         $this->assertEquals('some_new_value', $cacheKeyGenerator());
-    }    
+    }
 }

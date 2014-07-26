@@ -54,7 +54,10 @@ class AuthorizeTest extends PHPUnit_Framework_TestCase
             'BjyAuthorize\Guards',
             $this->getMock('BjyAuthorize\Service\GuardsServiceFactory')
         );
-
+        $serviceLocator->setService(
+            'BjyAuthorize\CacheKeyGenerator', 
+            function() { return 'bjyauthorize-acl'; }
+        );
         $this->serviceLocator = $serviceLocator;
     }
 
@@ -88,7 +91,10 @@ class AuthorizeTest extends PHPUnit_Framework_TestCase
             $this->getMock('BjyAuthorize\Provider\Identity\ProviderInterface')
         );
         $serviceManager->setService('BjyAuthorize\Cache', $cache);
-
+        $serviceManager->setService(
+            'BjyAuthorize\CacheKeyGenerator', 
+            function() { return 'bjyauthorize-acl'; }
+        );
         $authorize = new Authorize(array('cache_key' => 'bjyauthorize-acl'), $serviceManager);
         $authorize->load();
 
@@ -129,7 +135,10 @@ class AuthorizeTest extends PHPUnit_Framework_TestCase
             'BjyAuthorize\Guards',
             $this->getMock('BjyAuthorize\Service\GuardsServiceFactory')
         );
-
+        $serviceLocator->setService(
+            'BjyAuthorize\CacheKeyGenerator', 
+            function() { return 'acl'; }
+        );
         $authorize = new Authorize(array('cache_key' => 'acl'), $serviceLocator);
         $authorize->load();
     }
