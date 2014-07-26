@@ -29,11 +29,11 @@ class CacheKeyGeneratorFactory implements FactoryInterface
         $config = $serviceLocator->get('BjyAuthorize\Config');
         $cacheKey = (!empty($config['cache_key'])) ? $config['cache_key'] : 'bjyauthorize_acl';
 
-        $callback = function() use ($cacheKey) {
+        $callback = function () use ($cacheKey) {
             return $cacheKey;
         };
 
-        if(!empty($config['cache_key_generator']) && is_callable($config['cache_key_generator'])) {
+        if (!empty($config['cache_key_generator']) && is_callable($config['cache_key_generator'])) {
             $callback = $config['cache_key_generator'];
         }
 

@@ -46,7 +46,7 @@ class CacheKeyGeneratorFactoryTest extends PHPUnit_Framework_TestCase
     {
         $serviceLocator = $this->getMock('Zend\\ServiceManager\\ServiceLocatorInterface');
         $config         = array(
-            'cache_key_generator' => function() {
+            'cache_key_generator' => function () {
                 return 'some_new_value';
             }
         );
