@@ -263,7 +263,7 @@ class Authorize
         /** @var $cache StorageInterface */
         $cache      = $this->serviceLocator->get('BjyAuthorize\Cache');
 
-        /** @var $cacheKeyGenerator Callable */
+        /** @var $cacheKeyGenerator callable */
         $cacheKeyGenerator = $this->serviceLocator->get('BjyAuthorize\CacheKeyGenerator');
         $cacheKey = $cacheKeyGenerator();
 

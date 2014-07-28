@@ -33,10 +33,6 @@ class CacheKeyGeneratorFactory implements FactoryInterface
             return $cacheKey;
         };
 
-        if (!empty($config['cache_key_generator']) && is_callable($config['cache_key_generator'])) {
-            $callback = $config['cache_key_generator'];
-        }
-
         return $callback;
     }
 }
