@@ -264,8 +264,8 @@ class Authorize
         $cache      = $this->serviceLocator->get('BjyAuthorize\Cache');
 
         /** @var $cacheKeyGenerator callable */
-        $cacheKeyGenerator = $this->serviceLocator->get('BjyAuthorize\CacheKeyGenerator');
-        $cacheKey = $cacheKeyGenerator();
+        $cacheKeyGenerator  = $this->serviceLocator->get('BjyAuthorize\CacheKeyGenerator');
+        $cacheKey           = $cacheKeyGenerator();
 
         $success    = false;
         $this->acl  = $cache->getItem($cacheKey, $success);

@@ -22,17 +22,15 @@ class CacheKeyGeneratorFactory implements FactoryInterface
      * Create a cache key
      *
      * @param   ServiceLocatorInterface $serviceLocator
-     * @return  Callable
+     * @return  callable
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('BjyAuthorize\Config');
-        $cacheKey = (!empty($config['cache_key'])) ? $config['cache_key'] : 'bjyauthorize_acl';
+        $config     = $serviceLocator->get('BjyAuthorize\Config');
+        $cacheKey   = empty($config['cache_key']) ? 'bjyauthorize_acl' : (string) $config['cache_key'];
 
-        $callback = function () use ($cacheKey) {
+        return function () use ($cacheKey) {
             return $cacheKey;
         };
-
-        return $callback;
     }
 }
