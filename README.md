@@ -41,16 +41,6 @@ php composer.phar require bjyoungblood/bjy-authorize:1.4.*
 php composer.phar require zf-commons/zfc-user:0.1.*
 ```
 
-### Git Submodule
-
- 1. Install [ZfcUser](https://github.com/ZF-Commons/ZfcUser) (follow its installation docs)
- 2. Clone this project into your `./vendor/` directory
-
-    ```sh
-    cd vendor
-    git clone git://github.com/bjyoungblood/BjyAuthorize.git
-    ```
-
 ## Configuration
 
 Following steps apply if you want to use `ZfcUser` with `Zend\Db`. If you want to use Doctrine ORM/ODM, you should
