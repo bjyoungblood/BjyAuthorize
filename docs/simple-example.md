@@ -19,9 +19,11 @@ To get this to work, we setup a resource in our `config/autoload/bjyauthorize.gl
 
 ```php
 return [
-    'resource_providers' => [
-        'BjyAuthorize\Provider\Resource\Config' => [
-            'menu' => [],
+    'bjyauthorize' => [
+        'resource_providers' => [
+            'BjyAuthorize\Provider\Resource\Config' => [
+                'menu' => [],
+            ],
         ],
     ],
 ];
@@ -33,12 +35,15 @@ Then, under `'rule_providers'`, We setup following rules (in
 `config/autoload/bjyauthorize.global.php` again):
 
 ```php
-    'rule_providers' => [
-        'BjyAuthorize\Provider\Rule\Config' => [
-            'allow' => [
-                [['administration'], 'menu', ['menu_menu1']],
-                [['administration', 'affiliate'], 'menu', ['menu_menu2']],
-                [[‘administration', 'affiliate', 'guest'], 'menu', ['menu_menu3']],
+return [
+    'bjyauthorize' => [
+        'rule_providers' => [
+            'BjyAuthorize\Provider\Rule\Config' => [
+                'allow' => [
+                    [['administration'], 'menu', ['menu_menu1']],
+                    [['administration', 'affiliate'], 'menu', ['menu_menu2']],
+                    [[‘administration', 'affiliate', 'guest'], 'menu', ['menu_menu3']],
+                ],
             ],
         ],
     ],
@@ -85,12 +90,14 @@ done via configuration (again in `config/autoload/bjyauthorize.global.php`):
 
 ```php
 return [
-    'guards' => [
-        'BjyAuthorize\Guard\Controller' => [
-            ['controller' => 'zfcuser', 'roles' => []],
-            ['controller' => ['Module\Controller\Menu1Controller'], 'roles' => ['admin']],
-            ['controller' => ['Module\Controller\Menu2Controller'], 'roles' => ['admin','affiliate']],
-            ['controller' => ['Module\Controller\Menu3Controller'], 'roles' => ['admin','affiliate','guest']],
+    'bjyauthorize' => [
+        'guards' => [
+            'BjyAuthorize\Guard\Controller' => [
+                ['controller' => 'zfcuser', 'roles' => []],
+                ['controller' => ['Module\Controller\Menu1Controller'], 'roles' => ['admin']],
+                ['controller' => ['Module\Controller\Menu2Controller'], 'roles' => ['admin','affiliate']],
+                ['controller' => ['Module\Controller\Menu3Controller'], 'roles' => ['admin','affiliate','guest']],
+            ],
         ],
     ],
 ];
