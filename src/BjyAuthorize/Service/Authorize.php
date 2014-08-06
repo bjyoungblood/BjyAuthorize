@@ -262,12 +262,17 @@ class Authorize
 
         /** @var $cache StorageInterface */
         $cache      = $this->serviceLocator->get('BjyAuthorize\Cache');
+
+        /** @var $cacheKeyGenerator callable */
+        $cacheKeyGenerator  = $this->serviceLocator->get('BjyAuthorize\CacheKeyGenerator');
+        $cacheKey           = $cacheKeyGenerator();
+
         $success    = false;
-        $this->acl  = $cache->getItem($this->config['cache_key'], $success);
+        $this->acl  = $cache->getItem($cacheKey, $success);
 
         if (!($this->acl instanceof Acl) || !$success) {
             $this->loadAcl();
-            $cache->setItem($this->config['cache_key'], $this->acl);
+            $cache->setItem($cacheKey, $this->acl);
         }
 
         $this->setIdentityProvider($this->serviceLocator->get('BjyAuthorize\Provider\Identity\ProviderInterface'));
