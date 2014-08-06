@@ -50,19 +50,21 @@ These rules grant access to `'menu_menu1'` to the `'administrator'` role, `'menu
 
 Finally I used the **view helper**, provided by BjyAuthorize, to grant the required access:
 
-    <ul>
-	<?php if ($this->isAllowed( 'menu', 'menu_menu1' )) { ?>
-    		<li>Menu 1</li>
-	<?php } ?>
+```php
+<ul>
+<?php if ($this->isAllowed( 'menu', 'menu_menu1' )) { ?>
+    <li>Menu 1</li>
+<?php } ?>
 
-	<?php if ($this->isAllowed( 'menu', ‘menu'_menu2 )) { ?>
-    		<li>Menu 2</li>
-	<?php } ?>
+<?php if ($this->isAllowed( 'menu', ‘menu'_menu2 )) { ?>
+    <li>Menu 2</li>
+<?php } ?>
 
-	<?php if ($this->isAllowed( 'menu', ‘menu'_menu2 )) { ?>
-    		<li>Menu 3</li>
-	<?php } ?>
-    </ul>
+<?php if ($this->isAllowed( 'menu', ‘menu'_menu2 )) { ?>
+    <li>Menu 3</li>
+<?php } ?>
+</ul>
+```
 
 So now if an admin is logged in he will see all the menu options, an affiliate will see option 2 and 3 while a guest the 3rd option.
 
