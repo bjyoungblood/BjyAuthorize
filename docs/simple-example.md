@@ -21,7 +21,7 @@ To get this to work, we setup a resource in our `config/autoload/bjyauthorize.gl
 return [
     'bjyauthorize' => [
         'resource_providers' => [
-            'BjyAuthorize\Provider\Resource\Config' => [
+            \BjyAuthorize\Provider\Resource\Config::class => [
                 'menu' => [],
             ],
         ],
@@ -38,7 +38,7 @@ Then, under `'rule_providers'`, We setup following rules (in
 return [
     'bjyauthorize' => [
         'rule_providers' => [
-            'BjyAuthorize\Provider\Rule\Config' => [
+            \BjyAuthorize\Provider\Rule\Config::class => [
                 'allow' => [
                     [['administration'], 'menu', ['menu_menu1']],
                     [['administration', 'affiliate'], 'menu', ['menu_menu2']],
@@ -92,7 +92,7 @@ done via configuration (again in `config/autoload/bjyauthorize.global.php`):
 return [
     'bjyauthorize' => [
         'guards' => [
-            'BjyAuthorize\Guard\Controller' => [
+            \BjyAuthorize\Guard\Controller::class => [
                 ['controller' => 'zfcuser', 'roles' => []],
                 ['controller' => ['Module\Controller\Menu1Controller'], 'roles' => ['admin']],
                 ['controller' => ['Module\Controller\Menu2Controller'], 'roles' => ['admin','affiliate']],
