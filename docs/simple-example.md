@@ -1,52 +1,65 @@
-I decided to use BjyAuthorize/ZfcUser as a way to control access to certain pages in an administration by virtue of the users status. This is what I used it for:
+`BjyAuthorize` can be used as a way to control access to certain pages in an administration by virtue 
+of the user status. Here is an example on how this can be done:
 
 ### Controlling what html a user can see in a view:
 
-My view consisted of three menu options:
+The view to be modified consisted of three menu options:
 
-    <ul>
-        <li>Menu 1</li>
-        <li>Menu 2</li>
-        <ii>Menu 3</li>
-    </ul>
+```php
+<ul>
+    <li>Menu 1</li>
+    <li>Menu 2</li>
+    <ii>Menu 3</li>
+</ul>
+```
 
-The admin can see all three menus, the affiliate menu 2 / 3, and the guest menu 3 only.
+The admin can see all three menus, the affiliate can see menu #2 and #3, and the guest #3 only.
 
-To get this to work I setup a resource in the config/autoload/bjyauthorize.global.php file.
+To get this to work, we setup a resource in our `config/autoload/bjyauthorize.global.php` file.
 
-    'resource_providers' => array(
-        'BjyAuthorize\Provider\Resource\Config' => array(
-            'menu' => array(),
-        ),
-    ),
+```php
+return [
+    'resource_providers' => [
+        'BjyAuthorize\Provider\Resource\Config' => [
+            'menu' => [],
+        ],
+    ],
+];
+```
 
-I name the resource '**menu**' as it is specific to the menu items in my view.
+The name for the resource is `'menu'`, as it is specific to the menu items in this view.
 
-Then, under 'rule providers' I setup the following. Notice how I have included the 'menu' resource from above:
+Then, under `'rule_providers'`, We setup following rules:
 
-   'rule_providers' => array(
-        'BjyAuthorize\Provider\Rule\Config' => array(
+```php
+    'rule_providers' => [
+        'BjyAuthorize\Provider\Rule\Config' => [
             'allow' => array(
-                array( array( 'administration' ), 'menu', array( 'menu_menu1 ) ),
-                array( array( 'administration’,’affiliate’ ), 'menu', array( 'menu_menu2’ ) ),
-                array( array( ‘administration’,’affiliate’,’guest’ ), 'menu', array( 'menu_menu3’ ) ),
-            ),
-        ),
-    ),
+                [['administration'], 'menu', ['menu_menu1']],
+                [['administration', 'affiliate'], 'menu', ['menu_menu2']],
+                [[‘administration', 'affiliate', 'guest'], 'menu', ['menu_menu3']],
+            ],
+        ],
+    ],
+];
+```
+
+These rules grant access to `'menu_menu1'` to the `'administrator'` role, `'menu_menu2'` to the
+`'affiliate'` as well as the `'administrator'` and `'menu_menu3'` to all 3 existing roles.
 
 
 Finally I used the **view helper**, provided by BjyAuthorize, to grant the required access:
 
     <ul>
-	<?php if ($this->isAllowed( 'menu', 'menu_menu1’ )) { ?>
+	<?php if ($this->isAllowed( 'menu', 'menu_menu1' )) { ?>
     		<li>Menu 1</li>
 	<?php } ?>
 
-	<?php if ($this->isAllowed( 'menu', ‘menu’_menu2 )) { ?>
+	<?php if ($this->isAllowed( 'menu', ‘menu'_menu2 )) { ?>
     		<li>Menu 2</li>
 	<?php } ?>
 
-	<?php if ($this->isAllowed( 'menu', ‘menu’_menu2 )) { ?>
+	<?php if ($this->isAllowed( 'menu', ‘menu'_menu2 )) { ?>
     		<li>Menu 3</li>
 	<?php } ?>
     </ul>
