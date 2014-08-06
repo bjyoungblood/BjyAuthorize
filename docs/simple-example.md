@@ -1,5 +1,5 @@
-`BjyAuthorize` can be used as a way to control access to certain pages in an administration by virtue 
-of the user status. Here is an example on how this can be done:
+`BjyAuthorize` can be used as a way to control access to certain pages in an administration by 
+virtue of the user status. Here is an example on how this can be done:
 
 ### Controlling what html a user can see in a view:
 
@@ -29,12 +29,13 @@ return [
 
 The name for the resource is `'menu'`, as it is specific to the menu items in this view.
 
-Then, under `'rule_providers'`, We setup following rules:
+Then, under `'rule_providers'`, We setup following rules (in 
+`config/autoload/bjyauthorize.global.php` again):
 
 ```php
     'rule_providers' => [
         'BjyAuthorize\Provider\Rule\Config' => [
-            'allow' => array(
+            'allow' => [
                 [['administration'], 'menu', ['menu_menu1']],
                 [['administration', 'affiliate'], 'menu', ['menu_menu2']],
                 [[‘administration', 'affiliate', 'guest'], 'menu', ['menu_menu3']],
@@ -48,38 +49,49 @@ These rules grant access to `'menu_menu1'` to the `'administrator'` role, `'menu
 `'affiliate'` as well as the `'administrator'` and `'menu_menu3'` to all 3 existing roles.
 
 
-Finally I used the **view helper**, provided by BjyAuthorize, to grant the required access:
+Finally we use the `isAllowed` **view helper**, provided by BjyAuthorize, to limit access to menu 
+items:
 
 ```php
 <ul>
-<?php if ($this->isAllowed( 'menu', 'menu_menu1' )) { ?>
+<?php if ($this->isAllowed('menu', 'menu_menu1')) { ?>
     <li>Menu 1</li>
 <?php } ?>
 
-<?php if ($this->isAllowed( 'menu', ‘menu'_menu2 )) { ?>
+<?php if ($this->isAllowed('menu', ‘menu'_menu2 )) { ?>
     <li>Menu 2</li>
 <?php } ?>
 
-<?php if ($this->isAllowed( 'menu', ‘menu'_menu2 )) { ?>
+<?php if ($this->isAllowed('menu', ‘menu'_menu2)) { ?>
     <li>Menu 3</li>
 <?php } ?>
 </ul>
 ```
 
-So now if an admin is logged in he will see all the menu options, an affiliate will see option 2 and 3 while a guest the 3rd option.
+This will hide or show the items in our menu according to our configured ACL rules and the 
+current logged in user.
 
 ### Disabling the page content associated to a route:
 
-Obviously the above only disables the navigation and if someone knows the URL they can still access the information. BjyAuthorize has a useful thing called a 'guard' to deal with this. As each of my controllers are specific to a specific user role, I simply use a guard to control access to the pages (Actions) delivered by the controllers.
+Obviously, what provided so far only **disables** the links to those sections of our site, 
+so we **MUST** prevent direct access to those features of the application to unauthorized
+users.
 
-This is my guard:
+BjyAuthorize's main feature is exactly this: "guarding" against unauthorized acces, exactly
+like a firewall.
 
-    'guards' => array(
-        'BjyAuthorize\Guard\Controller' => array(
-            array('controller' => 'zfcuser', 'roles' => array()),
-            array('controller' => array('Module\Controller\Menu1Controller'), 'roles' => array('admin')),
-            array('controller' => array('Module\Controller\Menu2Controller'), 'roles' => array('admin','affiliate')),
-            array('controller' => array('Module\Controller\Menu3Controller'), 'roles' => array('admin','affiliate','guest')),
-    ),
+In order to do that, we have to configure the "guards" provided by the module, which is usually
+done via configuration (again in `config/autoload/bjyauthorize.global.php`):
 
-I hope the above is useful to you!
+```php
+return [
+    'guards' => [
+        'BjyAuthorize\Guard\Controller' => [
+            ['controller' => 'zfcuser', 'roles' => []],
+            ['controller' => ['Module\Controller\Menu1Controller'], 'roles' => ['admin']],
+            ['controller' => ['Module\Controller\Menu2Controller'], 'roles' => ['admin','affiliate']],
+            ['controller' => ['Module\Controller\Menu3Controller'], 'roles' => ['admin','affiliate','guest']],
+        ],
+    ],
+];
+```
