@@ -56,6 +56,7 @@ return array(
     'service_manager' => array(
         'factories' => array(
             'BjyAuthorize\Cache'                    => 'BjyAuthorize\Service\CacheFactory',
+            'BjyAuthorize\CacheKeyGenerator'        => 'BjyAuthorize\Service\CacheKeyGeneratorFactory',
             'BjyAuthorize\Config'                   => 'BjyAuthorize\Service\ConfigServiceFactory',
             'BjyAuthorize\Guards'                   => 'BjyAuthorize\Service\GuardsServiceFactory',
             'BjyAuthorize\RoleProviders'            => 'BjyAuthorize\Service\RoleProvidersServiceFactory',
