@@ -96,7 +96,7 @@ return [
                 'guest' => [],
                 'user'  => ['children' => [
                     'admin' => [],
-                )],
+                ]],
             ],
 
             // this will load roles from the user_role table in a database
