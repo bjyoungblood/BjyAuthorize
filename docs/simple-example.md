@@ -42,7 +42,7 @@ return [
                 'allow' => [
                     [['administration'], 'menu', ['menu_menu1']],
                     [['administration', 'affiliate'], 'menu', ['menu_menu2']],
-                    [[‘administration', 'affiliate', 'guest'], 'menu', ['menu_menu3']],
+                    [['administration', 'affiliate', 'guest'], 'menu', ['menu_menu3']],
                 ],
             ],
         ],
