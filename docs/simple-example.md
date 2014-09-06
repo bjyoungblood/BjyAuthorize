@@ -42,7 +42,7 @@ return [
                 'allow' => [
                     [['administration'], 'menu', ['menu_menu1']],
                     [['administration', 'affiliate'], 'menu', ['menu_menu2']],
-                    [[‘administration', 'affiliate', 'guest'], 'menu', ['menu_menu3']],
+                    [['administration', 'affiliate', 'guest'], 'menu', ['menu_menu3']],
                 ],
             ],
         ],
@@ -63,11 +63,11 @@ items:
     <li>Menu 1</li>
 <?php } ?>
 
-<?php if ($this->isAllowed('menu', ‘menu'_menu2 )) { ?>
+<?php if ($this->isAllowed('menu', 'menu_menu2')) { ?>
     <li>Menu 2</li>
 <?php } ?>
 
-<?php if ($this->isAllowed('menu', ‘menu'_menu2)) { ?>
+<?php if ($this->isAllowed('menu', 'menu_menu2')) { ?>
     <li>Menu 3</li>
 <?php } ?>
 </ul>
