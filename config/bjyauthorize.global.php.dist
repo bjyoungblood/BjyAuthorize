@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Don't just copy and paste, please change/add/remove values according to your needs
+ */
+
 return array(
     'bjyauthorize' => array(
 
