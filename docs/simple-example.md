@@ -67,7 +67,7 @@ items:
     <li>Menu 2</li>
 <?php } ?>
 
-<?php if ($this->isAllowed('menu', 'menu_menu2')) { ?>
+<?php if ($this->isAllowed('menu', 'menu_menu3')) { ?>
     <li>Menu 3</li>
 <?php } ?>
 </ul>
