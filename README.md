@@ -72,7 +72,7 @@ return [
          * be applied to the active user. the identity provider tells us which
          * roles the "identity role" should inherit from.
          * for ZfcUser, this will be your default identity provider
-	 */
+        */
         'identity_provider' => \BjyAuthorize\Provider\Identity\ZfcUserZendDb::class,
 
         /* If you only have a default role and an authenticated role, you can
