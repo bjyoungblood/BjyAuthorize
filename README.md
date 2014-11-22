@@ -54,10 +54,13 @@ also check the [doctrine documentation](https://github.com/bjyoungblood/BjyAutho
  4. Create a `./config/autoload/bjyauthorize.global.php` file and fill it with
     configuration variable values as described in the following annotated example.
 
-Here is an annotated sample configuration file:
+Here is an annotated sample configuration file: 
 
 ```php
 <?php
+
+// For PHP <= 5.4, you should replace any ::class references with strings
+// remove the first \ and the ::class part and encase in single quotes
 
 return [
     'bjyauthorize' => [
@@ -68,9 +71,8 @@ return [
         /* this module uses a meta-role that inherits from any roles that should
          * be applied to the active user. the identity provider tells us which
          * roles the "identity role" should inherit from.
-         *
          * for ZfcUser, this will be your default identity provider
-         */
+        */
         'identity_provider' => \BjyAuthorize\Provider\Identity\ZfcUserZendDb::class,
 
         /* If you only have a default role and an authenticated role, you can

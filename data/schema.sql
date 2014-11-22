@@ -10,7 +10,7 @@ CREATE  TABLE IF NOT EXISTS `user_role` (
 ) ENGINE = InnoDB DEFAULT CHARACTER SET = utf8 COLLATE = utf8_unicode_ci;
 
 CREATE  TABLE IF NOT EXISTS `user_role_linker` (
-  `user_id` INT UNSIGNED NOT NULL,
+  `user_id` INT(11) UNSIGNED NOT NULL,
   `role_id` INT(11) NOT NULL,
   PRIMARY KEY (`user_id`, `role_id`),
   INDEX `idx_role_id` (`role_id` ASC),
