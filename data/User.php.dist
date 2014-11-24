@@ -57,6 +57,7 @@ class User implements UserInterface, ProviderInterface
 
     /**
      * @var int
+     * @ORM\Column(type="integer")
      */
     protected $state;
 
