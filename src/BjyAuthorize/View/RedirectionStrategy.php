@@ -35,6 +35,11 @@ class RedirectionStrategy implements ListenerAggregateInterface
     protected $redirectUri;
 
     /**
+     * @var bool add query parameter 'redirect' to redirect URL if true
+     */
+    protected $addQueryRedirect = true;
+
+    /**
      * @var \Zend\Stdlib\CallbackHandler[]
      */
     protected $listeners = array();
@@ -66,6 +71,13 @@ class RedirectionStrategy implements ListenerAggregateInterface
      */
     public function onDispatchError(MvcEvent $event)
     {
+        // Skip redirection for authenticated users
+        $serviceManager = $event->getTarget()->getServiceManager();
+        $hasIdentity = $serviceManager->get('zfcuser_auth_service')->hasIdentity();
+        if ($hasIdentity) {
+            return;
+        }
+
         // Do nothing if the result is a response object
         $result     = $event->getResult();
         $routeMatch = $event->getRouteMatch();
@@ -91,6 +103,12 @@ class RedirectionStrategy implements ListenerAggregateInterface
 
         if (null === $url) {
             $url = $router->assemble(array(), array('name' => $this->redirectRoute));
+            if ($this->addQueryRedirect) {
+                $redirectUrl = $router->assemble($routeMatch->getParams(), array(
+                    'name' => $routeMatch->getMatchedRouteName(),
+                ));
+                $url .= '?redirect=' . $redirectUrl;
+            }
         }
 
         $response = $response ?: new Response();
@@ -116,4 +134,21 @@ class RedirectionStrategy implements ListenerAggregateInterface
     {
         $this->redirectUri = $redirectUri ? (string) $redirectUri : null;
     }
+
+    /**
+     * @return bool
+     */
+    public function getAddQueryRedirect() {
+        return $this->addQueryRedirect;
+    }
+
+    /**
+     * @param bool $addQueryRedirect
+     * @return RedirectionStrategy
+     */
+    public function setAddQueryRedirect($addQueryRedirect) {
+        $this->addQueryRedirect = $addQueryRedirect;
+        return $this;
+    }
+
 }
