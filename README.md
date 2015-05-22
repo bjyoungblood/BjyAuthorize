@@ -7,7 +7,7 @@
 [![Latest Unstable Version](https://poser.pugx.org/bjyoungblood/bjy-authorize/v/unstable.png)](https://packagist.org/packages/bjyoungblood/bjy-authorize)
 [![Dependency Status](https://www.versioneye.com/package/php--bjyoungblood--bjy-authorize/badge.png)](https://www.versioneye.com/package/php--bjyoungblood--bjy-authorize)
 
-This module is designed provide a facade for `Zend\Permissions\Acl` that will
+This module is designed to provide a facade for `Zend\Permissions\Acl` that will
 ease its usage with modules and applications. By default, it provides simple
 setup via config files or by using `Zend\Db` or Doctrine ORM/ODM (via ZfcUserDoctrineORM).
 
