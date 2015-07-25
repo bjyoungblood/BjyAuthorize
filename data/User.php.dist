@@ -72,7 +72,7 @@ class User implements UserInterface, ProviderInterface
     protected $roles;
 
     /**
-     * Initialies the roles variable.
+     * Initializes the roles variable.
      */
     public function __construct()
     {
