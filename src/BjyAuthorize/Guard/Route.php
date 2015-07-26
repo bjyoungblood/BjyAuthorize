@@ -52,9 +52,9 @@ class Route extends AbstractGuard
         /* @var $service \BjyAuthorize\Service\Authorize */
         $service    = $this->serviceLocator->get('BjyAuthorize\Service\Authorize');
         $match      = $event->getRouteMatch();
-        $routeName  = $match->getMatchedRouteName();
+        $routeName  = $this->applyWildcardRules($match->getMatchedRouteName());
 
-        if ($service->isAllowed('route/' . $routeName)) {
+        if ($service->isAllowed($routeName)) {
             return;
         }
 
@@ -67,5 +67,14 @@ class Route extends AbstractGuard
         $app = $event->getTarget();
 
         $app->getEventManager()->trigger(MvcEvent::EVENT_DISPATCH_ERROR, $event);
+    }
+    
+    protected function applyWildcardRules($routeName) {
+        foreach($this->rules as $ruleName => $properties) {
+            if (fnmatch($ruleName, 'route/' . $routeName)) {
+                return $ruleName;
+            }
+        }
+        return 'route/' . $routeName;
     }
 }
