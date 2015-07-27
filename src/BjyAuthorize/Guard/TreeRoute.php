@@ -33,14 +33,14 @@ class TreeRoute extends Route
         $lastSlashPos   = strlen($routeName);
 
         do {
-            $routeNameBase = substr($routeNameBase, 0,  $lastSlashPos);
+            $routeNameBase = substr($routeNameBase, 0, $lastSlashPos);
             if ($service->isAllowed('route/' . $routeNameBase)) {
                 return;
             }
             if (isset($this->rules['route/' . $routeNameBase])) {
                 break;
             }
-        } while($lastSlashPos = strrpos($routeNameBase, '/'));
+        } while ($lastSlashPos = strrpos($routeNameBase, '/'));
 
         $event->setError(static::ERROR);
         $event->setParam('route', $routeName);
@@ -52,5 +52,4 @@ class TreeRoute extends Route
 
         $app->getEventManager()->trigger(MvcEvent::EVENT_DISPATCH_ERROR, $event);
     }
-
 }

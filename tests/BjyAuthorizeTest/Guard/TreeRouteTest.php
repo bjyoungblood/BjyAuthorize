@@ -89,7 +89,13 @@ class TreeRouteTest extends PHPUnit_Framework_TestCase
 
 
         $identityRole = new Role('user');
-        $identityProvider = $this->getMock('BjyAuthorize\Provider\Identity\AuthenticationIdentityProvider', array(), array(), '', false);
+        $identityProvider = $this->getMock(
+            'BjyAuthorize\Provider\Identity\AuthenticationIdentityProvider',
+            array(),
+            array(),
+            '',
+            false
+        );
         $identityProvider
             ->expects($this->any())
             ->method('getIdentityRoles')
@@ -117,7 +123,7 @@ class TreeRouteTest extends PHPUnit_Framework_TestCase
         $serviceManager->setService('BjyAuthorize\RuleProviders', array());
         $serviceManager->setService('BjyAuthorize\Guards', array($treeRouteGuard));
         $serviceManager->setService('BjyAuthorize\Cache', $cache);
-        $serviceManager->setService('BjyAuthorize\CacheKeyGenerator', function() {
+        $serviceManager->setService('BjyAuthorize\CacheKeyGenerator', function () {
             return 'bjyauthorize_acl';
         });
 
