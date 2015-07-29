@@ -11,7 +11,7 @@ namespace BjyAuthorize\Provider\Identity;
 use BjyAuthorize\Exception\InvalidRoleException;
 use BjyAuthorize\Provider\Role\ProviderInterface as RoleProviderInterface;
 use Zend\Permissions\Acl\Role\RoleInterface;
-use Zend\Authentication\AuthenticationService;
+use Zend\Authentication\AuthenticationServiceInterface;
 
 /**
  * Simple identity provider to handle simply guest|user
@@ -21,7 +21,7 @@ use Zend\Authentication\AuthenticationService;
 class AuthenticationIdentityProvider implements ProviderInterface
 {
     /**
-     * @var AuthenticationService
+     * @var AuthenticationServiceInterface
      */
     protected $authService;
 
@@ -36,9 +36,9 @@ class AuthenticationIdentityProvider implements ProviderInterface
     protected $authenticatedRole = 'user';
 
     /**
-     * @param AuthenticationService $authService
+     * @param AuthenticationServiceInterface $authService
      */
-    public function __construct(AuthenticationService $authService)
+    public function __construct(AuthenticationServiceInterface $authService)
     {
         $this->authService = $authService;
     }

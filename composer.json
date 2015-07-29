@@ -26,13 +26,13 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=5.3.3",
-        "zendframework/zend-permissions-acl": "~2.2",
-        "zendframework/zend-mvc":             "~2.2",
-        "zendframework/zend-eventmanager":    "~2.2",
-        "zendframework/zend-servicemanager":  "~2.2",
-        "zendframework/zend-http":            "~2.2",
-        "zendframework/zend-view":            "~2.2",
-        "zendframework/zend-cache":           "~2.2"
+        "zendframework/zend-permissions-acl": "~2.3",
+        "zendframework/zend-mvc":             "~2.3",
+        "zendframework/zend-eventmanager":    "~2.3",
+        "zendframework/zend-servicemanager":  "~2.3",
+        "zendframework/zend-http":            "~2.3",
+        "zendframework/zend-view":            "~2.3",
+        "zendframework/zend-cache":           "~2.3"
     },
     "require-dev": {
         "phpunit/phpunit":                    "~3.7",
