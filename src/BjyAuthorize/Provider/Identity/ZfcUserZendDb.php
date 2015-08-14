@@ -9,6 +9,7 @@
 namespace BjyAuthorize\Provider\Identity;
 
 use BjyAuthorize\Exception\InvalidRoleException;
+use BjyAuthorize\Provider\Role\ZendDb;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\Db\Sql\Select;
 use Zend\Permissions\Acl\Role\RoleInterface;
@@ -32,23 +33,25 @@ class ZfcUserZendDb implements ProviderInterface
     protected $defaultRole;
 
     /**
-     * @var string
-     */
-    protected $tableName = 'user_role_linker';
-
-    /**
      * @var \Zend\Db\TableGateway\TableGateway
      */
     private $tableGateway;
 
     /**
-     * @param \Zend\Db\TableGateway\TableGateway $tableGateway
-     * @param \ZfcUser\Service\User              $userService
+     * @var \BjyAuthorize\Provider\Role\ZendDb
      */
-    public function __construct(TableGateway $tableGateway, User $userService)
+    private $zendDbRole;
+
+    /**
+     * @param \Zend\Db\TableGateway\TableGateway $tableGateway
+     * @param \ZfcUser\Service\User $userService
+     * @param \BjyAuthorize\Provider\Role\ZendDb $zendDb
+     */
+    public function __construct(TableGateway $tableGateway, User $userService, ZendDb $zendDbRole)
     {
         $this->tableGateway = $tableGateway;
         $this->userService  = $userService;
+        $this->zendDbRole   = $zendDbRole;
     }
 
     /**
@@ -64,10 +67,12 @@ class ZfcUserZendDb implements ProviderInterface
 
         // get roles associated with the logged in user
         $sql = new Select();
-
-        $sql->from($this->tableName);
-        // @todo these fields should eventually be configurable
-        $sql->join('user_role', 'user_role.id = ' . $this->tableName . '.role_id');
+        $sql->from($this->tableGateway->getTable());
+        $sql->join(
+            $this->zendDbRole->getTableName(),
+            $this->zendDbRole->getTableName() . '.' . $this->zendDbRole->getIdentifierFieldName() . ' = ' .
+            $this->tableGateway->getTable() . '.role_id'
+        );
         $sql->where(array('user_id' => $authService->getIdentity()->getId()));
 
         $results = $this->tableGateway->selectWith($sql);

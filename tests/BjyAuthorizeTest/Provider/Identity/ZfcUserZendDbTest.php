@@ -10,6 +10,7 @@ namespace BjyAuthorizeTest\Provider\Identity;
 
 use PHPUnit_Framework_TestCase;
 use BjyAuthorize\Provider\Identity\ZfcUserZendDb;
+use BjyAuthorize\Provider\Role\ZendDb;
 
 /**
  * {@see \BjyAuthorize\Provider\Identity\ZfcUserZendDb} test
@@ -39,6 +40,11 @@ class ZfcUserZendDbTest extends PHPUnit_Framework_TestCase
     protected $provider;
 
     /**
+     * @var \BjyAuthorize\Provider\Role\ZendDb
+     */
+    protected $zendDbRole;
+
+    /**
      * {@inheritDoc}
      *
      * @covers \BjyAuthorize\Provider\Identity\ZfcUserZendDb::__construct
@@ -47,6 +53,7 @@ class ZfcUserZendDbTest extends PHPUnit_Framework_TestCase
     {
         $this->authService  = $this->getMock('Zend\Authentication\AuthenticationService');
         $this->userService  = $this->getMock('ZfcUser\Service\User');
+        $this->zendDbRole   = new ZendDb(array(), $this->getMock('Zend\ServiceManager\ServiceLocatorInterface'));
         $this->tableGateway = $this->getMock('Zend\Db\TableGateway\TableGateway', array(), array(), '', false);
 
         $this
@@ -55,7 +62,7 @@ class ZfcUserZendDbTest extends PHPUnit_Framework_TestCase
             ->method('getAuthService')
             ->will($this->returnValue($this->authService));
 
-        $this->provider = new ZfcUserZendDb($this->tableGateway, $this->userService);
+        $this->provider = new ZfcUserZendDb($this->tableGateway, $this->userService, $this->zendDbRole);
     }
 
     /**

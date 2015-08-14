@@ -45,6 +45,22 @@ class ZendDb implements ProviderInterface
     protected $parentRoleFieldName = 'parent_id';
 
     /**
+     * @return string
+     */
+    public function getTableName()
+    {
+        return $this->tableName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIdentifierFieldName()
+    {
+        return $this->identifierFieldName;
+    }
+
+    /**
      * @param                         $options
      * @param ServiceLocatorInterface $serviceLocator
      */
