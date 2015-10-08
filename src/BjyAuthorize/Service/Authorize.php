@@ -12,6 +12,7 @@ use BjyAuthorize\Provider\Role\ProviderInterface as RoleProvider;
 use BjyAuthorize\Provider\Resource\ProviderInterface as ResourceProvider;
 use BjyAuthorize\Provider\Rule\ProviderInterface as RuleProvider;
 use BjyAuthorize\Provider\Identity\ProviderInterface as IdentityProvider;
+use Zend\Permissions\Acl\Assertion\AssertionAggregate;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Permissions\Acl\Acl;
 use Zend\Permissions\Acl\Exception\InvalidArgumentException;
@@ -348,12 +349,21 @@ class Authorize
      */
     protected function loadRule(array $rule, $type)
     {
-        $privileges = $assertion = null;
+        $privileges = $assertions = null;
         $ruleSize   = count($rule);
 
         if (4 === $ruleSize) {
-            list($roles, $resources, $privileges, $assertion) = $rule;
-            $assertion = $this->serviceLocator->get($assertion);
+            list($roles, $resources, $privileges, $assertions) = $rule;
+            if (is_array($assertions) && count($assertions) > 1) {
+                $aggregate = new AssertionAggregate();
+                foreach ($assertions as $assertion) {
+                    $assertion = $this->serviceLocator->get($assertion);
+                    $aggregate->addAssertion($assertion);
+                }
+                $assertions = $aggregate;
+            } elseif (is_array($assertions)) {
+                $assertions = reset($assertions);
+            }
         } elseif (3 === $ruleSize) {
             list($roles, $resources, $privileges) = $rule;
         } elseif (2 === $ruleSize) {
@@ -362,14 +372,14 @@ class Authorize
             throw new \InvalidArgumentException('Invalid rule definition: ' . print_r($rule, true));
         }
 
-        if (is_string($assertion)) {
-            $assertion = $this->serviceLocator->get($assertion);
+        if (is_string($assertions)) {
+            $assertions = $this->serviceLocator->get($assertions);
         }
 
         if (static::TYPE_ALLOW === $type) {
-            $this->acl->allow($roles, $resources, $privileges, $assertion);
+            $this->acl->allow($roles, $resources, $privileges, $assertions);
         } else {
-            $this->acl->deny($roles, $resources, $privileges, $assertion);
+            $this->acl->deny($roles, $resources, $privileges, $assertions);
         }
     }
 

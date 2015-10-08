@@ -26,7 +26,7 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=5.3.3",
-        "zendframework/zend-permissions-acl": "~2.2",
+        "zendframework/zend-permissions-acl": "~2.3",
         "zendframework/zend-mvc":             "~2.2",
         "zendframework/zend-eventmanager":    "~2.2",
         "zendframework/zend-servicemanager":  "~2.2",
