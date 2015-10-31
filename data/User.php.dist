@@ -94,11 +94,12 @@ class User implements UserInterface, ProviderInterface
      *
      * @param int $id
      *
-     * @return void
+     * @return User
      */
     public function setId($id)
     {
         $this->id = (int) $id;
+        return $this;
     }
 
     /**
@@ -116,11 +117,12 @@ class User implements UserInterface, ProviderInterface
      *
      * @param string $username
      *
-     * @return void
+     * @return User
      */
     public function setUsername($username)
     {
         $this->username = $username;
+        return $this;
     }
 
     /**
@@ -138,11 +140,12 @@ class User implements UserInterface, ProviderInterface
      *
      * @param string $email
      *
-     * @return void
+     * @return User
      */
     public function setEmail($email)
     {
         $this->email = $email;
+        return $this;
     }
 
     /**
@@ -160,11 +163,12 @@ class User implements UserInterface, ProviderInterface
      *
      * @param string $displayName
      *
-     * @return void
+     * @return User
      */
     public function setDisplayName($displayName)
     {
         $this->displayName = $displayName;
+        return $this;
     }
 
     /**
@@ -182,11 +186,12 @@ class User implements UserInterface, ProviderInterface
      *
      * @param string $password
      *
-     * @return void
+     * @return User
      */
     public function setPassword($password)
     {
         $this->password = $password;
+        return $this;
     }
 
     /**
@@ -204,11 +209,12 @@ class User implements UserInterface, ProviderInterface
      *
      * @param int $state
      *
-     * @return void
+     * @return User
      */
     public function setState($state)
     {
         $this->state = $state;
+        return $this;
     }
 
     /**
@@ -226,10 +232,11 @@ class User implements UserInterface, ProviderInterface
      *
      * @param Role $role
      *
-     * @return void
+     * @return User
      */
     public function addRole($role)
     {
         $this->roles[] = $role;
+        return $this;
     }
 }
