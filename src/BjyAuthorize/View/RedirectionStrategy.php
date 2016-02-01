@@ -6,7 +6,7 @@
 
 namespace BjyAuthorize\View;
 
-use BjyAuthorize\Exception\UnAuthorizedException;
+use BjyAuthorize\Exception\UnauthorizedException;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;
 use Zend\Http\Response;
@@ -82,7 +82,7 @@ class RedirectionStrategy implements ListenerAggregateInterface
                 || Controller::ERROR === $error
                 || (
                     Application::ERROR_EXCEPTION === $error
-                    && ($event->getParam('exception') instanceof UnAuthorizedException)
+                    && ($event->getParam('exception') instanceof UnauthorizedException)
                 )
             )
         ) {

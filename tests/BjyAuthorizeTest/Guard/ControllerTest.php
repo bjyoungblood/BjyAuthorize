@@ -237,7 +237,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $event->expects($this->at(6))->method('setParam')->with('action', 'test-action');
         $event->expects($this->at(7))->method('setParam')->with(
             'exception',
-            $this->isInstanceOf('BjyAuthorize\Exception\UnAuthorizedException')
+            $this->isInstanceOf('BjyAuthorize\Exception\UnauthorizedException')
         );
 
         $event

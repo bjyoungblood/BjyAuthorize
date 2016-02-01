@@ -74,9 +74,9 @@ class UnauthorizedStrategyTest extends PHPUnit_Framework_TestCase
     /**
      * @covers \BjyAuthorize\View\UnauthorizedStrategy::onDispatchError
      */
-    public function testOnDispatchErrorWithGenericUnAuthorizedException()
+    public function testOnDispatchErrorWithGenericUnauthorizedException()
     {
-        $exception = $this->getMock('BjyAuthorize\\Exception\\UnAuthorizedException');
+        $exception = $this->getMock('BjyAuthorize\\Exception\\UnauthorizedException');
         $viewModel = $this->getMock('Zend\\View\\Model\\ModelInterface');
         $mvcEvent  = $this->getMock('Zend\\Mvc\\MvcEvent');
 

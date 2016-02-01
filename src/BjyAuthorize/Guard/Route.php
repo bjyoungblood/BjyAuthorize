@@ -8,7 +8,7 @@
 
 namespace BjyAuthorize\Guard;
 
-use BjyAuthorize\Exception\UnAuthorizedException;
+use BjyAuthorize\Exception\UnauthorizedException;
 
 use Zend\EventManager\EventManagerInterface;
 use Zend\Mvc\MvcEvent;
@@ -61,7 +61,7 @@ class Route extends AbstractGuard
         $event->setError(static::ERROR);
         $event->setParam('route', $routeName);
         $event->setParam('identity', $service->getIdentity());
-        $event->setParam('exception', new UnAuthorizedException('You are not authorized to access ' . $routeName));
+        $event->setParam('exception', new UnauthorizedException('You are not authorized to access ' . $routeName));
 
         /* @var $app \Zend\Mvc\Application */
         $app = $event->getTarget();

@@ -201,7 +201,7 @@ class RouteTest extends PHPUnit_Framework_TestCase
         $event->expects($this->at(4))->method('setParam')->with('identity', 'admin');
         $event->expects($this->at(5))->method('setParam')->with(
             'exception',
-            $this->isInstanceOf('BjyAuthorize\Exception\UnAuthorizedException')
+            $this->isInstanceOf('BjyAuthorize\Exception\UnauthorizedException')
         );
 
         $event

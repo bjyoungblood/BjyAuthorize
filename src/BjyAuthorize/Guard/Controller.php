@@ -8,7 +8,7 @@
 
 namespace BjyAuthorize\Guard;
 
-use BjyAuthorize\Exception\UnAuthorizedException;
+use BjyAuthorize\Exception\UnauthorizedException;
 
 use Zend\EventManager\EventManagerInterface;
 use Zend\Mvc\MvcEvent;
@@ -98,7 +98,7 @@ class Controller extends AbstractGuard
         $event->setParam('action', $action);
 
         $errorMessage = sprintf("You are not authorized to access %s:%s", $controller, $action);
-        $event->setParam('exception', new UnAuthorizedException($errorMessage));
+        $event->setParam('exception', new UnauthorizedException($errorMessage));
 
         /* @var $app \Zend\Mvc\ApplicationInterface */
         $app = $event->getTarget();
