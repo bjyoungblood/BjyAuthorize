@@ -202,12 +202,12 @@ In either a controller or a view script, you can call
 ```$this->isAllowed($resource[, $privilege])```, which will query the ACL
 using the currently authenticated (or default) user's roles.
 
-Whenever you need to stop processing your action you can throw an UnAuthorizedException and users will see you message on a 403 page.
+Whenever you need to stop processing your action you can throw an UnauthorizedException and users will see you message on a 403 page.
 
 ```php
 function cafeAction() {
     if (!$this->isAllowed('alcohol', 'consume')) {
-        throw new \BjyAuthorize\Exception\UnAuthorizedException('Grow a beard first!');
+        throw new \BjyAuthorize\Exception\UnauthorizedException('Grow a beard first!');
     }
 
     // party on ...

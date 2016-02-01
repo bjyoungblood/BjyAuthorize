@@ -206,7 +206,7 @@ class RedirectionStrategyTest extends PHPUnit_Framework_TestCase
         $routeMatch   = $this->getMock('Zend\\Mvc\\Router\\RouteMatch', array(), array(), '', false);
         $route        = $this->getMock('Zend\\Mvc\\Router\\RouteInterface');
         $headers      = $this->getMock('Zend\\Http\\Headers');
-        $exception    = $this->getMock('BjyAuthorize\\Exception\\UnAuthorizedException');
+        $exception    = $this->getMock('BjyAuthorize\\Exception\\UnauthorizedException');
 
         $mvcEvent->expects($this->any())->method('getResponse')->will($this->returnValue($response));
         $mvcEvent->expects($this->any())->method('getRouteMatch')->will($this->returnValue($routeMatch));

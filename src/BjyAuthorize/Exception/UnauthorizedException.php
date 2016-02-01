@@ -13,6 +13,6 @@ namespace BjyAuthorize\Exception;
  *
  * @author Ben Youngblood <bx.youngblood@gmail.com>
  */
-class UnAuthorizedException extends \BadMethodCallException
+class UnauthorizedException extends \BadMethodCallException
 {
 }
