@@ -97,7 +97,10 @@ class Controller extends AbstractGuard
         $event->setParam('controller', $controller);
         $event->setParam('action', $action);
 
-        $errorMessage = sprintf("You are not authorized to access %s:%s on route %s", $controller, $action, $match->getMatchedRouteName());
+        $errorMessage = sprintf(
+            "You are not authorized to access %s:%s on route %s", 
+            $controller, $action, $match->getMatchedRouteName()
+        );
         $event->setParam('exception', new UnAuthorizedException($errorMessage));
 
         /* @var $app \Zend\Mvc\ApplicationInterface */
