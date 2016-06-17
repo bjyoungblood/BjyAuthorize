@@ -28,8 +28,21 @@ class CacheFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        $adapterName = null;
         $options = $serviceLocator->get('BjyAuthorize\Config');
+        if (is_array($options)
+            && isset($options['cache_options'])
+            && isset($options['cache_options']['adapter'])
+            && isset($options['cache_options']['adapter']['name'])
+        ) {
+            $adapterName = $options['cache_options']['adapter']['name'];
+        }
 
-        return StorageFactory::factory($options['cache_options']);
+        // Create adapter via serviceLocator if possible
+        if (!empty($adapterName) && $serviceLocator->has($adapterName)) {
+            return $serviceLocator->get($adapterName);
+        } else {
+            return StorageFactory::factory($options['cache_options']);
+        }
     }
 }
