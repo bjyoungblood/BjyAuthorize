@@ -27,7 +27,7 @@
         "php": ">=5.5",
         "zendframework/zend-permissions-acl": "~2.2",
         "zendframework/zend-mvc":             "~2.7|~3.0",
-        "zendframework/zend-eventmanager":    "~2.7|~3.0",
+        "zendframework/zend-eventmanager":    "~2.6|~3.0",
         "zendframework/zend-servicemanager":  "~2.7|~3.0",
         "zendframework/zend-http":            "~2.4",
         "zendframework/zend-view":            "~2.8",
