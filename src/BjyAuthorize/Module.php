@@ -8,13 +8,15 @@
 
 namespace BjyAuthorize;
 
+use BjyAuthorize\Controller\Plugin;
+use BjyAuthorize\Guard\AbstractGuard;
+use BjyAuthorize\View\Helper;
+use BjyAuthorize\View\UnauthorizedStrategy;
 use Zend\EventManager\EventInterface;
-use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\ModuleManager\Feature\BootstrapListenerInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 use Zend\ModuleManager\Feature\ControllerPluginProviderInterface;
 use Zend\ModuleManager\Feature\ViewHelperProviderInterface;
-use Zend\ServiceManager\AbstractPluginManager;
 
 /**
  * BjyAuthorize Module
@@ -22,7 +24,6 @@ use Zend\ServiceManager\AbstractPluginManager;
  * @author Ben Youngblood <bx.youngblood@gmail.com>
  */
 class Module implements
-    AutoloaderProviderInterface,
     BootstrapListenerInterface,
     ConfigProviderInterface,
     ControllerPluginProviderInterface,
@@ -38,14 +39,16 @@ class Module implements
         /* @var $sm \Zend\ServiceManager\ServiceLocatorInterface */
         $serviceManager = $app->getServiceManager();
         $config         = $serviceManager->get('BjyAuthorize\Config');
+        /** @var UnauthorizedStrategy $strategy */
         $strategy       = $serviceManager->get($config['unauthorized_strategy']);
+        /** @var AbstractGuard[] $guards */
         $guards         = $serviceManager->get('BjyAuthorize\Guards');
 
         foreach ($guards as $guard) {
-            $app->getEventManager()->attach($guard);
+            $guard->attach($app->getEventManager());
         }
 
-        $app->getEventManager()->attach($strategy);
+        $strategy->attach($app->getEventManager());
     }
 
     /**
@@ -55,13 +58,7 @@ class Module implements
     {
         return array(
             'factories' => array(
-                'isAllowed' => function (AbstractPluginManager $pluginManager) {
-                    $serviceLocator = $pluginManager->getServiceLocator();
-                    /* @var $authorize \BjyAuthorize\Service\Authorize */
-                    $authorize = $serviceLocator->get('BjyAuthorize\Service\Authorize');
-
-                    return new View\Helper\IsAllowed($authorize);
-                }
+                'isAllowed' => Helper\IsAllowedFactory::class,
             ),
         );
     }
@@ -73,27 +70,7 @@ class Module implements
     {
         return array(
             'factories' => array(
-                'isAllowed' => function (AbstractPluginManager $pluginManager) {
-                    $serviceLocator = $pluginManager->getServiceLocator();
-                    /* @var $authorize \BjyAuthorize\Service\Authorize */
-                    $authorize = $serviceLocator->get('BjyAuthorize\Service\Authorize');
-
-                    return new Controller\Plugin\IsAllowed($authorize);
-                }
-            ),
-        );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getAutoloaderConfig()
-    {
-        return array(
-            'Zend\Loader\StandardAutoloader' => array(
-                'namespaces' => array(
-                    __NAMESPACE__ => __DIR__ . '/../../src/' . __NAMESPACE__,
-                ),
+                'isAllowed' => Plugin\IsAllowedFactory::class
             ),
         );
     }

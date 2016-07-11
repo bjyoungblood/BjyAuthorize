@@ -23,24 +23,22 @@
             "role":      "Developer"
         }
     ],
-    "minimum-stability": "dev",
     "require": {
-        "php": ">=5.3.3",
+        "php": ">=5.5",
         "zendframework/zend-permissions-acl": "~2.2",
-        "zendframework/zend-mvc":             "~2.2",
-        "zendframework/zend-eventmanager":    "~2.2",
-        "zendframework/zend-servicemanager":  "~2.2",
-        "zendframework/zend-http":            "~2.2",
-        "zendframework/zend-view":            "~2.2",
-        "zendframework/zend-cache":           "~2.2"
+        "zendframework/zend-mvc":             "~2.7|~3.0",
+        "zendframework/zend-eventmanager":    "~2.6|~3.0",
+        "zendframework/zend-servicemanager":  "~2.7|~3.0",
+        "zendframework/zend-http":            "~2.4",
+        "zendframework/zend-view":            "~2.8",
+        "zendframework/zend-authentication":  "~2.5",
+        "zendframework/zend-cache":           "~2.6"
     },
     "require-dev": {
-        "phpunit/phpunit":                    "~3.7",
+        "phpunit/phpunit":                    "~4.8|~5.0",
+        "zendframework/zend-db":              "~2.5",
         "doctrine/common":                    ">=2.3,<2.5-dev",
-        "zendframework/zend-developer-tools": "0.*",
-        "zf-commons/zfc-user":                "1.*",
-        "squizlabs/php_codesniffer":          "1.4.*",
-        "satooshi/php-coveralls":             "~0.6"
+        "zendframework/zend-developer-tools": "~1.0"
     },
     "suggests": {
         "zendframework/zend-developer-tools": "if you need to see current authorization details while developing",

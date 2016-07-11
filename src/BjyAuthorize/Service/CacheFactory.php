@@ -8,6 +8,7 @@
 
 namespace BjyAuthorize\Service;
 
+use Interop\Container\ContainerInterface;
 use Zend\Cache\Storage\StorageInterface;
 use Zend\Cache\StorageFactory;
 use Zend\ServiceManager\FactoryInterface;
@@ -21,6 +22,17 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 class CacheFactory implements FactoryInterface
 {
     /**
+     * @param ContainerInterface $container
+     * @param string $requestedName
+     * @param array|null $options
+     * @return StorageInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        return StorageFactory::factory($container->get('BjyAuthorize\Config')['cache_options']);
+    }
+
+    /**
      * Create a cache
      *
      * @param   ServiceLocatorInterface $serviceLocator
@@ -28,8 +40,6 @@ class CacheFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $options = $serviceLocator->get('BjyAuthorize\Config');
-
-        return StorageFactory::factory($options['cache_options']);
+        return $this($serviceLocator, StorageFactory::class);
     }
 }

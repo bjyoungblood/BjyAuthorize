@@ -18,12 +18,12 @@ class Config implements ProviderInterface
     /**
      * @var \Zend\Permissions\Acl\Resource\ResourceInterface[]
      */
-    protected $resources = array();
+    protected $resources = [];
 
     /**
      * @param \Zend\Permissions\Acl\Resource\ResourceInterface[] $config
      */
-    public function __construct(array $config = array())
+    public function __construct(array $config = [])
     {
         $this->resources = $config;
     }

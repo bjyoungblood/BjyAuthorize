@@ -9,6 +9,10 @@
 namespace BjyAuthorize\Service;
 
 use BjyAuthorize\Provider\Role\Config;
+use Interop\Container\ContainerInterface;
+use Interop\Container\Exception\ContainerException;
+use Zend\ServiceManager\Exception\ServiceNotCreatedException;
+use Zend\ServiceManager\Exception\ServiceNotFoundException;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -19,6 +23,11 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class ConfigRoleProviderServiceFactory implements FactoryInterface
 {
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        return new Config($container->get('BjyAuthorize\Config')['role_providers']['BjyAuthorize\Provider\Role\Config']);
+    }
+
     /**
      * {@inheritDoc}
      *
@@ -26,8 +35,6 @@ class ConfigRoleProviderServiceFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('BjyAuthorize\Config');
-
-        return new Config($config['role_providers']['BjyAuthorize\Provider\Role\Config']);
+        return $this($serviceLocator, Config::class);
     }
 }

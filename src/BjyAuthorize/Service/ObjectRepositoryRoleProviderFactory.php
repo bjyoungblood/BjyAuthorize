@@ -10,6 +10,10 @@ namespace BjyAuthorize\Service;
 
 use BjyAuthorize\Exception\InvalidArgumentException;
 use BjyAuthorize\Provider\Role\ObjectRepositoryProvider;
+use Interop\Container\ContainerInterface;
+use Interop\Container\Exception\ContainerException;
+use Zend\ServiceManager\Exception\ServiceNotCreatedException;
+use Zend\ServiceManager\Exception\ServiceNotFoundException;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -21,14 +25,9 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class ObjectRepositoryRoleProviderFactory implements FactoryInterface
 {
-    /**
-     * {@inheritDoc}
-     *
-     * @return \BjyAuthorize\Provider\Role\ObjectRepositoryProvider
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $config = $serviceLocator->get('BjyAuthorize\Config');
+        $config = $container->get('BjyAuthorize\Config');
 
         if (! isset($config['role_providers']['BjyAuthorize\Provider\Role\ObjectRepositoryProvider'])) {
             throw new InvalidArgumentException(
@@ -47,8 +46,18 @@ class ObjectRepositoryRoleProviderFactory implements FactoryInterface
         }
 
         /* @var $objectManager \Doctrine\Common\Persistence\ObjectManager */
-        $objectManager = $serviceLocator->get($providerConfig['object_manager']);
+        $objectManager = $container->get($providerConfig['object_manager']);
 
         return new ObjectRepositoryProvider($objectManager->getRepository($providerConfig['role_entity_class']));
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @return \BjyAuthorize\Provider\Role\ObjectRepositoryProvider
+     */
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        return $this($serviceLocator, ObjectRepositoryProvider::class);
     }
 }
