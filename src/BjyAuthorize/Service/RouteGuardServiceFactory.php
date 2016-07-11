@@ -9,6 +9,10 @@
 namespace BjyAuthorize\Service;
 
 use BjyAuthorize\Guard\Route;
+use Interop\Container\ContainerInterface;
+use Interop\Container\Exception\ContainerException;
+use Zend\ServiceManager\Exception\ServiceNotCreatedException;
+use Zend\ServiceManager\Exception\ServiceNotFoundException;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -19,6 +23,11 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class RouteGuardServiceFactory implements FactoryInterface
 {
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        return new Route($container->get('BjyAuthorize\Config')['guards']['BjyAuthorize\Guard\Route'], $container);
+    }
+
     /**
      * {@inheritDoc}
      *
@@ -26,8 +35,6 @@ class RouteGuardServiceFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('BjyAuthorize\Config');
-
-        return new Route($config['guards']['BjyAuthorize\Guard\Route'], $serviceLocator);
+        return $this($serviceLocator, Route::class);
     }
 }

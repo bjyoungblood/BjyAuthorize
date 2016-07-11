@@ -33,7 +33,7 @@ class UnauthorizedStrategy implements ListenerAggregateInterface
     protected $template;
 
     /**
-     * @var \Zend\Stdlib\CallbackHandler[]
+     * @var callable[] An array with callback functions or methods.
      */
     protected $listeners = array();
 
@@ -42,13 +42,13 @@ class UnauthorizedStrategy implements ListenerAggregateInterface
      */
     public function __construct($template)
     {
-        $this->template = (string) $template;
+        $this->template = (string)$template;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function attach(EventManagerInterface $events)
+    public function attach(EventManagerInterface $events, $priority = 1)
     {
         $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH_ERROR, array($this, 'onDispatchError'), -5000);
     }

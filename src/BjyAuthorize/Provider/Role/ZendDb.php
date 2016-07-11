@@ -9,8 +9,8 @@
 namespace BjyAuthorize\Provider\Role;
 
 use BjyAuthorize\Acl\Role;
+use Interop\Container\ContainerInterface;
 use Zend\Db\Sql\Select;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Role provider based on a {@see \Zend\Db\Adaper\Adapter}
@@ -20,7 +20,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 class ZendDb implements ProviderInterface
 {
     /**
-     * @var ServiceLocatorInterface
+     * @var ContainerInterface
      */
     protected $serviceLocator;
 
@@ -46,9 +46,9 @@ class ZendDb implements ProviderInterface
 
     /**
      * @param                         $options
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param ContainerInterface $serviceLocator
      */
-    public function __construct($options, ServiceLocatorInterface $serviceLocator)
+    public function __construct($options, ContainerInterface $serviceLocator)
     {
         $this->serviceLocator = $serviceLocator;
 

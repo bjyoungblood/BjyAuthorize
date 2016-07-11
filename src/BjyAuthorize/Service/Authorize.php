@@ -12,7 +12,7 @@ use BjyAuthorize\Provider\Role\ProviderInterface as RoleProvider;
 use BjyAuthorize\Provider\Resource\ProviderInterface as ResourceProvider;
 use BjyAuthorize\Provider\Rule\ProviderInterface as RuleProvider;
 use BjyAuthorize\Provider\Identity\ProviderInterface as IdentityProvider;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
 use Zend\Permissions\Acl\Acl;
 use Zend\Permissions\Acl\Exception\InvalidArgumentException;
 use Zend\Permissions\Acl\Resource\GenericResource;
@@ -68,7 +68,7 @@ class Authorize
     protected $loaded;
 
     /**
-     * @var \Zend\ServiceManager\ServiceLocatorInterface
+     * @var ContainerInterface
      */
     protected $serviceLocator;
 
@@ -79,9 +79,9 @@ class Authorize
 
     /**
      * @param array                                         $config
-     * @param \Zend\ServiceManager\ServiceLocatorInterface  $serviceLocator
+     * @param ContainerInterface  $serviceLocator
      */
-    public function __construct(array $config, ServiceLocatorInterface $serviceLocator)
+    public function __construct(array $config, ContainerInterface $serviceLocator)
     {
         $this->config         = $config;
         $this->serviceLocator = $serviceLocator;

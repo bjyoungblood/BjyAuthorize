@@ -10,8 +10,8 @@ namespace BjyAuthorize\Guard;
 
 use BjyAuthorize\Provider\Rule\ProviderInterface as RuleProviderInterface;
 use BjyAuthorize\Provider\Resource\ProviderInterface as ResourceProviderInterface;
+use Interop\Container\ContainerInterface;
 use \Zend\EventManager\AbstractListenerAggregate;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 abstract class AbstractGuard extends AbstractListenerAggregate implements
     GuardInterface,
@@ -19,7 +19,7 @@ abstract class AbstractGuard extends AbstractListenerAggregate implements
     ResourceProviderInterface
 {
     /**
-     * @var ServiceLocatorInterface
+     * @var ContainerInterface
      */
     protected $serviceLocator;
 
@@ -30,10 +30,10 @@ abstract class AbstractGuard extends AbstractListenerAggregate implements
 
     /**
      *
-     * @param array                   $rules
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param array              $rules
+     * @param ContainerInterface $serviceLocator
      */
-    public function __construct(array $rules, ServiceLocatorInterface $serviceLocator)
+    public function __construct(array $rules, ContainerInterface $serviceLocator)
     {
         $this->serviceLocator = $serviceLocator;
 
