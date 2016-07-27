@@ -61,7 +61,8 @@ class ControllerTest extends PHPUnit_Framework_TestCase
      */
     public function testAttachDetach()
     {
-        $eventManager = $this->getMock('Zend\\EventManager\\EventManagerInterface');
+        $eventManager = $this->getMockBuilder('Zend\\EventManager\\EventManagerInterface')
+            ->getMock();
         $callbackMock = $this->getMock('Zend\\Stdlib\\CallbackHandler', array(), array(), '', false);
         $eventManager
             ->expects($this->once())
