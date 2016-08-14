@@ -268,10 +268,19 @@ class ControllerTest extends PHPUnit_Framework_TestCase
     {
         $eventManager = $this->getMockBuilder('Zend\\EventManager\\EventManagerInterface')
             ->getMock();
-        $application  = $this->getMock('Zend\\Mvc\\Application', array('getEventManager'), array(), '', false);
-        $event        = $this->getMock('Zend\\Mvc\\MvcEvent', array('getTarget', 'getRouteMatch', 'getRequest', 'setError', 'setParam'));
-        $routeMatch   = $this->getMock('Zend\\Mvc\\Router\\RouteMatch', array('getParam'), array(), '', false);
-        $request      = $this->getMock('Zend\\Http\\Request');
+        $application  = $this->getMockBuilder('Zend\\Mvc\\Application')
+            ->setMethods(array('getEventManager'))
+            ->disableOriginalConstructor()
+            ->getMock();
+        $event        = $this->getMockBuilder('Zend\\Mvc\\MvcEvent')
+            ->setMethods(array('getTarget', 'getRouteMatch', 'getRequest', 'setError', 'setParam'))
+            ->getMock();
+        $routeMatch   = $this->getMockBuilder('Zend\\Mvc\\Router\\RouteMatch')
+            ->setMethods(array('getParam'))
+            ->disableOriginalConstructor()
+            ->getMock();
+        $request      = $this->getMockBuilder('Zend\\Http\\Request')
+            ->getMock();
 
         $event->expects($this->any())->method('getRouteMatch')->will($this->returnValue($routeMatch));
         $event->expects($this->any())->method('getRequest')->will($this->returnValue($request));
