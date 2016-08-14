@@ -19,6 +19,12 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class ConfigServiceFactory implements FactoryInterface
 {
+    /**
+     * @param ContainerInterface $container
+     * @param string $requestedName
+     * @param array|null $options
+     * @return array
+     */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $config = $container->get('config');

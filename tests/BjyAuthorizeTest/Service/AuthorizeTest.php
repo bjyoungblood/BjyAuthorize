@@ -19,6 +19,7 @@ use Zend\ServiceManager\ServiceManager;
  */
 class AuthorizeTest extends PHPUnit_Framework_TestCase
 {
+    /** @var  ServiceManager */
     protected $serviceLocator;
 
     public function setUp()
@@ -160,6 +161,7 @@ class AuthorizeTest extends PHPUnit_Framework_TestCase
 
         $resourceProviderMock = $this->getMockBuilder('BjyAuthorize\Provider\Resource\Config')
             ->disableOriginalConstructor()
+            ->setMethods(array('getResources'))
             ->getMock();
 
         $resourceProviderMock
@@ -172,19 +174,7 @@ class AuthorizeTest extends PHPUnit_Framework_TestCase
             );
 
         $serviceLocator->setService('BjyAuthorize\Provider\Resource\Config', $resourceProviderMock);
-
-        $configMock = $this->getMockBuilder('BjyAuthorize\Service\ConfigServiceFactory')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $configMock
-            ->expects($this->any())
-            ->method('createService')
-            ->will(
-                $this->returnValue(array($resourceProviderMock))
-            );
-
-        $serviceLocator->setFactory('BjyAuthorize\ResourceProviders', $configMock);
+        $serviceLocator->setService('BjyAuthorize\ResourceProviders', array($resourceProviderMock));
 
         $authorize = new Authorize(array('cache_key' => 'acl'), $this->serviceLocator);
         $authorize->load();
@@ -216,22 +206,9 @@ class AuthorizeTest extends PHPUnit_Framework_TestCase
             );
 
         $serviceLocator->setService('BjyAuthorize\Provider\Resource\Config', $resourceProviderMock);
+        $serviceLocator->setService('BjyAuthorize\ResourceProviders', array($resourceProviderMock));
 
-        $configMock = $this->getMockBuilder('BjyAuthorize\Service\ConfigServiceFactory')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $configMock
-            ->expects($this->any())
-            ->method('createService')
-            ->will(
-                $this->returnValue(array($resourceProviderMock))
-            );
-
-        $serviceLocator->setFactory('BjyAuthorize\ResourceProviders', $configMock);
-
-        $authorize = new Authorize(array('cache_key' => 'acl'), $this->serviceLocator);
-        $authorize->load();
+        $authorize = new Authorize(array('cache_key' => 'acl'), $serviceLocator);
 
         $acl = $authorize->getAcl();
 
@@ -263,19 +240,7 @@ class AuthorizeTest extends PHPUnit_Framework_TestCase
             );
 
         $serviceLocator->setService('BjyAuthorize\Provider\Resource\Config', $resourceProviderMock);
-
-        $configMock = $this->getMockBuilder('BjyAuthorize\Service\ConfigServiceFactory')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $configMock
-            ->expects($this->any())
-            ->method('createService')
-            ->will(
-                $this->returnValue(array($resourceProviderMock))
-            );
-
-        $serviceLocator->setFactory('BjyAuthorize\ResourceProviders', $configMock);
+        $serviceLocator->setService('BjyAuthorize\ResourceProviders', array($resourceProviderMock));
 
         $authorize = new Authorize(array('cache_key' => 'acl'), $this->serviceLocator);
         $authorize->load();
@@ -303,19 +268,7 @@ class AuthorizeTest extends PHPUnit_Framework_TestCase
             );
 
         $serviceLocator->setService('BjyAuthorize\Provider\Role\Config', $roleProviderMock);
-
-        $roleMock = $this->getMockBuilder('BjyAuthorize\Service\RoleProvidersServiceFactory')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $roleMock
-            ->expects($this->any())
-            ->method('createService')
-            ->will(
-                $this->returnValue(array($roleProviderMock))
-            );
-
-        $serviceLocator->setFactory('BjyAuthorize\RoleProviders', $roleMock);
+        $serviceLocator->setService('BjyAuthorize\RoleProviders', array($roleProviderMock));
 
         $authorize = new Authorize(array('cache_key' => 'acl'), $this->serviceLocator);
         $authorize->load();

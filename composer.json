@@ -47,8 +47,8 @@
         "zf-commons/zfc-user-doctrine-mongo-odm": "If you want to use BjyAuthorize with Doctrine ODM"
     },
     "autoload": {
-        "psr-0": {
-            "BjyAuthorize\\": "src/"
+        "psr-4": {
+            "BjyAuthorize\\": "src/BjyAuthorize"
         }
     },
     "extra": {

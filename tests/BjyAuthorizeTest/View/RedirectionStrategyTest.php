@@ -42,8 +42,13 @@ class RedirectionStrategyTest extends PHPUnit_Framework_TestCase
      */
     public function testAttachDetach()
     {
-        $eventManager = $this->getMock('Zend\\EventManager\\EventManagerInterface');
-        $callbackMock = $this->getMock('Zend\\Stdlib\\CallbackHandler', array(), array(), '', false);
+        $eventManager = $this->getMockBuilder('Zend\\EventManager\\EventManagerInterface')
+            ->getMock();
+
+        $callbackMock = $this->getMockBuilder(\stdClass::class)
+            ->setMethods(['__invoke'])
+            ->getMock();
+
         $eventManager
             ->expects($this->once())
             ->method('attach')
@@ -140,7 +145,7 @@ class RedirectionStrategyTest extends PHPUnit_Framework_TestCase
         $mvcEvent     = $this->getMock('Zend\\Mvc\\MvcEvent');
         $response     = $this->getMock('Zend\\Http\\Response');
         $routeMatch   = $this->getMock('Zend\\Mvc\\Router\\RouteMatch', array(), array(), '', false);
-        $route        = $this->getMock('Zend\\Mvc\\Router\\RouteInterface');
+        $route        = $this->getMock('Zend\\Mvc\\Router\\RouteInterface', array('assemble'));
         $headers      = $this->getMock('Zend\\Http\\Headers');
 
         $mvcEvent->expects($this->any())->method('getResponse')->will($this->returnValue($response));

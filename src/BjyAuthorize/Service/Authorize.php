@@ -78,8 +78,8 @@ class Authorize
     protected $config;
 
     /**
-     * @param array                                         $config
-     * @param ContainerInterface  $serviceLocator
+     * @param array              $config
+     * @param ContainerInterface $serviceLocator
      */
     public function __construct(array $config, ContainerInterface $serviceLocator)
     {

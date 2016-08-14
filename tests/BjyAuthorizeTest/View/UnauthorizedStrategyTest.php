@@ -44,8 +44,13 @@ class UnauthorizedStrategyTest extends PHPUnit_Framework_TestCase
      */
     public function testAttachDetach()
     {
-        $eventManager = $this->getMock('Zend\\EventManager\\EventManagerInterface');
-        $callbackMock = $this->getMock('Zend\\Stdlib\\CallbackHandler', array(), array(), '', false);
+        $eventManager = $this->getMockBuilder('Zend\\EventManager\\EventManagerInterface')
+            ->getMock();
+
+        $callbackMock = $this->getMockBuilder(\stdClass::class)
+            ->setMethods(['__invoke'])
+            ->getMock();
+
         $eventManager
             ->expects($this->once())
             ->method('attach')

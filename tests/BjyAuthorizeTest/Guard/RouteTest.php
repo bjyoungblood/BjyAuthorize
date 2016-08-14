@@ -44,7 +44,7 @@ class RouteTest extends PHPUnit_Framework_TestCase
         parent::setUp();
 
         $this->serviceLocator = $this->getMock('Zend\\ServiceManager\\ServiceLocatorInterface');
-        $this->authorize = $authorize = $this->getMock('BjyAuthorize\\Service\\Authorize', array(), array(), '', false);
+        $this->authorize = $authorize = $this->getMock('BjyAuthorize\\Service\\Authorize', array('isAllowed', 'getIdentity'), array(), '', false);
         $this->routeGuard = new Route(array(), $this->serviceLocator);
 
         $this
@@ -62,7 +62,11 @@ class RouteTest extends PHPUnit_Framework_TestCase
     public function testAttachDetach()
     {
         $eventManager = $this->getMock('Zend\\EventManager\\EventManagerInterface');
-        $callbackMock = $this->getMock('Zend\\Stdlib\\CallbackHandler', array(), array(), '', false);
+
+        $callbackMock = $this->getMockBuilder(\stdClass::class)
+            ->setMethods(['__invoke'])
+            ->getMock();
+
         $eventManager
             ->expects($this->once())
             ->method('attach')
@@ -222,9 +226,9 @@ class RouteTest extends PHPUnit_Framework_TestCase
     private function createMvcEvent($route = null)
     {
         $eventManager = $this->getMock('Zend\\EventManager\\EventManagerInterface');
-        $application  = $this->getMock('Zend\\Mvc\\Application', array(), array(), '', false);
-        $event        = $this->getMock('Zend\\Mvc\\MvcEvent');
-        $routeMatch   = $this->getMock('Zend\\Mvc\\Router\\RouteMatch', array(), array(), '', false);
+        $application  = $this->getMock('Zend\\Mvc\\Application', array('getEventManager'), array(), '', false);
+        $event        = $this->getMock('Zend\\Mvc\\MvcEvent', array('getRouteMatch', 'getRequest', 'getTarget', 'setError', 'setParam'));
+        $routeMatch   = $this->getMock('Zend\\Mvc\\Router\\RouteMatch', array('getMatchedRouteName'), array(), '', false);
         $request      = $this->getMock('Zend\\Http\\Request');
 
         $event->expects($this->any())->method('getRouteMatch')->will($this->returnValue($routeMatch));

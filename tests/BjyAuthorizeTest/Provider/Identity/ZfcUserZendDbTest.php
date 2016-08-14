@@ -46,7 +46,7 @@ class ZfcUserZendDbTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->authService  = $this->getMock('Zend\Authentication\AuthenticationService');
-        $this->userService  = $this->getMock('ZfcUser\Service\User');
+        $this->userService  = $this->getMock('ZfcUser\Service\User', array('getAuthService'));
         $this->tableGateway = $this->getMock('Zend\Db\TableGateway\TableGateway', array(), array(), '', false);
 
         $this

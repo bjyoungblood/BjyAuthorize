@@ -8,6 +8,7 @@
 
 namespace BjyAuthorizeTest\Guard;
 
+use BjyAuthorize\Exception\UnAuthorizedException;
 use PHPUnit_Framework_TestCase;
 use BjyAuthorize\Guard\Controller;
 use Zend\Mvc\MvcEvent;
@@ -63,12 +64,17 @@ class ControllerTest extends PHPUnit_Framework_TestCase
     {
         $eventManager = $this->getMockBuilder('Zend\\EventManager\\EventManagerInterface')
             ->getMock();
-        $callbackMock = $this->getMock('Zend\\Stdlib\\CallbackHandler', array(), array(), '', false);
+
+        $callbackMock = $this->getMockBuilder(\stdClass::class)
+            ->setMethods(['__invoke'])
+            ->getMock();
+
         $eventManager
             ->expects($this->once())
             ->method('attach')
             ->with()
             ->will($this->returnValue($callbackMock));
+
         $this->controllerGuard->attach($eventManager);
         $eventManager
             ->expects($this->once())
@@ -238,7 +244,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
         $event->expects($this->at(6))->method('setParam')->with('action', 'test-action');
         $event->expects($this->at(7))->method('setParam')->with(
             'exception',
-            $this->isInstanceOf('BjyAuthorize\Exception\UnAuthorizedException')
+            $this->isInstanceOf(UnAuthorizedException::class)
         );
 
         $event
@@ -246,7 +252,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
             ->getEventManager()
             ->expects($this->once())
             ->method('trigger')
-            ->with(MvcEvent::EVENT_DISPATCH_ERROR, $event);
+            ->with(MvcEvent::EVENT_DISPATCH_ERROR, null, []);
 
         $this->assertNull($this->controllerGuard->onDispatch($event), 'Does not stop event propagation');
     }
@@ -260,10 +266,11 @@ class ControllerTest extends PHPUnit_Framework_TestCase
      */
     private function createMvcEvent($controller = null, $action = null, $method = null)
     {
-        $eventManager = $this->getMock('Zend\\EventManager\\EventManagerInterface');
-        $application  = $this->getMock('Zend\\Mvc\\Application', array(), array(), '', false);
-        $event        = $this->getMock('Zend\\Mvc\\MvcEvent');
-        $routeMatch   = $this->getMock('Zend\\Mvc\\Router\\RouteMatch', array(), array(), '', false);
+        $eventManager = $this->getMockBuilder('Zend\\EventManager\\EventManagerInterface')
+            ->getMock();
+        $application  = $this->getMock('Zend\\Mvc\\Application', array('getEventManager'), array(), '', false);
+        $event        = $this->getMock('Zend\\Mvc\\MvcEvent', array('getTarget', 'getRouteMatch', 'getRequest', 'setError', 'setParam'));
+        $routeMatch   = $this->getMock('Zend\\Mvc\\Router\\RouteMatch', array('getParam'), array(), '', false);
         $request      = $this->getMock('Zend\\Http\\Request');
 
         $event->expects($this->any())->method('getRouteMatch')->will($this->returnValue($routeMatch));
