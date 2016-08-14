@@ -39,7 +39,8 @@
         "zendframework/zend-db":              "~2.5",
         "doctrine/common":                    ">=2.3,<2.5-dev",
         "squizlabs/php_codesniffer": "^2.5.1",
-        "zendframework/zend-developer-tools": "~1.0"
+        "zendframework/zend-developer-tools": "~1.0",
+        "satooshi/php-coveralls":             "~0.6"
     },
     "suggests": {
         "zendframework/zend-developer-tools": "if you need to see current authorization details while developing",
