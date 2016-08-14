@@ -38,6 +38,7 @@
         "phpunit/phpunit":                    "~4.8",
         "zendframework/zend-db":              "~2.5",
         "doctrine/common":                    ">=2.3,<2.5-dev",
+        "squizlabs/php_codesniffer": "^2.5.1",
         "zendframework/zend-developer-tools": "~1.0"
     },
     "suggests": {

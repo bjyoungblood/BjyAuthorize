@@ -3,7 +3,6 @@
 
 namespace BjyAuthorize\Controller\Plugin;
 
-
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\AbstractPluginManager;
 use Zend\ServiceManager\FactoryInterface;
@@ -32,5 +31,4 @@ class IsAllowedFactory implements FactoryInterface
 
         return new IsAllowed($authorize);
     }
-
 }

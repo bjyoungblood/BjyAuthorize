@@ -56,7 +56,6 @@ class ObjectRepositoryProviderTest extends PHPUnit_Framework_TestCase
             ->will($this->returnValue($parent));
 
         return $role;
-
     }
 
     /**

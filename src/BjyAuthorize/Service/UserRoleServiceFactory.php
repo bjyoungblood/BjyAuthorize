@@ -18,7 +18,7 @@ use Zend\Db\TableGateway\TableGateway;
 
 /**
  * @author Simone Castellaneta <s.castel@gmail.com>
- * 
+ *
  * @return \Zend\Db\TableGateway\TableGateway
  */
 class UserRoleServiceFactory implements FactoryInterface
@@ -30,7 +30,7 @@ class UserRoleServiceFactory implements FactoryInterface
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return \Zend\Db\TableGateway\TableGateway
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
