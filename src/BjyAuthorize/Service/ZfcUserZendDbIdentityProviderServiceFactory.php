@@ -10,11 +10,8 @@ namespace BjyAuthorize\Service;
 
 use BjyAuthorize\Provider\Identity\ZfcUserZendDb;
 use Interop\Container\ContainerInterface;
-use Interop\Container\Exception\ContainerException;
-use Zend\ServiceManager\Exception\ServiceNotCreatedException;
-use Zend\ServiceManager\Exception\ServiceNotFoundException;
-use Zend\ServiceManager\FactoryInterface;
 use Zend\Db\TableGateway\TableGateway;
+use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -30,7 +27,7 @@ class ZfcUserZendDbIdentityProviderServiceFactory implements FactoryInterface
         $tableGateway = new TableGateway('user_role_linker', $container->get('zfcuser_zend_db_adapter'));
         /* @var $userService \ZfcUser\Service\User */
         $userService = $container->get('zfcuser_user_service');
-        $config      = $container->get('BjyAuthorize\Config');
+        $config = $container->get('BjyAuthorize\Config');
 
         $provider = new ZfcUserZendDb($tableGateway, $userService);
 

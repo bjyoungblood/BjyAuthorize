@@ -27,8 +27,8 @@ class CacheKeyGeneratorFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $config     = $container->get('BjyAuthorize\Config');
-        $cacheKey   = empty($config['cache_key']) ? 'bjyauthorize_acl' : (string) $config['cache_key'];
+        $config = $container->get('BjyAuthorize\Config');
+        $cacheKey = empty($config['cache_key']) ? 'bjyauthorize_acl' : (string)$config['cache_key'];
 
         return function () use ($cacheKey) {
             return $cacheKey;

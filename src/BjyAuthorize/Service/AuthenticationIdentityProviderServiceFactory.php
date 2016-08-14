@@ -26,9 +26,9 @@ class AuthenticationIdentityProviderServiceFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $user                   = $container->get('zfcuser_user_service');
+        $user = $container->get('zfcuser_user_service');
         $simpleIdentityProvider = new AuthenticationIdentityProvider($user->getAuthService());
-        $config                 = $container->get('BjyAuthorize\Config');
+        $config = $container->get('BjyAuthorize\Config');
 
         $simpleIdentityProvider->setDefaultRole($config['default_role']);
         $simpleIdentityProvider->setAuthenticatedRole($config['authenticated_role']);

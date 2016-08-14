@@ -8,8 +8,8 @@
 
 namespace BjyAuthorize\View\Helper;
 
-use Zend\View\Helper\AbstractHelper;
 use BjyAuthorize\Service\Authorize;
+use Zend\View\Helper\AbstractHelper;
 
 /**
  * IsAllowed View helper. Allows checking access to a resource/privilege in views.
@@ -32,7 +32,7 @@ class IsAllowed extends AbstractHelper
     }
 
     /**
-     * @param mixed      $resource
+     * @param mixed $resource
      * @param mixed|null $privilege
      *
      * @return bool

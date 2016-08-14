@@ -8,18 +8,18 @@
 
 namespace BjyAuthorize\Service;
 
-use BjyAuthorize\Provider\Role\ProviderInterface as RoleProvider;
-use BjyAuthorize\Provider\Resource\ProviderInterface as ResourceProvider;
-use BjyAuthorize\Provider\Rule\ProviderInterface as RuleProvider;
+use BjyAuthorize\Acl\Role;
+use BjyAuthorize\Guard\GuardInterface;
 use BjyAuthorize\Provider\Identity\ProviderInterface as IdentityProvider;
+use BjyAuthorize\Provider\Resource\ProviderInterface as ResourceProvider;
+use BjyAuthorize\Provider\Role\ProviderInterface as RoleProvider;
+use BjyAuthorize\Provider\Rule\ProviderInterface as RuleProvider;
 use Interop\Container\ContainerInterface;
+use Zend\Cache\Storage\StorageInterface;
 use Zend\Permissions\Acl\Acl;
 use Zend\Permissions\Acl\Exception\InvalidArgumentException;
 use Zend\Permissions\Acl\Resource\GenericResource;
-use BjyAuthorize\Acl\Role;
-use BjyAuthorize\Guard\GuardInterface;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
-use Zend\Cache\Storage\StorageInterface;
 
 /**
  * Authorize service
@@ -78,15 +78,15 @@ class Authorize
     protected $config;
 
     /**
-     * @param array              $config
+     * @param array $config
      * @param ContainerInterface $serviceLocator
      */
     public function __construct(array $config, ContainerInterface $serviceLocator)
     {
-        $this->config         = $config;
+        $this->config = $config;
         $this->serviceLocator = $serviceLocator;
-        $that                 = $this;
-        $this->loaded         = function () use ($that) {
+        $that = $this;
+        $this->loaded = function () use ($that) {
             $that->load();
         };
     }
@@ -230,7 +230,7 @@ class Authorize
 
     /**
      * @param string|ResourceInterface $resource
-     * @param string                   $privilege
+     * @param string $privilege
      *
      * @return bool
      */
@@ -261,14 +261,14 @@ class Authorize
         $this->loaded = null;
 
         /** @var $cache StorageInterface */
-        $cache      = $this->serviceLocator->get('BjyAuthorize\Cache');
+        $cache = $this->serviceLocator->get('BjyAuthorize\Cache');
 
         /** @var $cacheKeyGenerator callable */
-        $cacheKeyGenerator  = $this->serviceLocator->get('BjyAuthorize\CacheKeyGenerator');
-        $cacheKey           = $cacheKeyGenerator();
+        $cacheKeyGenerator = $this->serviceLocator->get('BjyAuthorize\CacheKeyGenerator');
+        $cacheKey = $cacheKeyGenerator();
 
-        $success    = false;
-        $this->acl  = $cache->getItem($cacheKey, $success);
+        $success = false;
+        $this->acl = $cache->getItem($cacheKey, $success);
 
         if (!($this->acl instanceof Acl) || !$success) {
             $this->loadAcl();
@@ -312,7 +312,7 @@ class Authorize
      * @deprecated this method will be removed in BjyAuthorize 2.0.x
      *
      * @param string[]|\Zend\Permissions\Acl\Resource\ResourceInterface[] $resources
-     * @param mixed|null                                                  $parent
+     * @param mixed|null $parent
      */
     protected function loadResource($resources, $parent = null)
     {
@@ -349,7 +349,7 @@ class Authorize
     protected function loadRule(array $rule, $type)
     {
         $privileges = $assertion = null;
-        $ruleSize   = count($rule);
+        $ruleSize = count($rule);
 
         if (4 === $ruleSize) {
             list($roles, $resources, $privileges, $assertion) = $rule;

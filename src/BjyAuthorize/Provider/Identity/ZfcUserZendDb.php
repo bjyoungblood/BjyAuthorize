@@ -9,8 +9,8 @@
 namespace BjyAuthorize\Provider\Identity;
 
 use BjyAuthorize\Exception\InvalidRoleException;
-use Zend\Db\TableGateway\TableGateway;
 use Zend\Db\Sql\Select;
+use Zend\Db\TableGateway\TableGateway;
 use Zend\Permissions\Acl\Role\RoleInterface;
 use ZfcUser\Service\User;
 
@@ -43,12 +43,12 @@ class ZfcUserZendDb implements ProviderInterface
 
     /**
      * @param \Zend\Db\TableGateway\TableGateway $tableGateway
-     * @param \ZfcUser\Service\User              $userService
+     * @param \ZfcUser\Service\User $userService
      */
     public function __construct(TableGateway $tableGateway, User $userService)
     {
         $this->tableGateway = $tableGateway;
-        $this->userService  = $userService;
+        $this->userService = $userService;
     }
 
     /**
@@ -58,7 +58,7 @@ class ZfcUserZendDb implements ProviderInterface
     {
         $authService = $this->userService->getAuthService();
 
-        if (! $authService->hasIdentity()) {
+        if (!$authService->hasIdentity()) {
             return array($this->getDefaultRole());
         }
 
@@ -96,7 +96,7 @@ class ZfcUserZendDb implements ProviderInterface
      */
     public function setDefaultRole($defaultRole)
     {
-        if (! ($defaultRole instanceof RoleInterface || is_string($defaultRole))) {
+        if (!($defaultRole instanceof RoleInterface || is_string($defaultRole))) {
             throw InvalidRoleException::invalidRoleInstance($defaultRole);
         }
 

@@ -27,7 +27,7 @@ class AuthorizeAwareServiceInitializer implements InitializerInterface
      */
     public function __invoke(ContainerInterface $container, $instance)
     {
-        if (! $instance instanceof AuthorizeAwareInterface) {
+        if (!$instance instanceof AuthorizeAwareInterface) {
             return;
         }
 

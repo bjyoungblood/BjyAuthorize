@@ -35,14 +35,14 @@ class Module implements
     public function onBootstrap(EventInterface $event)
     {
         /* @var $app \Zend\Mvc\ApplicationInterface */
-        $app            = $event->getTarget();
+        $app = $event->getTarget();
         /* @var $sm \Zend\ServiceManager\ServiceLocatorInterface */
         $serviceManager = $app->getServiceManager();
-        $config         = $serviceManager->get('BjyAuthorize\Config');
+        $config = $serviceManager->get('BjyAuthorize\Config');
         /** @var UnauthorizedStrategy $strategy */
-        $strategy       = $serviceManager->get($config['unauthorized_strategy']);
+        $strategy = $serviceManager->get($config['unauthorized_strategy']);
         /** @var AbstractGuard[] $guards */
-        $guards         = $serviceManager->get('BjyAuthorize\Guards');
+        $guards = $serviceManager->get('BjyAuthorize\Guards');
 
         foreach ($guards as $guard) {
             $guard->attach($app->getEventManager());

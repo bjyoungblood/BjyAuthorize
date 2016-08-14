@@ -76,14 +76,14 @@ class ZendDb implements ProviderInterface
     {
         /* @var $tableGateway \Zend\Db\TableGateway\TableGateway */
         $tableGateway = $this->serviceLocator->get('BjyAuthorize\Service\RoleDbTableGateway');
-        $sql          = new Select();
+        $sql = new Select();
 
         $sql->from($this->tableName);
 
         /* @var $roles Role[] */
-        $roles       = array();
+        $roles = array();
         $indexedRows = array();
-        $rowset      = $tableGateway->selectWith($sql);
+        $rowset = $tableGateway->selectWith($sql);
 
         // Pass 1: collect all rows and index them by PK
         foreach ($rowset as $row) {
@@ -92,9 +92,9 @@ class ZendDb implements ProviderInterface
 
         // Pass 2: build a role for each indexed row
         foreach ($indexedRows as $row) {
-            $parentRoleId   = isset($row[$this->parentRoleFieldName])
+            $parentRoleId = isset($row[$this->parentRoleFieldName])
                 ? $indexedRows[$row[$this->parentRoleFieldName]][$this->roleIdFieldName] : null;
-            $roleId         = $row[$this->roleIdFieldName];
+            $roleId = $row[$this->roleIdFieldName];
             $roles[$roleId] = new Role($roleId, $parentRoleId);
         }
 

@@ -8,8 +8,8 @@
 
 namespace BjyAuthorize\Provider\Role;
 
-use BjyAuthorize\Acl\Role;
 use BjyAuthorize\Acl\HierarchicalRoleInterface;
+use BjyAuthorize\Acl\Role;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Zend\Permissions\Acl\Role\RoleInterface;
 
@@ -39,7 +39,7 @@ class ObjectRepositoryProvider implements ProviderInterface
     public function getRoles()
     {
         $result = $this->objectRepository->findAll();
-        $roles  = array();
+        $roles = array();
 
         // Pass One: Build each object
         foreach ($result as $role) {

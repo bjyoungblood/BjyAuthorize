@@ -8,6 +8,9 @@
 
 namespace BjyAuthorize\View;
 
+use BjyAuthorize\Exception\UnAuthorizedException;
+use BjyAuthorize\Guard\Controller;
+use BjyAuthorize\Guard\Route;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;
 use Zend\Http\Response as HttpResponse;
@@ -15,9 +18,6 @@ use Zend\Mvc\Application;
 use Zend\Mvc\MvcEvent;
 use Zend\Stdlib\ResponseInterface as Response;
 use Zend\View\Model\ViewModel;
-use BjyAuthorize\Exception\UnAuthorizedException;
-use BjyAuthorize\Guard\Controller;
-use BjyAuthorize\Guard\Route;
 
 /**
  * Dispatch error handler, catches exceptions related with authorization and
@@ -70,7 +70,7 @@ class UnauthorizedStrategy implements ListenerAggregateInterface
      */
     public function setTemplate($template)
     {
-        $this->template = (string) $template;
+        $this->template = (string)$template;
     }
 
     /**
@@ -93,23 +93,23 @@ class UnauthorizedStrategy implements ListenerAggregateInterface
     public function onDispatchError(MvcEvent $event)
     {
         // Do nothing if the result is a response object
-        $result   = $event->getResult();
+        $result = $event->getResult();
         $response = $event->getResponse();
 
-        if ($result instanceof Response || ($response && ! $response instanceof HttpResponse)) {
+        if ($result instanceof Response || ($response && !$response instanceof HttpResponse)) {
             return;
         }
 
         // Common view variables
         $viewVariables = array(
-           'error'      => $event->getParam('error'),
-           'identity'   => $event->getParam('identity'),
+            'error' => $event->getParam('error'),
+            'identity' => $event->getParam('identity'),
         );
 
         switch ($event->getError()) {
             case Controller::ERROR:
                 $viewVariables['controller'] = $event->getParam('controller');
-                $viewVariables['action']     = $event->getParam('action');
+                $viewVariables['action'] = $event->getParam('action');
                 break;
             case Route::ERROR:
                 $viewVariables['route'] = $event->getParam('route');
@@ -120,7 +120,7 @@ class UnauthorizedStrategy implements ListenerAggregateInterface
                 }
 
                 $viewVariables['reason'] = $event->getParam('exception')->getMessage();
-                $viewVariables['error']  = 'error-unauthorized';
+                $viewVariables['error'] = 'error-unauthorized';
                 break;
             default:
                 /*
@@ -132,7 +132,7 @@ class UnauthorizedStrategy implements ListenerAggregateInterface
                 return;
         }
 
-        $model    = new ViewModel($viewVariables);
+        $model = new ViewModel($viewVariables);
         $response = $response ?: new HttpResponse();
 
         $model->setTemplate($this->getTemplate());

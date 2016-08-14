@@ -9,10 +9,9 @@
 namespace BjyAuthorize\Guard;
 
 use BjyAuthorize\Exception\UnAuthorizedException;
-
 use Zend\EventManager\EventManagerInterface;
-use Zend\Mvc\MvcEvent;
 use Zend\Http\Request as HttpRequest;
+use Zend\Mvc\MvcEvent;
 
 /**
  * Controller Guard listener, allows checking of permissions
@@ -29,10 +28,10 @@ class Controller extends AbstractGuard
 
     protected function extractResourcesFromRule(array $rule)
     {
-        $results        = array();
-        $rule['action'] = isset($rule['action']) ? (array) $rule['action'] : array(null);
+        $results = array();
+        $rule['action'] = isset($rule['action']) ? (array)$rule['action'] : array(null);
 
-        foreach ((array) $rule['controller'] as $controller) {
+        foreach ((array)$rule['controller'] as $controller) {
             foreach ($rule['action'] as $action) {
                 $results[] = $this->getResourceName($controller, $action);
             }
@@ -77,12 +76,12 @@ class Controller extends AbstractGuard
     public function onDispatch(MvcEvent $event)
     {
         /* @var $service \BjyAuthorize\Service\Authorize */
-        $service    = $this->serviceLocator->get('BjyAuthorize\Service\Authorize');
-        $match      = $event->getRouteMatch();
+        $service = $this->serviceLocator->get('BjyAuthorize\Service\Authorize');
+        $match = $event->getRouteMatch();
         $controller = $match->getParam('controller');
-        $action     = $match->getParam('action');
-        $request    = $event->getRequest();
-        $method     = $request instanceof HttpRequest ? strtolower($request->getMethod()) : null;
+        $action = $match->getParam('action');
+        $request = $event->getRequest();
+        $method = $request instanceof HttpRequest ? strtolower($request->getMethod()) : null;
 
         $authorized = $service->isAllowed($this->getResourceName($controller))
             || $service->isAllowed($this->getResourceName($controller, $action))

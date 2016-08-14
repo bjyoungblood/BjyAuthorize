@@ -9,7 +9,6 @@
 namespace BjyAuthorize\Guard;
 
 use BjyAuthorize\Exception\UnAuthorizedException;
-
 use Zend\EventManager\EventManagerInterface;
 use Zend\Mvc\MvcEvent;
 
@@ -50,9 +49,9 @@ class Route extends AbstractGuard
     public function onRoute(MvcEvent $event)
     {
         /* @var $service \BjyAuthorize\Service\Authorize */
-        $service    = $this->serviceLocator->get('BjyAuthorize\Service\Authorize');
-        $match      = $event->getRouteMatch();
-        $routeName  = $match->getMatchedRouteName();
+        $service = $this->serviceLocator->get('BjyAuthorize\Service\Authorize');
+        $match = $event->getRouteMatch();
+        $routeName = $match->getMatchedRouteName();
 
         if ($service->isAllowed('route/' . $routeName)) {
             return;
