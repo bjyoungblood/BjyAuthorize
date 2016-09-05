@@ -10,6 +10,7 @@ namespace BjyAuthorize\Service;
 
 use BjyAuthorize\Exception\InvalidArgumentException;
 use BjyAuthorize\Provider\Role\ObjectRepositoryProvider;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -21,16 +22,11 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class ObjectRepositoryRoleProviderFactory implements FactoryInterface
 {
-    /**
-     * {@inheritDoc}
-     *
-     * @return \BjyAuthorize\Provider\Role\ObjectRepositoryProvider
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $config = $serviceLocator->get('BjyAuthorize\Config');
+        $config = $container->get('BjyAuthorize\Config');
 
-        if (! isset($config['role_providers']['BjyAuthorize\Provider\Role\ObjectRepositoryProvider'])) {
+        if (!isset($config['role_providers']['BjyAuthorize\Provider\Role\ObjectRepositoryProvider'])) {
             throw new InvalidArgumentException(
                 'Config for "BjyAuthorize\Provider\Role\ObjectRepositoryProvider" not set'
             );
@@ -38,17 +34,27 @@ class ObjectRepositoryRoleProviderFactory implements FactoryInterface
 
         $providerConfig = $config['role_providers']['BjyAuthorize\Provider\Role\ObjectRepositoryProvider'];
 
-        if (! isset($providerConfig['role_entity_class'])) {
+        if (!isset($providerConfig['role_entity_class'])) {
             throw new InvalidArgumentException('role_entity_class not set in the bjyauthorize role_providers config.');
         }
 
-        if (! isset($providerConfig['object_manager'])) {
+        if (!isset($providerConfig['object_manager'])) {
             throw new InvalidArgumentException('object_manager not set in the bjyauthorize role_providers config.');
         }
 
         /* @var $objectManager \Doctrine\Common\Persistence\ObjectManager */
-        $objectManager = $serviceLocator->get($providerConfig['object_manager']);
+        $objectManager = $container->get($providerConfig['object_manager']);
 
         return new ObjectRepositoryProvider($objectManager->getRepository($providerConfig['role_entity_class']));
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @return \BjyAuthorize\Provider\Role\ObjectRepositoryProvider
+     */
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        return $this($serviceLocator, ObjectRepositoryProvider::class);
     }
 }

@@ -9,6 +9,7 @@
 namespace BjyAuthorize\Service;
 
 use BjyAuthorize\Collector\RoleCollector;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -19,6 +20,14 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class RoleCollectorServiceFactory implements FactoryInterface
 {
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        /* @var $identityProvider \BjyAuthorize\Provider\Identity\ProviderInterface */
+        $identityProvider = $container->get('BjyAuthorize\Provider\Identity\ProviderInterface');
+
+        return new RoleCollector($identityProvider);
+    }
+
     /**
      * {@inheritDoc}
      *
@@ -26,9 +35,6 @@ class RoleCollectorServiceFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        /* @var $identityProvider \BjyAuthorize\Provider\Identity\ProviderInterface */
-        $identityProvider = $serviceLocator->get('BjyAuthorize\Provider\Identity\ProviderInterface');
-
-        return new RoleCollector($identityProvider);
+        return $this($serviceLocator, RoleCollector::class);
     }
 }

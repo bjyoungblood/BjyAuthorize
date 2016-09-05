@@ -9,6 +9,7 @@
 namespace BjyAuthorize\Service;
 
 use BjyAuthorize\View\UnauthorizedStrategy;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -19,6 +20,11 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class UnauthorizedStrategyServiceFactory implements FactoryInterface
 {
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        return new UnauthorizedStrategy($container->get('BjyAuthorize\Config')['template']);
+    }
+
     /**
      * {@inheritDoc}
      *
@@ -26,8 +32,6 @@ class UnauthorizedStrategyServiceFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('BjyAuthorize\Config');
-
-        return new UnauthorizedStrategy($config['template']);
+        return $this($serviceLocator, UnauthorizedStrategy::class);
     }
 }

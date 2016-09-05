@@ -7,13 +7,13 @@
 namespace BjyAuthorize\View;
 
 use BjyAuthorize\Exception\UnAuthorizedException;
+use BjyAuthorize\Guard\Controller;
+use BjyAuthorize\Guard\Route;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;
 use Zend\Http\Response;
 use Zend\Mvc\Application;
 use Zend\Mvc\MvcEvent;
-use BjyAuthorize\Guard\Route;
-use BjyAuthorize\Guard\Controller;
 
 /**
  * Dispatch error handler, catches exceptions related with authorization and
@@ -35,14 +35,14 @@ class RedirectionStrategy implements ListenerAggregateInterface
     protected $redirectUri;
 
     /**
-     * @var \Zend\Stdlib\CallbackHandler[]
+     * @var callable[] An array with callback functions or methods.
      */
     protected $listeners = array();
 
     /**
      * {@inheritDoc}
      */
-    public function attach(EventManagerInterface $events)
+    public function attach(EventManagerInterface $events, $priority = 1)
     {
         $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH_ERROR, array($this, 'onDispatchError'), -5000);
     }
@@ -67,17 +67,17 @@ class RedirectionStrategy implements ListenerAggregateInterface
     public function onDispatchError(MvcEvent $event)
     {
         // Do nothing if the result is a response object
-        $result     = $event->getResult();
+        $result = $event->getResult();
         $routeMatch = $event->getRouteMatch();
-        $response   = $event->getResponse();
-        $router     = $event->getRouter();
-        $error      = $event->getError();
-        $url        = $this->redirectUri;
+        $response = $event->getResponse();
+        $router = $event->getRouter();
+        $error = $event->getError();
+        $url = $this->redirectUri;
 
         if ($result instanceof Response
-            || ! $routeMatch
-            || ($response && ! $response instanceof Response)
-            || ! (
+            || !$routeMatch
+            || ($response && !$response instanceof Response)
+            || !(
                 Route::ERROR === $error
                 || Controller::ERROR === $error
                 || (
@@ -106,7 +106,7 @@ class RedirectionStrategy implements ListenerAggregateInterface
      */
     public function setRedirectRoute($redirectRoute)
     {
-        $this->redirectRoute = (string) $redirectRoute;
+        $this->redirectRoute = (string)$redirectRoute;
     }
 
     /**
@@ -114,6 +114,6 @@ class RedirectionStrategy implements ListenerAggregateInterface
      */
     public function setRedirectUri($redirectUri)
     {
-        $this->redirectUri = $redirectUri ? (string) $redirectUri : null;
+        $this->redirectUri = $redirectUri ? (string)$redirectUri : null;
     }
 }

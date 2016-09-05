@@ -8,6 +8,7 @@
 
 namespace BjyAuthorizeTest\View;
 
+use BjyAuthorize\Exception\UnAuthorizedException;
 use PHPUnit_Framework_TestCase;
 use BjyAuthorize\View\UnauthorizedStrategy;
 use Zend\Http\Response;
@@ -44,8 +45,13 @@ class UnauthorizedStrategyTest extends PHPUnit_Framework_TestCase
      */
     public function testAttachDetach()
     {
-        $eventManager = $this->getMock('Zend\\EventManager\\EventManagerInterface');
-        $callbackMock = $this->getMock('Zend\\Stdlib\\CallbackHandler', array(), array(), '', false);
+        $eventManager = $this->getMockBuilder('Zend\\EventManager\\EventManagerInterface')
+            ->getMock();
+
+        $callbackMock = $this->getMockBuilder(\stdClass::class)
+            ->setMethods(['__invoke'])
+            ->getMock();
+
         $eventManager
             ->expects($this->once())
             ->method('attach')
@@ -76,7 +82,7 @@ class UnauthorizedStrategyTest extends PHPUnit_Framework_TestCase
      */
     public function testOnDispatchErrorWithGenericUnAuthorizedException()
     {
-        $exception = $this->getMock('BjyAuthorize\\Exception\\UnAuthorizedException');
+        $exception = $this->getMock(UnAuthorizedException::class);
         $viewModel = $this->getMock('Zend\\View\\Model\\ModelInterface');
         $mvcEvent  = $this->getMock('Zend\\Mvc\\MvcEvent');
 
@@ -130,7 +136,7 @@ class UnauthorizedStrategyTest extends PHPUnit_Framework_TestCase
      */
     public function testIgnoresUnknownExceptions()
     {
-        $exception = $this->getMock('Exception');
+        $exception = $this->getMock(\Exception::class);
         $viewModel = $this->getMock('Zend\\View\\Model\\ModelInterface');
         $mvcEvent  = $this->getMock('Zend\\Mvc\\MvcEvent');
 

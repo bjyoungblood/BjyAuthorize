@@ -9,6 +9,7 @@
 namespace BjyAuthorize\Service;
 
 use BjyAuthorize\Guard\Controller;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -19,6 +20,14 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class ControllerGuardServiceFactory implements FactoryInterface
 {
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        return new Controller(
+            $container->get('BjyAuthorize\Config')['guards']['BjyAuthorize\Guard\Controller'],
+            $container
+        );
+    }
+
     /**
      * {@inheritDoc}
      *
@@ -26,8 +35,6 @@ class ControllerGuardServiceFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('BjyAuthorize\Config');
-
-        return new Controller($config['guards']['BjyAuthorize\Guard\Controller'], $serviceLocator);
+        return $this($serviceLocator, Controller::class);
     }
 }

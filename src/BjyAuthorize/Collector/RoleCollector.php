@@ -21,7 +21,7 @@ use ZendDeveloperTools\Collector\CollectorInterface;
  */
 class RoleCollector implements CollectorInterface, Serializable
 {
-    const NAME     = 'bjy_authorize_role_collector';
+    const NAME = 'bjy_authorize_role_collector';
 
     const PRIORITY = 150;
 
@@ -64,14 +64,14 @@ class RoleCollector implements CollectorInterface, Serializable
      */
     public function collect(MvcEvent $mvcEvent)
     {
-        if (! $this->identityProvider) {
+        if (!$this->identityProvider) {
             return;
         }
 
         $roles = $this->identityProvider->getIdentityRoles();
 
-        if (! is_array($roles) && ! $roles instanceof \Traversable) {
-            $roles = (array) $roles;
+        if (!is_array($roles) && !$roles instanceof \Traversable) {
+            $roles = (array)$roles;
         }
 
         foreach ($roles as $role) {
@@ -80,7 +80,7 @@ class RoleCollector implements CollectorInterface, Serializable
             }
 
             if ($role) {
-                $this->collectedRoles[] = (string) $role;
+                $this->collectedRoles[] = (string)$role;
             }
         }
     }

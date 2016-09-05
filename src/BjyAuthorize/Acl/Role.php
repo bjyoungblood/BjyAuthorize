@@ -29,7 +29,7 @@ class Role implements RoleInterface, HierarchicalRoleInterface
     protected $parent;
 
     /**
-     * @param string|null               $roleId
+     * @param string|null $roleId
      * @param RoleInterface|string|null $parent
      */
     public function __construct($roleId = null, $parent = null)
@@ -57,7 +57,7 @@ class Role implements RoleInterface, HierarchicalRoleInterface
      */
     public function setRoleId($roleId)
     {
-        $this->roleId = (string) $roleId;
+        $this->roleId = (string)$roleId;
 
         return $this;
     }

@@ -41,8 +41,8 @@ class Config implements ProviderInterface
     }
 
     /**
-     * @param string      $name
-     * @param array       $options
+     * @param string $name
+     * @param array $options
      * @param string|null $parent
      *
      * @return array
@@ -55,8 +55,8 @@ class Config implements ProviderInterface
             $children = array();
         }
 
-        $roles   = array();
-        $role    = new Role($name, $parent);
+        $roles = array();
+        $role = new Role($name, $parent);
         $roles[] = $role;
 
         foreach ($children as $key => $value) {

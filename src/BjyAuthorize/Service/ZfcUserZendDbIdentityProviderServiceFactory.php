@@ -9,8 +9,9 @@
 namespace BjyAuthorize\Service;
 
 use BjyAuthorize\Provider\Identity\ZfcUserZendDb;
-use Zend\ServiceManager\FactoryInterface;
+use Interop\Container\ContainerInterface;
 use Zend\Db\TableGateway\TableGateway;
+use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -20,6 +21,21 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class ZfcUserZendDbIdentityProviderServiceFactory implements FactoryInterface
 {
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        /* @var $tableGateway \Zend\Db\TableGateway\TableGateway */
+        $tableGateway = new TableGateway('user_role_linker', $container->get('zfcuser_zend_db_adapter'));
+        /* @var $userService \ZfcUser\Service\User */
+        $userService = $container->get('zfcuser_user_service');
+        $config = $container->get('BjyAuthorize\Config');
+
+        $provider = new ZfcUserZendDb($tableGateway, $userService);
+
+        $provider->setDefaultRole($config['default_role']);
+
+        return $provider;
+    }
+
     /**
      * {@inheritDoc}
      *
@@ -27,16 +43,6 @@ class ZfcUserZendDbIdentityProviderServiceFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        /* @var $tableGateway \Zend\Db\TableGateway\TableGateway */
-        $tableGateway = new TableGateway('user_role_linker', $serviceLocator->get('zfcuser_zend_db_adapter'));
-        /* @var $userService \ZfcUser\Service\User */
-        $userService = $serviceLocator->get('zfcuser_user_service');
-        $config      = $serviceLocator->get('BjyAuthorize\Config');
-
-        $provider = new ZfcUserZendDb($tableGateway, $userService);
-
-        $provider->setDefaultRole($config['default_role']);
-
-        return $provider;
+        return $this($serviceLocator, ZfcUserZendDb::class);
     }
 }
