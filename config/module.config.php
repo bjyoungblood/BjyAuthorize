@@ -78,6 +78,8 @@ return array(
             'BjyAuthorize\Collector\RoleCollector'  => 'BjyAuthorize\Service\RoleCollectorServiceFactory',
             'BjyAuthorize\Provider\Identity\ZfcUserZendDb'
                 => 'BjyAuthorize\Service\ZfcUserZendDbIdentityProviderServiceFactory',
+                'BjyAuthorize\Provider\Identity\ZfcUserDoctrineMongoODM'
+                => 'BjyAuthorize\Service\ZfcUserDoctrineMongoODMIdentityProviderServiceFactory',
             'BjyAuthorize\View\UnauthorizedStrategy'
                 => 'BjyAuthorize\Service\UnauthorizedStrategyServiceFactory',
             'BjyAuthorize\Service\RoleDbTableGateway' => 'BjyAuthorize\Service\UserRoleServiceFactory',
