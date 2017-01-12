@@ -93,6 +93,11 @@ class RedirectionStrategy implements ListenerAggregateInterface
             $url = $router->assemble(array(), array('name' => $this->redirectRoute));
         }
 
+        if ($event->getRequest() && ($uri = $event->getRequest()->getRequestUri())) {
+            $sep = (false === strpos($url, '?')) ? '?' : '&';
+            $url .= $sep . 'redirect=' . urlencode($uri);
+        }
+        
         $response = $response ?: new Response();
 
         $response->getHeaders()->addHeaderLine('Location', $url);
