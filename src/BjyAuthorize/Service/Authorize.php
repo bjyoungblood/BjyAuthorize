@@ -239,6 +239,10 @@ class Authorize
         $this->loaded && $this->loaded->__invoke();
 
         try {
+            // Check if the acl has the resource before checking for isAllowed
+            if (!$this->acl->hasResource($resource)) {
+                return false;
+            }
             return $this->acl->isAllowed($this->getIdentity(), $resource, $privilege);
         } catch (InvalidArgumentException $e) {
             return false;
