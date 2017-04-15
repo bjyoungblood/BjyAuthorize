@@ -15,7 +15,7 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
  * An example document that represents a role.
  *
  * @ODM\Document(
- *     collection="role"
+ *     collection="user_role"
  * )
  * @ODM\ChangeTrackingPolicy("DEFERRED_IMPLICIT")
  */
