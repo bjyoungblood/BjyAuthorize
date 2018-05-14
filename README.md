@@ -1,5 +1,13 @@
 # BjyAuthorize - Acl security for ZF2
 
+## Deprecated
+
+This package is now officially deprecated and will not receive any future updates or bug fixes.
+
+As long-term support for Zend Framework 2 ended on 2018-03-31, any users who currently rely on this package are heavily encouraged to migrate to Zend Framework 3 or another framework.
+
+***
+
 [![Build Status](https://travis-ci.org/bjyoungblood/BjyAuthorize.png?branch=master)](https://travis-ci.org/bjyoungblood/BjyAuthorize)
 [![Coverage Status](https://coveralls.io/repos/bjyoungblood/BjyAuthorize/badge.png?branch=master)](https://coveralls.io/r/bjyoungblood/BjyAuthorize)
 [![Total Downloads](https://poser.pugx.org/bjyoungblood/bjy-authorize/downloads.png)](https://packagist.org/packages/bjyoungblood/bjy-authorize)
